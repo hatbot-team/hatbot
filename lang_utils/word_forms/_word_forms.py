@@ -1,6 +1,8 @@
+__author__ = 'moskupols'
+
 try:
     from . import _forms_base
-except SystemError:
+except SystemError:  # we are __main__, for instance running doctests
     import _forms_base
 
 
@@ -13,7 +15,7 @@ def get_forms(initial):
     >>> get_forms('мыла')
 
     :param initial: a russian word in its initial form, in lower case
-    :return: a list of forms if the word is found in the dictionary, Null otherwise
+    :return: a list of forms if the word is found in the dictionary, None otherwise
     """
     if initial in _forms_base.initial_to_forms:
         return list(_forms_base.initial_to_forms[initial])
@@ -32,7 +34,7 @@ def get_initial_forms(form):
     ['рама']
 
     :param form: a russian word in lower case
-    :return: a list of possible initial forms if the word is found in the dictionary, Null otherwise
+    :return: a list of possible initial forms if the word is found in the dictionary, None otherwise
     """
     if form in _forms_base.form_to_initials:
         return list(_forms_base.form_to_initials[form])

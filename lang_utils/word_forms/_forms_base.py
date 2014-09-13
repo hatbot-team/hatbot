@@ -1,3 +1,5 @@
+__author__ = 'moskupols'
+
 import os
 
 FORMS_BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/word_forms.txt'
