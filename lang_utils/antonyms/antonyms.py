@@ -3,9 +3,9 @@
 __author__ = 'pershik'
 
 try:
-    from . import _init_antonyms
+    from . import _antonyms_base
 except SystemError:
-    import _init_antonyms
+    import _antonyms_base
 
 
 def get_antonyms(word):
@@ -21,7 +21,7 @@ def get_antonyms(word):
     :param word: russian word in the initial form
     :return: list of all its antonyms
     """
-    if word in _init_antonyms.antonyms:
-        return _init_antonyms.antonyms[word]
+    if word in _antonyms_base.antonyms:
+        return _antonyms_base.antonyms[word]
     else:
         return []
