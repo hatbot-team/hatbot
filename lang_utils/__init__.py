@@ -1,4 +1,4 @@
 __author__ = 'moskupols'
 
-__all__ = ['antonyms', 'word_forms', 'synonyms']
+__all__ = ['antonyms', 'morphology', 'synonyms']
 
