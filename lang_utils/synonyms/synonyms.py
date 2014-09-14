@@ -7,6 +7,17 @@ except SystemError:
 
 
 # noinspection PyProtectedMember
+def get_words_with_synonyms():
+    """
+    >>> len(get_words_with_synonyms())
+    13708
+
+    :return: iterable containing all russian words which have at least one synonym
+    """
+    return _synonyms_base._synonyms.keys()
+
+
+# noinspection PyProtectedMember
 def get_synonyms(word):
     """
     Get synonyms list for the given word

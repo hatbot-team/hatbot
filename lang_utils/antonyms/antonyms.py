@@ -8,6 +8,16 @@ except SystemError:
     import _antonyms_base
 
 
+def get_words_with_antonyms():
+    """
+    >>> len(get_words_with_antonyms())
+    457
+
+    :return: iterable containing all russian words which have at least one antonym
+    """
+    return _antonyms_base.antonyms.keys()
+
+
 def get_antonyms(word):
 
     """
