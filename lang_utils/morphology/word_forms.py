@@ -25,8 +25,8 @@ except SystemError:
 
 def get_initial_forms(form, part_filter=None):
     """
-    Get all possible initial forms (there are several of them sometimes) of a given word.
-    Optional argument part_filter allows to prune unnecessary ambiguity.
+    Gets all possible initial forms (there are several of them sometimes) of a given word.
+    Optional argument part_filter allows to prune unnecessary ambiguity with part of speech.
 
     >>> get_initial_forms('Дядя')
     ['дядя']
@@ -44,8 +44,16 @@ def get_initial_forms(form, part_filter=None):
     :param form: a russian word
     :param part_filter: something that supports `in' operator: str, list, set etc. If it is a container,
     it should contain only Part-of-speech names according to pymorphy2 enumerations
-    :return: a list of possible initial forms of the given word in lowercase
+    :return: a list of possible initial forms of the given word in lowercase.
+    It's guaranteed that there are no repetitions.
+    Variants are generated in the order of descending certainty.
     """
-    return list(sorted(set(p.normal_form
-                           for p in morph.parse(form)
-                           if part_filter is None or p.tag.POS in part_filter)))
+    met = set()
+    ret = []
+    for p in morph.parse(form):
+        if part_filter is None or p.tag.POS in part_filter:
+            norm = p.normal_form
+            if norm not in met:
+                ret.append(norm)
+                met.add(norm)
+    return ret

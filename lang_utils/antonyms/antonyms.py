@@ -32,6 +32,6 @@ def get_antonyms(word):
     :return: list of all its antonyms
     """
     if word in _antonyms_base.antonyms:
-        return _antonyms_base.antonyms[word]
+        return list(_antonyms_base.antonyms[word])
     else:
         return []

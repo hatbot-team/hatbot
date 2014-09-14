@@ -34,6 +34,6 @@ def get_synonyms(word):
     """
 
     if word in _synonyms_base._synonyms:
-        return _synonyms_base._synonyms[word]
+        return list(_synonyms_base._synonyms[word])
     else:
         return []

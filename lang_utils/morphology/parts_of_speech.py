@@ -8,7 +8,7 @@ except SystemError:
 
 def get_parts_of_speech(word):
     """
-    Returns a list of strings describing parts of speech the given russian word could be.
+    Returns a list strings describing parts of speech the given russian word could be.
     The enums are derived from pymorphy2.
 
     >>> get_parts_of_speech('рогалик')
@@ -17,8 +17,17 @@ def get_parts_of_speech(word):
     ['ADJF', 'NOUN']
     >>> 'NOUN' in get_parts_of_speech('правил')
     True
+    >>> 'ADJF' in get_parts_of_speech('правил')
+    False
 
     :param word: a russian word
     :return: list of pymorphy2 POS enums.
     """
-    return list(sorted(set(p.tag.POS for p in morph.parse(word))))
+    met = set()
+    ret = []
+    for p in morph.parse(word):
+        pos = p.tag.POS
+        if pos not in met:
+            ret.append(pos)
+            met.add(pos)
+    return ret
