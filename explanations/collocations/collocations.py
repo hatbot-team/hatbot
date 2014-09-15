@@ -16,10 +16,17 @@ def explain_collocation(word):
     >>> explain_collocation('язык')
     ['Заполни пропуск и поставь слово в начальную форму. русском *пропуск*']
     """
-    if word in _collocations_base.expl_collocation:
+    if word in _collocations_base.collocation_explainable:
         return _collocations_base.expl_collocation[word]
     else:
         return []
+
+def get_all_explainable_words():
+    """
+    Gives all explainable words
+    :return: Set with all explainable with collocation words
+    """
+    return _collocations_base.collocation_explainable
 
 def get_all_explanations():
     """

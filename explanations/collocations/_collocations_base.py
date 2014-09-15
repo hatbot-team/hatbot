@@ -10,8 +10,12 @@ COLLOCATIONS_PATH = \
 
 BANNED_PARTS = ['NPRO', 'PRED', 'PREP', 'CONJ', 'PRCL', 'INTJ']
 
-def put_word_in_initial_form(word):
-    return get_initial_forms(word)[0]
+def get_noun_initial_form(word):
+    possible_forms = get_initial_forms(word, {'NOUN'})
+    if len(possible_forms) == 0:
+        return None
+    else:
+        return possible_forms[0]
 
 def try_add(initial_word, explanation_word, skip_position):
     """
@@ -23,25 +27,28 @@ def try_add(initial_word, explanation_word, skip_position):
     conjunction or another minor part of speech, and adds explanation into dict
     """
     correct = True
+    initial_word = get_noun_initial_form(initial_word)
+    if initial_word is None:
+        correct = False
     if are_cognates(initial_word, explanation_word):
         correct = False
-    if not ('NOUN' in get_parts_of_speech(initial_word)):
-        correct = False
-    if get_parts_of_speech(explanation_word) == [None]:
+    list_of_explanation_parts = get_parts_of_speech(explanation_word)
+    if list_of_explanation_parts == [None]:
         correct = False
     for wrong_part in BANNED_PARTS:
-        if wrong_part in get_parts_of_speech(explanation_word):
+        if wrong_part in list_of_explanation_parts:
             correct = False
     global expl_collocation
+    global collocation_explainable
     if correct:
         explanation = "Заполни пропуск и поставь слово в начальную форму. "
         if skip_position == 0:
             explanation += "*пропуск* " + explanation_word
         else:
             explanation += explanation_word + " *пропуск*"
-        initial_word = put_word_in_initial_form(initial_word)
         expl_collocation[initial_word] = expl_collocation.get(initial_word, [])
         expl_collocation[initial_word] += [explanation]
+        collocation_explainable.add(initial_word)
 
 
 def init_base():
@@ -55,5 +62,6 @@ def init_base():
         try_add(words[1], words[0], 1)
 
 expl_collocation = dict()
+collocation_explainable = set()
 
 init_base()
