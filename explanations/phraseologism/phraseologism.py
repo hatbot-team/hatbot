@@ -18,7 +18,10 @@ def explain_phraseologism(word):
      'Заполни пропуск и поставь слово в начальную форму: Положить зубы на *пропуск* ']
     """
     if word in _phraseologism_base.phraseologism_explainable:
-        return _phraseologism_base.expl_phraseologism[word]
+        explanations = _phraseologism_base.expl_phraseologism[word]
+        result = ["Заполни пропуск и поставь слово в начальную форму: " + explanation
+                    for explanation in explanations]
+        return result
     else:
         return []
 
@@ -27,6 +30,8 @@ def get_all_explanations():
     """
     Gives all explanations
     :return: Dict if format string(word) -> list of strings(its explanations)
+    Explanation in a dict is in a short form. You should also add phrase
+    "Заполни пропуск и поставь слово в начальную форму: " in the beginning of any explanation
     """
     return _phraseologism_base.expl_phraseologism
 

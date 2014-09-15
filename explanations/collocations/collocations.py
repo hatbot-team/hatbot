@@ -17,7 +17,10 @@ def explain_collocation(word):
     ['Заполни пропуск и поставь слово в начальную форму. русском *пропуск*']
     """
     if word in _collocations_base.collocation_explainable:
-        return _collocations_base.expl_collocation[word]
+        explanations = _collocations_base.expl_collocation[word]
+        result = ["Заполни пропуск и поставь слово в начальную форму: " + explanation
+                    for explanation in explanations]
+        return result
     else:
         return []
 
@@ -32,5 +35,7 @@ def get_all_explanations():
     """
     Gives all explanations
     :return: Dict if format string(word) -> list of strings(its explanations)
+    Explanation in a dict is in a short form. You should also add phrase
+    "Заполни пропуск и поставь слово в начальную форму: " in the beginning of any explanation
     """
     return _collocations_base.expl_collocation

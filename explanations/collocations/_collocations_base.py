@@ -26,29 +26,27 @@ def try_add(initial_word, explanation_word, skip_position):
     Method checks if initial word is NOUN, and explanation word is preposition,
     conjunction or another minor part of speech, and adds explanation into dict
     """
-    correct = True
     initial_word = get_noun_initial_form(initial_word)
     if initial_word is None:
-        correct = False
+        return
     if are_cognates(initial_word, explanation_word):
-        correct = False
+        return
     list_of_explanation_parts = get_parts_of_speech(explanation_word)
     if list_of_explanation_parts == [None]:
-        correct = False
+        return
     for wrong_part in BANNED_PARTS:
         if wrong_part in list_of_explanation_parts:
-            correct = False
+            return
     global expl_collocation
     global collocation_explainable
-    if correct:
-        explanation = "Заполни пропуск и поставь слово в начальную форму. "
-        if skip_position == 0:
-            explanation += "*пропуск* " + explanation_word
-        else:
-            explanation += explanation_word + " *пропуск*"
-        expl_collocation[initial_word] = expl_collocation.get(initial_word, [])
-        expl_collocation[initial_word] += [explanation]
-        collocation_explainable.add(initial_word)
+    explanation = ""
+    if skip_position == 0:
+        explanation += "*пропуск* " + explanation_word
+    else:
+        explanation += explanation_word + " *пропуск*"
+    expl_collocation[initial_word] = expl_collocation.get(initial_word, [])
+    expl_collocation[initial_word] += [explanation]
+    collocation_explainable.add(initial_word)
 
 
 def init_base():

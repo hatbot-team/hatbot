@@ -28,15 +28,14 @@ def try_add(phrase, index):
     :param phrase: list of words in phraseologism. Punctuation is also a word
     :param index: number of word we would like to explain in the phrase
     """
-    correct = True
     initial_word = get_noun_initial_form(phrase[index])
     if initial_word is None:
-        correct = False
+        return
     n_valid = 0
     for i in range(len(phrase)):
         if i != index:
             if are_cognates(phrase[i], phrase[index]):
-                correct = False
+                return
             list_of_parts = get_parts_of_speech(phrase[i])
             valid = False
             for valid_part in VALID_PARTS:
@@ -45,19 +44,18 @@ def try_add(phrase, index):
             if valid:
                 n_valid += 1
     if n_valid == 0:
-        correct = False
-    if correct:
-        global expl_phraseologism
-        global phraseologism_explainable
-        explanation = "Заполни пропуск и поставь слово в начальную форму: "
-        for i in range(len(phrase)):
-            if i != index:
-                explanation += phrase[i] + " "
-            else:
-                explanation += "*пропуск* "
-        phraseologism_explainable.add(initial_word)
-        expl_phraseologism[initial_word] = expl_phraseologism.get(initial_word, [])
-        expl_phraseologism[initial_word] += [explanation]
+        return
+    global expl_phraseologism
+    global phraseologism_explainable
+    explanation = ""
+    for i in range(len(phrase)):
+        if i != index:
+            explanation += phrase[i] + " "
+        else:
+            explanation += "*пропуск* "
+    phraseologism_explainable.add(initial_word)
+    expl_phraseologism[initial_word] = expl_phraseologism.get(initial_word, [])
+    expl_phraseologism[initial_word] += [explanation]
 
 
 def init_base():
