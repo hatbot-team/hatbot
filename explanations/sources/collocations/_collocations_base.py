@@ -38,7 +38,6 @@ def try_add(initial_word, explanation_word, skip_position):
         if wrong_part in list_of_explanation_parts:
             return
     global expl_collocation
-    global collocation_explainable
     explanation = ""
     if skip_position == 0:
         explanation += "*пропуск* " + explanation_word
@@ -46,7 +45,6 @@ def try_add(initial_word, explanation_word, skip_position):
         explanation += explanation_word + " *пропуск*"
     expl_collocation[initial_word] = expl_collocation.get(initial_word, [])
     expl_collocation[initial_word] += [explanation]
-    collocation_explainable.add(initial_word)
 
 
 def init_base():
@@ -60,6 +58,5 @@ def init_base():
         try_add(words[1], words[0], 1)
 
 expl_collocation = dict()
-collocation_explainable = set()
 
 init_base()

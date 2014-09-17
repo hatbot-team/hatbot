@@ -1,3 +1,5 @@
 __author__ = 'moskupols'
 
-__all__ = ['collocations', 'phraseologism']
+__all__ = ['Explanation', 'sources']
+
+from .explanation import Explanation
