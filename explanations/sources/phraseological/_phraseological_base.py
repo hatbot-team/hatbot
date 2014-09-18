@@ -45,17 +45,14 @@ def try_add(phrase, index):
                 n_valid += 1
     if n_valid == 0:
         return
-    global expl_phraseological
-    global phraseological_explainable
-    explanation = ""
-    for i in range(len(phrase)):
-        if i != index:
-            explanation += phrase[i] + " "
-        else:
-            explanation += "*пропуск* "
-    phraseological_explainable.add(initial_word)
-    expl_phraseological[initial_word] = expl_phraseological.get(initial_word, [])
-    expl_phraseological[initial_word] += [explanation]
+
+    global keys_dict
+    global accepted_phrases
+
+    if len(accepted_phrases) == 0 or accepted_phrases[-1] != phrase:
+        accepted_phrases.append(phrase)
+
+    keys_dict.setdefault(initial_word, []).append((len(accepted_phrases) - 1, index))
 
 
 def init_base():
@@ -69,7 +66,7 @@ def init_base():
             try_add(phrase, index)
 
 
-expl_phraseological = dict()
-phraseological_explainable = set()
+keys_dict = dict()
+accepted_phrases = []
 
 init_base()
