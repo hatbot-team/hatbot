@@ -5,9 +5,9 @@ try:
 except SystemError:
     import _collocations_base
 
-from explanations.sources.ExplanationSource import ExplanationSource
+from explanations.sources.GapExplanationSource import GapExplanationSource
 
-class CollocationsSource(ExplanationSource):
+class CollocationsSource(GapExplanationSource):
 
     @classmethod
     def keys_for(cls, word):
@@ -17,18 +17,22 @@ class CollocationsSource(ExplanationSource):
         :return: List of explanations
         Example:
         >>> CollocationsSource.keys_for('учёт')
-        ['миграционного *пропуск*']
+        [(30, 1)]
         >>> CollocationsSource.keys_for('язык')
-        ['русском *пропуск*']
+        [(45, 1)]
         """
-        if word in _collocations_base.expl_collocation:
-            return [e for e in _collocations_base.expl_collocation[word]]
+        if word in _collocations_base.keys_dict:
+            return list(_collocations_base.keys_dict[word])
         else:
             return []
 
     @classmethod
-    def represent_explanation(cls, key):
-        return "Заполни пропуск и поставь слово в начальную форму: " + key
+    def gap_prefix(cls, key):
+        return '' if key[1] == 0 else _collocations_base.collocations_list[key[0]][0]
+
+    @classmethod
+    def gap_suffix(cls, key):
+        return '' if key[1] == 1 else _collocations_base.collocations_list[key[0]][1]
 
     @classmethod
     def explainable_words(cls):
@@ -36,4 +40,4 @@ class CollocationsSource(ExplanationSource):
         Gives all explainable words
         :return: Set with all explainable with collocation words
         """
-        return _collocations_base.expl_collocation.keys()
+        return _collocations_base.keys_dict.keys()

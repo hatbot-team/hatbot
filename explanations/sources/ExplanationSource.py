@@ -12,9 +12,15 @@ class ExplanationSource:
 
         >>> from explanations.sources import PhraseologicalSource
         >>> PhraseologicalSource.explain('голод')
-        [ *пропуск* не тетка]
+        [*пропуск* не тетка]
         >>> PhraseologicalSource.explain('полка')
-        [Класть зубы на *пропуск* , Положить зубы на *пропуск* ]
+        [Класть зубы на *пропуск*, Положить зубы на *пропуск*]
+
+        >>> from explanations.sources import CollocationsSource
+        >>> CollocationsSource.explain('учёт')
+        [миграционного *пропуск*]
+        >>> CollocationsSource.explain('язык')
+        [русском *пропуск*]
 
         :param word: russian word, in lowercase.
         :return: list of Explanation objects
