@@ -1,9 +1,9 @@
 __author__ = 'moskupols'
 
 import random
-from explanations import collocations
+from explanations.sources import CollocationsSource, PhraseologicalSource
 
-word_to_explanations = collocations.get_all_explanations()
+words = set(CollocationsSource.explainable_words() + PhraseologicalSource.explainable_words())
 
 
 def get_explainable_words():
@@ -12,7 +12,7 @@ def get_explainable_words():
 
     :return: iterable
     """
-    return word_to_explanations.keys()
+    return words
 
 
 def explain(word) -> str:
@@ -22,7 +22,7 @@ def explain(word) -> str:
     :param word: a russian noun in lowercase
     :return: the explanation
     """
-    if word in word_to_explanations:
-        return random.choice(word_to_explanations[word])
+    if word in words:
+        return random.choice(CollocationsSource.explain(word) + PhraseologicalSource.explain(word))
     else:
         return None
