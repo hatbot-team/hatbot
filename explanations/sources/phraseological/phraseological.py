@@ -18,9 +18,9 @@ class PhraseologicalSource(GapExplanationSource):
         :return: list of explanations
         Example:
         >>> PhraseologicalSource.keys_for('голод')
-        [(204, 0)]
+        [(228, 0)]
         >>> PhraseologicalSource.keys_for('полка')
-        [(422, 3), (729, 3)]
+        [(472, 3), (835, 3)]
         """
         if word in _phraseological_base.keys_dict.keys():
             return [k for k in _phraseological_base.keys_dict[word]]
@@ -29,11 +29,11 @@ class PhraseologicalSource(GapExplanationSource):
 
     @classmethod
     def gap_prefix(cls, key):
-        return ' '.join(_phraseological_base.accepted_phrases[key[0]][:key[1]])
+        return ' '.join(_phraseological_base.phrases[key[0]][:key[1]])
 
     @classmethod
     def gap_suffix(cls, key):
-        return ' '.join(_phraseological_base.accepted_phrases[key[0]][key[1] + 1:])
+        return ' '.join(_phraseological_base.phrases[key[0]][key[1] + 1:])
 
     @classmethod
     def explainable_words(cls):

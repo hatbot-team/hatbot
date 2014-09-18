@@ -39,7 +39,9 @@ def try_add(phrase):
         return
 
     global keys_dict
-    global accepted_phrases
+    global phrases
+
+    phrases.append(None) # for keys persistence
 
     phrase_added = False
     for (index, word) in enumerate(words):
@@ -61,14 +63,15 @@ def try_add(phrase):
 
         # everything is ok, we have an explanation of (initial_)word using our source
 
-        # if this phrase has not yet been added to the list of accepted phrases, do it.
+        # if this phrase has not yet been added to the list of accepted phrases, do it
+        # by replacing the last added None with the list of phrase' words
         if not phrase_added:
-            accepted_phrases.append(words)
+            phrases[-1] = words
             phrase_added = True
 
         # registering the pair (index of phrase, index of word) as a key that is enough for
         # recovering the explanation
-        keys_dict.setdefault(initial_word, []).append((len(accepted_phrases) - 1, index))
+        keys_dict.setdefault(initial_word, []).append((len(phrases) - 1, index))
 
 
 def init_base():
@@ -82,6 +85,6 @@ def init_base():
 
 
 keys_dict = dict()
-accepted_phrases = []
+phrases = []
 
 init_base()
