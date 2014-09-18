@@ -8,8 +8,8 @@ from lang_utils.cognates import are_cognates
 PHRASEOLOGICAL_PATH = \
     os.path.dirname(os.path.abspath(__file__)) + '/phraseologism.txt'
 
-VALID_PARTS = ['NOUN', 'ADJF', 'ADJS', 'COMP', 'VERB',
-               'INFN', 'PRTF', 'PRTS', 'GRND', 'NUMR', 'ADVB', 'NPRO']
+VALID_PARTS = {'NOUN', 'ADJF', 'ADJS', 'COMP', 'VERB',
+               'INFN', 'PRTF', 'PRTS', 'GRND', 'NUMR', 'ADVB', 'NPRO'}
 
 
 def get_noun_initial_form(word):
@@ -19,40 +19,56 @@ def get_noun_initial_form(word):
     else:
         return possible_forms[0]
 
-def try_add(phrase, index):
+def try_add(phrase):
     """
     This method tries to add an explanation from parsed phraseological unit phrase
-    for a word number index in this phrase
-    It checks if a phrase[index] is a NOUN, is there any cognates in other part,
+    for all nouns in it.
+    It checks if a word is a NOUN, is there any cognates in other part,
     is there any information in the rest of phrase: at least one major part of speech
-    :param phrase: list of words in phraseological unit. Punctuation is also a word
-    :param index: number of word we would like to explain in the phrase
+    :param phrase: the phraseological unit. Punctuation should be separated with spaces.
     """
-    initial_word = get_noun_initial_form(phrase[index])
-    if initial_word is None:
-        return
+    words = phrase.split()
+    parts = tuple(map(get_parts_of_speech, words))
+
     n_valid = 0
-    for i in range(len(phrase)):
-        if i != index:
-            if are_cognates(phrase[i], phrase[index]):
-                return
-            list_of_parts = get_parts_of_speech(phrase[i])
-            valid = False
-            for valid_part in VALID_PARTS:
-                if valid_part in list_of_parts:
-                    valid = True
-            if valid:
-                n_valid += 1
+    for p in parts:
+        if not VALID_PARTS.isdisjoint(p):
+            n_valid += 1
+
     if n_valid == 0:
         return
 
     global keys_dict
     global accepted_phrases
 
-    if len(accepted_phrases) == 0 or accepted_phrases[-1] != phrase:
-        accepted_phrases.append(phrase)
+    phrase_added = False
+    for (index, word) in enumerate(words):
+        initial_word = get_noun_initial_form(word)
+        if initial_word is None:
+            continue
 
-    keys_dict.setdefault(initial_word, []).append((len(accepted_phrases) - 1, index))
+        cognates_valid = False
+        for i, that_word in enumerate(words):
+            if i != index and are_cognates(word, that_word):
+                break
+        else:
+            cognates_valid = True
+        if not cognates_valid:
+            continue
+
+        if n_valid == 1 and not VALID_PARTS.isdisjoint(parts[index]):
+            continue
+
+        # everything is ok, we have an explanation of (initial_)word using our source
+
+        # if this phrase has not yet been added to the list of accepted phrases, do it.
+        if not phrase_added:
+            accepted_phrases.append(words)
+            phrase_added = True
+
+        # registering the pair (index of phrase, index of word) as a key that is enough for
+        # recovering the explanation
+        keys_dict.setdefault(initial_word, []).append((len(accepted_phrases) - 1, index))
 
 
 def init_base():
@@ -61,9 +77,8 @@ def init_base():
     """
     raw_data = open(PHRASEOLOGICAL_PATH)
     for line in raw_data:
-        phrase = line.rstrip('\n').split(' ')
-        for index in range(len(phrase)):
-            try_add(phrase, index)
+        phrase = line.strip()
+        try_add(phrase)
 
 
 keys_dict = dict()
