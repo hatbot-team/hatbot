@@ -1,8 +1,7 @@
 __author__ = 'Алексей'
 
 import os
-from lang_utils.morphology import get_initial_forms
-from lang_utils.morphology import get_parts_of_speech
+from lang_utils.morphology import get_initial_forms, get_parts_of_speech, morph
 from lang_utils.cognates import are_cognates
 
 COLLOCATIONS_PATH = \
@@ -10,12 +9,36 @@ COLLOCATIONS_PATH = \
 
 BANNED_PARTS = {'NPRO', 'PRED', 'PREP', 'CONJ', 'PRCL', 'INTJ'}
 
+
 def get_noun_initial_form(word):
     possible_forms = get_initial_forms(word, {'NOUN'})
     if len(possible_forms) == 0:
         return None
     else:
         return possible_forms[0]
+
+
+def normalized_explanation(words, main_index):
+    """
+    Returns normalized version of collocation pointed by the given key
+
+    :return: list of words in collocation in the form for explaining the word number key[1]
+    """
+    if main_index == 1:
+        try:
+            second = [p for p in morph.parse(words[1]) if p.tag.POS == 'NOUN'][0].normalized
+            first = morph.parse(words[0])[0]
+            first = first.inflect({second.tag.case,
+                                   second.tag.gender,
+                                   second.tag.number})
+            return [first.word, second.word]
+        except IndexError:
+            pass
+        except AttributeError:
+            pass
+
+    return words
+
 
 def try_add(words, skip_position):
     """
@@ -27,7 +50,7 @@ def try_add(words, skip_position):
     """
     global keys_dict
     global collocations_list
-    if skip_position == 0:
+    if len(collocations_list) == 0 or collocations_list[-1] != words:
         collocations_list.append(None)
 
     initial_word = words[skip_position]
@@ -44,8 +67,7 @@ def try_add(words, skip_position):
     if not BANNED_PARTS.isdisjoint(list_of_explanation_parts):
         return
 
-    if collocations_list[-1] is None:
-        collocations_list[-1] = words
+    collocations_list[-1] = normalized_explanation(words, skip_position)
     keys_dict.setdefault(initial_word, []).append((len(collocations_list) - 1, skip_position))
 
 
@@ -56,8 +78,10 @@ def init_base():
     raw_data = open(COLLOCATIONS_PATH)
     for line in raw_data:
         words = line.split()
+
         try_add(words[:2], 0)
         try_add(words[:2], 1)
+
 
 keys_dict = dict()
 collocations_list = []

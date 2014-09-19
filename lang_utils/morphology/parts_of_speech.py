@@ -26,6 +26,8 @@ def get_parts_of_speech(word):
     met = set()
     ret = []
     for p in morph.parse(word):
+        if p.score < .1:
+            continue
         pos = p.tag.POS
         if pos not in met:
             ret.append(pos)

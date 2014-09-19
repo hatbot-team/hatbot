@@ -18,9 +18,9 @@ class ExplanationSource:
 
         >>> from explanations.sources import CollocationsSource
         >>> CollocationsSource.explain('учёт')
-        [миграционного *пропуск*]
+        [миграционный *пропуск*]
         >>> CollocationsSource.explain('язык')
-        [русском *пропуск*]
+        [русский *пропуск*]
 
         :param word: russian word, in lowercase.
         :return: list of Explanation objects
