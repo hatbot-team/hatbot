@@ -2,8 +2,11 @@ __author__ = 'moskupols'
 
 import random
 from explanations.sources import CollocationsSource, PhraseologicalSource
+from explanations import Explanation
 
-words = set(CollocationsSource.explainable_words() + PhraseologicalSource.explainable_words())
+words = set(CollocationsSource.explainable_words())
+words.update(PhraseologicalSource.explainable_words())
+words_list = list(words)
 
 
 def get_explainable_words():
@@ -15,7 +18,11 @@ def get_explainable_words():
     return words
 
 
-def explain(word) -> str:
+def get_random_word():
+    return random.choice(words_list)
+
+
+def explain(word) -> Explanation:
     """
     Returns the best explanation of the given word.
 
