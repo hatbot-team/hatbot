@@ -30,6 +30,12 @@ class ExplanationSource:
         >>> AntonymSource.explain('диван')
         []
 
+        >>> from explanations.sources import SynonymSource
+        >>> SynonymSource.explain('богомолье')
+        [синоним к словам богослужение, священнодействие]
+        >>> SynonymSource.explain('адский')
+        []
+
         :param word: russian noun in the initial form, in lowercase.
         :return: list of Explanation objects
         """

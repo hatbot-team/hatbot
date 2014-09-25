@@ -1,13 +1,11 @@
-from explanations.sources.antonyms.antonyms import AntonymSource
-
 __author__ = 'moskupols'
 
 import random
-from explanations.sources import CollocationsSource, PhraseologicalSource
+from explanations.sources import CollocationsSource, PhraseologicalSource, AntonymSource, SynonymSource
 from explanations import Explanation
 
 
-SOURCES = [CollocationsSource, PhraseologicalSource, AntonymSource]
+SOURCES = [CollocationsSource, PhraseologicalSource, AntonymSource, SynonymSource]
 
 words = set()
 for s in SOURCES:
