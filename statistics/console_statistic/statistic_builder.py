@@ -9,11 +9,13 @@ __author__ = 'pershik'
 PICKLE_PROTOCOL = 3
 
 stat_name = os.path.dirname(os.path.abspath(__file__)) + "/statistic"
+bad_name = os.path.dirname(os.path.abspath(__file__)) + "/bad_expl"
 words = list(explanator.get_explainable_words())
 stat = dict()
+bad_expl = set()
 
 
-def init():
+def init_stat():
     try:
         stat_file = open(stat_name, "rb")
         while True:
@@ -29,7 +31,28 @@ def init():
         return
 
 
+def init_bad():
+    try:
+        bad_file = open(bad_name, "rb")
+        while True:
+            try:
+                expl = pickle.load(bad_file)
+            except:
+                bad_file.close()
+                return
+            bad_expl.add(expl)
+    except:
+        return
+
+
+def init():
+    init_stat()
+    init_bad()
+
+
 def update_stat(expl, res):
+    if result == "i":
+        bad_expl.add(expl)
     val = (0, 0)
     if expl in stat:
         val = stat[expl]
@@ -48,6 +71,18 @@ def save_stat():
     stat_file.close()
 
 
+def save_bad():
+    bad_file = open(bad_name, "wb")
+    for expl in bad_expl:
+        pickle.dump(expl, bad_file, PICKLE_PROTOCOL)
+    bad_file.close()
+
+
+def save():
+    save_stat()
+    save_bad()
+
+
 init()
 while True:
     print("Объяснение: ")
@@ -59,10 +94,10 @@ while True:
     input()
     print("Ответ: " + word)
 
-    print("Угадали? (y/n)")
+    print("Угадали? (y/n) \nЕсли объяснение некорректно, введите i")
     result = input()
-    while result != "y" and result != "n":
-        print("Некорректный ввод. Введите y/n")
+    while result != "y" and result != "n" and result != "i":
+        print("Некорректный ввод. Введите y/n/i")
         result = input()
     update_stat(explanation, result)
 
@@ -74,4 +109,4 @@ while True:
     if result == "n":
         print("Спасибо!")
         break
-save_stat()
+save()
