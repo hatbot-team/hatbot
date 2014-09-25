@@ -3,4 +3,5 @@ __author__ = 'moskupols'
 from .ExplanationServer import ExplanationServer
 import cherrypy
 
-cherrypy.quickstart(ExplanationServer())
+cherrypy.config.update("server/server.conf")
+cherrypy.quickstart(ExplanationServer(), '/')

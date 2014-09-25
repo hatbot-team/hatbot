@@ -22,5 +22,14 @@ class ExplanationServer:
         }}
 
     @cherrypy.expose
+    def explain_plain(self, word=None):
+        if word is None:
+            raise cherrypy.HTTPError(400)
+        e = explanator.explain(word)
+        if e is None:
+            raise cherrypy.HTTPError(400)
+        return repr(e)
+
+    @cherrypy.expose
     def random_word(self):
         return explanator.get_random_word()
