@@ -24,6 +24,3 @@ class ExplanationServer:
     @cherrypy.expose
     def random_word(self):
         return explanator.get_random_word()
-
-if __name__ == '__main__':
-    cherrypy.quickstart(ExplanationServer())

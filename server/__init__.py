@@ -1,3 +1,3 @@
 __author__ = 'moskupols'
 
-from . import server
+from . import ExplanationServer
