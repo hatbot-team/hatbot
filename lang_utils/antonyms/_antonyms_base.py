@@ -1,3 +1,5 @@
+import codecs
+
 __author__ = 'pershik'
 
 import os
@@ -9,7 +11,7 @@ ANTONYMS_PATH = \
 
 def init_antonyms():
     try:
-        antonyms_file = open(ANTONYMS_PATH)
+        antonyms_file = codecs.open(ANTONYMS_PATH, 'r', encoding='utf-8')
     except:
         stderr.write('Antonyms dictionary doesn\'t exist\n')
         return

@@ -1,3 +1,5 @@
+from sys import stderr
+
 __author__ = 'skird'
 
 import codecs
@@ -8,7 +10,11 @@ SYNONYMS_BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + "/" + BASE_FIL
 
 
 def init_base():
-    _database = codecs.open(SYNONYMS_BASE_PATH, 'r', encoding='cp1251')
+    try:
+        _database = codecs.open(SYNONYMS_BASE_PATH, 'r', encoding='cp1251')
+    except:
+        stderr.write('Synonyms dictionary doesn\'t exist\n')
+        return
     global _synonyms
     for line in _database:
         words = line.split()

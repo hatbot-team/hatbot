@@ -1,3 +1,6 @@
+import codecs
+from sys import stderr
+
 __author__ = 'Алексей'
 
 import os
@@ -76,7 +79,12 @@ def init_base():
     """
     Method uses parsed phraseological units file to create dict of explanations
     """
-    raw_data = open(PHRASEOLOGICAL_PATH)
+    try:
+        raw_data = codecs.open(PHRASEOLOGICAL_PATH, 'r', encoding='cp1251')
+    except:
+        stderr.write('Phraseological base doesn\'t exist\n')
+        return
+
     for line in raw_data:
         phrase = line.strip()
         try_add(phrase)

@@ -1,3 +1,6 @@
+import codecs
+from sys import stderr
+
 __author__ = 'Алексей'
 
 import os
@@ -75,7 +78,12 @@ def init_base():
     """
     Parses initial collocation file and adds pair to dict
     """
-    raw_data = open(COLLOCATIONS_PATH)
+    try:
+        raw_data = codecs.open(COLLOCATIONS_PATH, 'r', encoding='cp1251')
+    except:
+        stderr.write('Collocations base doesn\'t exist\n')
+        return
+
     for line in raw_data:
         words = line.split()
 
