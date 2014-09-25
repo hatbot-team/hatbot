@@ -6,7 +6,7 @@ from explanations.explanation import Explanation
 class ExplanationSource:
 
     @classmethod
-    def explain(cls, word)->list:
+    def explain(cls, word: str)->list:
         """
         Returns list of explanation.Explanation for the given word.
 
@@ -22,7 +22,15 @@ class ExplanationSource:
         >>> CollocationsSource.explain('язык')
         [русский *пропуск*]
 
-        :param word: russian word, in lowercase.
+        >>> from explanations.sources import AntonymSource
+        >>> AntonymSource.explain('свет')
+        [антоним к словам тьма, мрак, темнота, тень]
+        >>> AntonymSource.explain('альтруист')
+        [антоним к слову эгоист]
+        >>> AntonymSource.explain('диван')
+        []
+
+        :param word: russian noun in the initial form, in lowercase.
         :return: list of Explanation objects
         """
         return [Explanation(cls, key) for key in cls.keys_for(word)]
@@ -39,7 +47,7 @@ class ExplanationSource:
         return repr(key)
 
     @classmethod
-    def keys_for(cls, word):
+    def keys_for(cls, word: str):
         """
         This method is used by explain to initialize Explanations list. It should return a list of
         keys objects. Each of them has to be enough for represent_explanation to make the explanation text.

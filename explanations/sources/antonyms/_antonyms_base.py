@@ -1,4 +1,5 @@
 import codecs
+from lang_utils.morphology.parts_of_speech import get_parts_of_speech
 
 __author__ = 'pershik'
 
@@ -15,11 +16,14 @@ def init_antonyms():
     except:
         stderr.write('Antonyms dictionary doesn\'t exist\n')
         return
-    global antonyms
+    global keys_dict
     for line in antonyms_file:
         words = line.strip().split('-')
-        antonyms[words[0]] = words[1].split(',')
+        if 'NOUN' in get_parts_of_speech(words[0]):
+            keys_dict[words[0]] = len(antonym_lists)
+        antonym_lists.append(words[1].split(','))
 
 
-antonyms = dict()
+antonym_lists = []
+keys_dict = dict()
 init_antonyms()

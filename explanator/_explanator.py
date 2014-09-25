@@ -1,11 +1,17 @@
+from explanations.sources.antonyms.antonyms import AntonymSource
+
 __author__ = 'moskupols'
 
 import random
 from explanations.sources import CollocationsSource, PhraseologicalSource
 from explanations import Explanation
 
-words = set(CollocationsSource.explainable_words())
-words.update(PhraseologicalSource.explainable_words())
+
+SOURCES = [CollocationsSource, PhraseologicalSource, AntonymSource]
+
+words = set()
+for s in SOURCES:
+    words.update(s.explainable_words())
 words_list = list(words)
 
 
@@ -30,6 +36,6 @@ def explain(word) -> Explanation:
     :return: the explanation
     """
     if word in words:
-        return random.choice(CollocationsSource.explain(word) + PhraseologicalSource.explain(word))
+        return random.choice(sum(map(lambda s: s.explain(word), SOURCES), []))
     else:
         return None
