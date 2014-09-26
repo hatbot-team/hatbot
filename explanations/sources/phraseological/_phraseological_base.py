@@ -86,7 +86,7 @@ def init_base():
         return
 
     for line in raw_data:
-        phrase = line.strip()
+        phrase = line.lower().strip()
         try_add(phrase)
 
 
