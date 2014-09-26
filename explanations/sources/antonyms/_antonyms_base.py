@@ -1,4 +1,5 @@
 import codecs
+from lang_utils.cognates.cognates import are_cognates
 from lang_utils.morphology.parts_of_speech import get_parts_of_speech
 
 __author__ = 'pershik'
@@ -21,7 +22,7 @@ def init_antonyms():
         words = line.strip().split('-')
         if 'NOUN' in get_parts_of_speech(words[0]):
             keys_dict[words[0]] = len(antonym_lists)
-        antonym_lists.append(words[1].split(','))
+        antonym_lists.append([w for w in words[1].split(',') if not are_cognates(words[0], w)])
 
 
 antonym_lists = []

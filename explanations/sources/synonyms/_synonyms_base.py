@@ -1,4 +1,5 @@
 from sys import stderr
+from lang_utils.cognates.cognates import are_cognates
 from lang_utils.morphology.parts_of_speech import get_parts_of_speech
 
 __author__ = 'skird'
@@ -19,7 +20,7 @@ def init_base():
     global _synonyms, _nouns
     for line in _database:
         words = line.split()
-        _synonyms[words[0]] = words[1:]
+        _synonyms[words[0]] = [w for w in words[1:] if not are_cognates(words[0], w)]
         if 'NOUN' in get_parts_of_speech(words[0]):
             _nouns.add(words[0])
 
