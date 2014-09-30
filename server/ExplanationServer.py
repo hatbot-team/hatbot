@@ -15,11 +15,15 @@ class ExplanationServer:
         e = explanator.explain(word)
         if e is None:
             raise cherrypy.HTTPError(400)
-        return {'explanation': {
-            'id_protocol': 'pickle' + str(PICKLE_PROTOCOL) + '+int-little',
-            'id': int.from_bytes(pickle.dumps(e, PICKLE_PROTOCOL), 'little'),
-            'text': repr(e)
-        }}
+        return {
+            'explanation': {
+                'id': {
+                    'protocol': 'pickle' + str(PICKLE_PROTOCOL) + '+int-little',
+                    'code': int.from_bytes(pickle.dumps(e, PICKLE_PROTOCOL), 'little'),
+                },
+                'text': repr(e)
+            }
+        }
 
     @cherrypy.expose
     def explain_plain(self, word=None):
