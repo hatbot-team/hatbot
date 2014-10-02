@@ -5,18 +5,6 @@ import json
 
 
 class Explanation:
-    class JsonEncoder(json.JSONEncoder):
-        def default(self, o):
-            if isinstance(o, Explanation):
-                return {'__type__': 'Explanation',
-                        'source': o.source_name,
-                        'key': o.key}
-            return json.JSONEncoder.default(self, o)
-    @staticmethod
-    def json_decode_hook(dct):
-        if dct.get('__type__', "").endswith('Explanation'):
-            return Explanation(dct['source'], dct['key'])
-        return dct
 
     def __init__(self, source, key):
         if not source in sources_registry.sources_registered() and\
@@ -34,9 +22,28 @@ class Explanation:
     def __str__(self):
         return self.text
 
-    def json_serializable(self):
-        return self.JsonEncoder().default(self)
+    def __eq__(self, other):
+        return isinstance(other, Explanation) and self.source_name == other.source_name
+
+    def __hash__(self):
+        return hash((self.source_name, self.key))
 
     @property
     def text(self)->str:
         return sources_registry.source_for_name(self.source_name).text_for_key(self.key)
+
+    class JsonEncoder(json.JSONEncoder):
+        def default(self, o):
+            if isinstance(o, Explanation):
+                return {'__type__': 'Explanation',
+                        'source': o.source_name,
+                        'key': o.key}
+            return json.JSONEncoder.default(self, o)
+    @staticmethod
+    def json_decode_hook(dct):
+        if dct.get('__type__', "").endswith('Explanation'):
+            return Explanation(dct['source'], dct['key'])
+        return dct
+
+    def json_serializable(self):
+        return self.JsonEncoder().default(self)
