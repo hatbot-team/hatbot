@@ -11,7 +11,7 @@ except SystemError:
 class SynonymSource(ExplanationSource):
     # noinspection PyProtectedMember
     @classmethod
-    def keys_for(cls, word: str):
+    def keys_for_word(cls, word: str):
         return [word] if word in _synonyms_base._nouns else []
 
     # noinspection PyProtectedMember
@@ -24,7 +24,7 @@ class SynonymSource(ExplanationSource):
 
     # noinspection PyProtectedMember
     @classmethod
-    def represent_explanation(cls, key):
+    def text_for_key(cls, key):
         s = _synonyms_base._synonyms[key]
         if len(s) == 1:
             return 'синоним к слову ' + s[0]

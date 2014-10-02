@@ -1,11 +1,10 @@
 __author__ = 'moskupols'
 
 import random
-from explanations.sources import CollocationsSource, PhraseologicalSource, AntonymSource, SynonymSource
-from explanations import Explanation
+from explanations import Explanation, sources_registry
 
 
-SOURCES = [CollocationsSource, PhraseologicalSource, AntonymSource, SynonymSource]
+SOURCES = sources_registry.sources_registered()
 
 words = set()
 for s in SOURCES:

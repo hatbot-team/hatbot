@@ -6,6 +6,7 @@ __author__ = 'pershik'
 STAT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistic"
 BLACK_PATH = os.path.dirname(os.path.abspath(__file__)) + "/bad_expl"
 
+
 def show_statistics():
     stat = Statistics(STAT_PATH)
     for explanation, (cnt_all, cnt_win) in stat.entries():

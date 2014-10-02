@@ -32,5 +32,5 @@ class GapExplanationSource(ExplanationSource):
         return ' *пропуск* '
 
     @classmethod
-    def represent_explanation(cls, key):
+    def text_for_key(cls, key):
         return (cls.gap_prefix(key) + cls.gap_placeholder() + cls.gap_suffix(key)).strip()

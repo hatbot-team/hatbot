@@ -11,15 +11,15 @@ from explanations.sources.GapExplanationSource import GapExplanationSource
 class PhraseologicalSource(GapExplanationSource):
 
     @classmethod
-    def keys_for(cls, word):
+    def keys_for_word(cls, word):
         """
         Returns keys enough to recover the explanation text
         :param word: word to explain
         :return: list of explanation keys
         Example:
-        >>> PhraseologicalSource.keys_for('голод')
+        >>> PhraseologicalSource.keys_for_word_word('голод')
         [(228, 0)]
-        >>> PhraseologicalSource.keys_for('полка')
+        >>> PhraseologicalSource.keys_for_word_word('полка')
         [(472, 3), (835, 3)]
         """
         if word in _phraseological_base.keys_dict.keys():

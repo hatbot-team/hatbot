@@ -20,12 +20,12 @@ class AntonymSource(ExplanationSource):
         return _antonyms_base.keys_dict.keys()
 
     @classmethod
-    def keys_for(cls, word):
+    def keys_for_word(cls, word):
         i = _antonyms_base.keys_dict.get(word)
         return [] if i is None else [i]
 
     @classmethod
-    def represent_explanation(cls, key):
+    def text_for_key(cls, key):
         antonyms = _antonyms_base.antonym_lists[key]
         if len(antonyms) == 1:
             return 'антоним к слову ' + antonyms[0]

@@ -10,15 +10,15 @@ from explanations.sources.GapExplanationSource import GapExplanationSource
 class CollocationsSource(GapExplanationSource):
 
     @classmethod
-    def keys_for(cls, word):
+    def keys_for_word(cls, word):
         """
         Explains meaning of word with the help of collocation base.
         :param word: initial word to explain
         :return: List of explanations
         Example:
-        >>> CollocationsSource.keys_for('учёт')
+        >>> CollocationsSource.keys_for_word_word('учёт')
         [(50, 1)]
-        >>> CollocationsSource.keys_for('язык')
+        >>> CollocationsSource.keys_for_word_word('язык')
         [(74, 1)]
         """
         if word in _collocations_base.keys_dict:
