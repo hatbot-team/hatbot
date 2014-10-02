@@ -31,6 +31,7 @@ class SynonymSource(ExplanationSource):
         return 'синоним к словам ' + ', '.join(s)
 
     # noinspection PyProtectedMember
+    @staticmethod
     def get_synonyms(word):
         """
         Get synonyms list for the given word

@@ -1,6 +1,6 @@
 __author__ = 'moskupols'
 
-__all__ = ['Statistics', 'BlackList']
+__all__ = ['Statistics', 'BlackList', 'console_statistic']
 
-from .statistics import Statistics, BlackList
+from .statistics import *
 from . import console_statistic

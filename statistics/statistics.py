@@ -2,6 +2,7 @@ import os
 import json
 from explanations import Explanation
 
+
 class Statistics:
     DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistics"
 
@@ -43,6 +44,7 @@ class Statistics:
 
     def entries(self):
         return self._stat.items()
+
 
 class BlackList:
     DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/blacklist"

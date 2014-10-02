@@ -1,4 +1,3 @@
-import os
 from statistics.statistics import Statistics, BlackList
 
 __author__ = 'pershik'
