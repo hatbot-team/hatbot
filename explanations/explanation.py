@@ -31,7 +31,7 @@ class Explanation:
        "key": "\u043f\u0440\u043e\u0431\u0441\u0442",
        "source": "SynonymSource"
     }
-    >>> json.loads(e_dumped, object_hook=Explanation.json_decode_hook)
+    >>> json.loads(e_dumped, object_hook=Explanation.decode_json)
     Explanation(source="SynonymSource", key=пробст)
     >>> e2 = sources_registry.source_for_name('PhraseologicalSource').explain('час')[0]
     >>> json.dumps([e, e2], sort_keys=True)
@@ -55,7 +55,7 @@ class Explanation:
       "source": "PhraseologicalSource"
      }
     ]
-    >>> print(json.loads(pair_dumped, object_hook=Explanation.json_decode_hook))
+    >>> print(json.loads(pair_dumped, object_hook=Explanation.decode_json))
     [Explanation(source="SynonymSource", key=пробст), Explanation(source="PhraseologicalSource", key=[40, 1])]
 
     It also supports hashing and equality check (iff key supports it).
@@ -101,7 +101,14 @@ class Explanation:
         return Explanation.JsonEncoder().default(self)
 
     @staticmethod
-    def json_decode_hook(dct):
+    def decode_json(dct):
+        """
+        Tries to convert the given dict to an Explanation, checking that it was
+        previously generated for using with JSON.
+
+        :param dct: the dict
+        :return: Explanation if success, dct otherwise
+        """
         if dct.get('__type__', "").endswith('Explanation'):
             return Explanation(dct['source'], dct['key'])
         return dct

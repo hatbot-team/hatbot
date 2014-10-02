@@ -18,7 +18,7 @@ class Statistics:
 
     def load(self, path):
         with open(self._path, "r") as stat_file:
-            self._stat = dict(json.load(stat_file, object_hook=Explanation.json_decode_hook))
+            self._stat = dict(json.load(stat_file, object_hook=Explanation.decode_json))
 
     def update(self, explanation, result):
         if result not in {'SUCCESS', 'FAIL'}:
@@ -61,7 +61,7 @@ class BlackList:
 
     def load(self, path):
         with open(path, 'r') as black_file:
-            self._blacklist = dict(json.load(black_file, object_hook=Explanation.json_decode_hook))
+            self._blacklist = dict(json.load(black_file, object_hook=Explanation.decode_json))
 
     def blame(self, explanation):
         self._blacklist.setdefault(explanation, 0)
