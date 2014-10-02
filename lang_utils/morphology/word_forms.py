@@ -51,8 +51,8 @@ def get_initial_forms(form, part_filter=None):
     met = set()
     ret = []
     for p in morph.parse(form):
-        if p.score < .1:
-            continue
+        # if p.score < .1:
+        #     continue
         if part_filter is None or p.tag.POS in part_filter:
             norm = p.normal_form
             if norm not in met:

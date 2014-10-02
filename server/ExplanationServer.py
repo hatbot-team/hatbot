@@ -2,7 +2,7 @@ __author__ = 'moskupols'
 
 import cherrypy
 import explanator
-import pickle
+from explanations import Explanation
 
 PICKLE_PROTOCOL = 3
 
@@ -22,11 +22,8 @@ class ExplanationServer:
             raise cherrypy.HTTPError(400)
         return {
             'explanation': {
-                'id': {
-                    'protocol': 'pickle' + str(PICKLE_PROTOCOL) + '+int-little',
-                    'code': int.from_bytes(pickle.dumps(e, PICKLE_PROTOCOL), 'little'),
-                },
-                'text': repr(e)
+                'id': e.json_serializable(),
+                'text': e.text
             }
         }
 
@@ -37,7 +34,7 @@ class ExplanationServer:
         e = explanator.explain(word)
         if e is None:
             raise cherrypy.HTTPError(400)
-        return repr(e)
+        return e.text
 
     @cherrypy.expose
     def random_word(self):

@@ -3,18 +3,15 @@ from statistics.statistics import Statistics, BlackList
 
 __author__ = 'pershik'
 
-STAT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistic"
-BLACK_PATH = os.path.dirname(os.path.abspath(__file__)) + "/bad_expl"
-
 
 def show_statistics():
-    stat = Statistics(STAT_PATH)
+    stat = Statistics()
     for explanation, (cnt_all, cnt_win) in stat.entries():
         print(explanation, cnt_all, cnt_win)
 
 
 def show_blacklist():
-    blacklist = BlackList(BLACK_PATH)
+    blacklist = BlackList()
     for explanation, cnt in blacklist.entries():
         print(explanation, cnt)
 

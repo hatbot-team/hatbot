@@ -1,13 +1,11 @@
 import os
-import pickle
-
-PICKLE_PROTOCOL = 3
-DEFAULT_STATISTICS_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistics"
-DEFAULT_BLACKLIST_PATH = os.path.dirname(os.path.abspath(__file__)) + "/blacklist"
+import json
+from explanations import Explanation
 
 class Statistics:
-    def __init__(self,
-                 stat_path=DEFAULT_STATISTICS_PATH):
+    DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistics"
+
+    def __init__(self, stat_path=DEFAULT_PATH):
         self._path = stat_path
         self._stat = dict()
 
@@ -18,17 +16,8 @@ class Statistics:
                 pass
 
     def load(self, path):
-        stat_file = open(self._path, "rb")
-        self._stat.clear()
-        while True:
-            try:
-                explanation = pickle.load(stat_file)
-            except EOFError:
-                stat_file.close()
-                return
-            cnt_all = pickle.load(stat_file)
-            cnt_win = pickle.load(stat_file)
-            self._stat[explanation] = (cnt_all, cnt_win)
+        with open(self._path, "r") as stat_file:
+            self._stat = dict(json.load(stat_file, object_hook=Explanation.json_decode_hook))
 
     def update(self, explanation, result):
         if result not in {'SUCCESS', 'FAIL'}:
@@ -46,18 +35,19 @@ class Statistics:
         if path is None:
             raise AttributeError("Don't know where to save statistics")
 
-        stat_file = open(path, "wb")
-        for expl, (cnt_all, cnt_win) in self._stat.items():
-            pickle.dump(expl, stat_file, PICKLE_PROTOCOL)
-            pickle.dump(cnt_all, stat_file, PICKLE_PROTOCOL)
-            pickle.dump(cnt_win, stat_file, PICKLE_PROTOCOL)
-        stat_file.close()
+        with open(path, "w") as stat_file:
+            json.dump(list(self._stat.items()),
+                      stat_file,
+                      cls=Explanation.JsonEncoder,
+                      indent='\t')
 
     def entries(self):
         return self._stat.items()
 
 class BlackList:
-    def __init__(self, path=DEFAULT_BLACKLIST_PATH):
+    DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/blacklist"
+
+    def __init__(self, path=DEFAULT_PATH):
         self._path = path
         self._blacklist = dict()
 
@@ -68,16 +58,8 @@ class BlackList:
                 pass
 
     def load(self, path):
-        blacklist_file = open(path, 'rb')
-        self._blacklist.clear()
-        while True:
-            try:
-                explanation = pickle.load(blacklist_file)
-            except EOFError:
-                blacklist_file.close()
-                return
-            cnt = pickle.load(blacklist_file)
-            self._blacklist[explanation] = cnt
+        with open(path, 'r') as black_file:
+            self._blacklist = dict(json.load(black_file, object_hook=Explanation.json_decode_hook))
 
     def blame(self, explanation):
         self._blacklist.setdefault(explanation, 0)
@@ -89,11 +71,11 @@ class BlackList:
         if path is None:
             raise AttributeError("Don't know where to save black list")
 
-        black_file = open(path, "wb")
-        for expl, cnt in self._blacklist.items():
-            pickle.dump(expl, black_file, PICKLE_PROTOCOL)
-            pickle.dump(cnt, black_file, PICKLE_PROTOCOL)
-        black_file.close()
+        with open(path, "w") as black_file:
+            json.dump(list(self._blacklist.items()),
+                      black_file,
+                      cls=Explanation.JsonEncoder,
+                      indent='\t')
 
     def entries(self):
         return self._blacklist.items()

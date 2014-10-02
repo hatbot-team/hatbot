@@ -4,13 +4,10 @@ from statistics.statistics import Statistics, BlackList
 
 __author__ = 'pershik'
 
-STAT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistic"
-BLACK_PATH = os.path.dirname(os.path.abspath(__file__)) + "/bad_expl"
-
 
 def interact():
-    stat = Statistics(STAT_PATH)
-    black = BlackList(BLACK_PATH)
+    stat = Statistics()
+    black = BlackList()
 
     while True:
         print("Объяснение: ")
