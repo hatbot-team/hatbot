@@ -21,7 +21,7 @@ class Explanation:
     >>> e
     Explanation(source="CollocationsSource", key=(25, 1))
 
-    ... and JSON serializing and de-serializing:
+    ... and JSON serializing and de-serializing (notice that JSON version does not include text):
     >>> import json
     >>> e = sources_registry.source_for_name('SynonymSource').explain('пробст')[0]
     >>> e_dumped = json.dumps(e.json_serializable(), sort_keys=True, indent='\t')
