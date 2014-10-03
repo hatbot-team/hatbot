@@ -2,9 +2,7 @@ __author__ = 'moskupols'
 
 import cherrypy
 import explanator
-from explanations import Explanation
 
-PICKLE_PROTOCOL = 3
 
 class ExplanationServer:
 
