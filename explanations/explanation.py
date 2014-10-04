@@ -86,16 +86,3 @@ Explanation(source="PhraseologicalSource", key=(40, 1))]
     @property
     def text(self)->str:
         return sources_registry.source_for_name(self.source_name).text_for_key(self.key)
-
-    def _json_serializable(self):
-        return {
-            '__type__': 'Explanation',
-            'source': self.source_name,
-            'key': self.key
-        }
-
-    @staticmethod
-    def _decode_json(dct):
-        if dct.get('__type__', '') == 'Explanation':
-            return Explanation(dct['source'], dct['key'])
-        return dct
