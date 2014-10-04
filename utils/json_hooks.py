@@ -14,7 +14,7 @@ from explanations import Explanation
 """
 
 
-def _serializable(data):
+def serializable(data):
     """ Borrowed from http://robotfantastic.org/serializing-python-data-to-json-some-edge-cases.html
     """
     def is_namedtuple(obj):
@@ -29,25 +29,25 @@ def _serializable(data):
     if isinstance(data, Explanation):
         return {'py/Explanation': {
             'source': data.source_name,
-            'key': _serializable(data.key)
+            'key': serializable(data.key)
         }}
     if isinstance(data, list):
-        return [_serializable(val) for val in data]
+        return [serializable(val) for val in data]
     if is_namedtuple(data):
         return {'py/namedtuple': {
             "name":   type(data).__name__,
             "fields": list(data._fields),
-            "values": [_serializable(getattr(data, f)) for f in data._fields]
+            "values": [serializable(getattr(data, f)) for f in data._fields]
         }}
     if isinstance(data, dict):
         if all(isinstance(k, str) for k in data):
-            return {k: _serializable(v) for k, v in data.items()}
+            return {k: serializable(v) for k, v in data.items()}
         return {'py/dict':
-            [[_serializable(k), _serializable(v)] for k, v in data.items()]
+            [[serializable(k), serializable(v)] for k, v in data.items()]
         }
     if isinstance(data, tuple):
-        return {"py/tuple": [_serializable(val) for val in data]}
-    raise TypeError("Type %s not data-_serializable" % type(data))
+        return {"py/tuple": [serializable(val) for val in data]}
+    raise TypeError("Type %s not data-serializable" % type(data))
 
 
 def _object_decode_hook(dct):
@@ -82,8 +82,12 @@ def loads(s, **kwargs):
 
 
 def dump(o, fp, **kwargs):
-    return json.dump(_serializable(o), fp, **kwargs)
+    return json.dump(serializable(o), fp, **kwargs)
 
 
 def dumps(o, **kwargs):
-    return json.dumps(_serializable(o), **kwargs)
+    return json.dumps(serializable(o), **kwargs)
+
+
+def unwrap(json_data):
+    return loads(json.dumps(json_data))

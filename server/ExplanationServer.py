@@ -21,10 +21,8 @@ class ExplanationServer:
         if e is None:
             raise cherrypy.HTTPError(400)
         return {
-            'explanation': {
-                'id': json_hooks.json_serializable(e),
-                'text': e.text
-            }
+            'id': json_hooks.serializable(e),
+            'text': e.text
         }
 
     @cherrypy.expose

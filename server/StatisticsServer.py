@@ -1,4 +1,4 @@
-from utils import json_hooks
+from utils import json_hooks as json
 
 __author__ = 'moskupols'
 
@@ -20,7 +20,7 @@ class StatisticsServer:
         info = cherrypy.request.json
 
         result = info['result']
-        explanation = json_hooks.decode_json(info['id'])
+        explanation = json.unwrap(info['id'])
 
         if result == 'BLAME':
             self.blacklist.blame(explanation)
