@@ -11,7 +11,6 @@ class Explanation:
      from this very source. The source has to be registered in sources_registry.
 
     Probably the most important usages are obtaining the explanation text...
-    >>> from utils import json_hooks as json
     >>> e = sources_registry.source_for_name('CollocationsSource').explain('суд')[0]
     >>> e.text
     'конституционный *пропуск*'
@@ -21,6 +20,7 @@ class Explanation:
     Explanation(source="CollocationsSource", key=(25, 1))
 
     ... and JSON serializing and de-serializing (notice that JSON version does not include text):
+    >>> from utils import json_hooks as json
     >>> e = sources_registry.source_for_name('SynonymSource').explain('пробст')[0]
     >>> e_dumped = json.dumps(e, sort_keys=True, indent='  ')
     >>> print(e_dumped)
