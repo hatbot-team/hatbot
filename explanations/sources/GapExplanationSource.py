@@ -5,7 +5,7 @@ from .ExplanationSource import ExplanationSource
 class GapExplanationSource(ExplanationSource):
 
     @classmethod
-    def gap_prefix(cls, key):
+    def before_gap(cls, key):
         """
         Should return the part of explanation before the gap.
 
@@ -15,7 +15,7 @@ class GapExplanationSource(ExplanationSource):
         raise NotImplementedError
 
     @classmethod
-    def gap_suffix(cls, key):
+    def after_gap(cls, key):
         """
         Should return the part of explanation after the gap.
 
@@ -33,4 +33,4 @@ class GapExplanationSource(ExplanationSource):
 
     @classmethod
     def text_for_key(cls, key):
-        return (cls.gap_prefix(key) + cls.gap_placeholder() + cls.gap_suffix(key)).strip()
+        return (cls.before_gap(key) + cls.gap_placeholder() + cls.after_gap(key)).strip()

@@ -1,4 +1,4 @@
-from explanations.explanation import Explanation
+from utils import json_hooks
 
 __author__ = 'moskupols'
 
@@ -20,7 +20,7 @@ class StatisticsServer:
         info = cherrypy.request.json
 
         result = info['result']
-        explanation = Explanation.decode_json(info['id'])
+        explanation = json_hooks.decode_json(info['id'])
 
         if result == 'BLAME':
             self.blacklist.blame(explanation)

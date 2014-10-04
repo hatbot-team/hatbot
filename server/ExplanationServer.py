@@ -1,3 +1,5 @@
+from utils import json_hooks
+
 __author__ = 'moskupols'
 
 import cherrypy
@@ -20,7 +22,7 @@ class ExplanationServer:
             raise cherrypy.HTTPError(400)
         return {
             'explanation': {
-                'id': e.json_serializable(),
+                'id': json_hooks.json_serializable(e),
                 'text': e.text
             }
         }

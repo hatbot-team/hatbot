@@ -1,10 +1,9 @@
 import os
-import json
-from explanations import Explanation
+from utils import json_hooks as json
 
 
 class Statistics:
-    DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistics"
+    DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistics.json"
 
     def __init__(self, stat_path=DEFAULT_PATH):
         self._path = stat_path
@@ -18,7 +17,7 @@ class Statistics:
 
     def load(self, path):
         with open(self._path, "r") as stat_file:
-            self._stat = dict(json.load(stat_file, object_hook=Explanation.decode_json))
+            self._stat = json.load(stat_file)
 
     def update(self, explanation, result):
         if result not in {'SUCCESS', 'FAIL'}:
@@ -37,17 +36,14 @@ class Statistics:
             raise AttributeError("Don't know where to save statistics")
 
         with open(path, "w") as stat_file:
-            json.dump(list(self._stat.items()),
-                      stat_file,
-                      cls=Explanation.JsonEncoder,
-                      indent='\t')
+            json.dump(self._stat, stat_file, indent='\t')
 
     def entries(self):
         return self._stat.items()
 
 
 class BlackList:
-    DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/blacklist"
+    DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/blacklist.json"
 
     def __init__(self, path=DEFAULT_PATH):
         self._path = path
@@ -61,7 +57,7 @@ class BlackList:
 
     def load(self, path):
         with open(path, 'r') as black_file:
-            self._blacklist = dict(json.load(black_file, object_hook=Explanation.decode_json))
+            self._blacklist = json.load(black_file)
 
     def blame(self, explanation):
         self._blacklist.setdefault(explanation, 0)
@@ -74,10 +70,7 @@ class BlackList:
             raise AttributeError("Don't know where to save black list")
 
         with open(path, "w") as black_file:
-            json.dump(list(self._blacklist.items()),
-                      black_file,
-                      cls=Explanation.JsonEncoder,
-                      indent='\t')
+            json.dump(self._blacklist, black_file, indent='\t')
 
     def entries(self):
         return self._blacklist.items()

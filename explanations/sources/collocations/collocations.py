@@ -16,9 +16,9 @@ class CollocationsSource(GapExplanationSource):
         :param word: initial word to explain
         :return: List of explanations
         Example:
-        >>> CollocationsSource.keys_for_word_word('учёт')
+        >>> CollocationsSource.keys_for_word('учёт')
         [(50, 1)]
-        >>> CollocationsSource.keys_for_word_word('язык')
+        >>> CollocationsSource.keys_for_word('язык')
         [(74, 1)]
         """
         if word in _collocations_base.keys_dict:
@@ -27,13 +27,13 @@ class CollocationsSource(GapExplanationSource):
             return []
 
     @classmethod
-    def gap_prefix(cls, key):
+    def before_gap(cls, key):
         if key[1] == 0:
             return ''
         return _collocations_base.collocations_list[key[0]][0]
 
     @classmethod
-    def gap_suffix(cls, key):
+    def after_gap(cls, key):
         if key[1] == 1:
             return ''
         return _collocations_base.collocations_list[key[0]][1]
