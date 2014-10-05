@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 
-def run_server(_):
+def run_server(args):
     from server import run
-    run()
+    run(args.config)
 
 
 def play(_):
@@ -23,12 +23,14 @@ ACTIONS = {
 }
 
 
-def main(argv):
-    if len(argv) < 2 or argv[1] not in ACTIONS:
-        print('usage: {} {}'.format(argv[0], '|'.join(list(ACTIONS.keys()))))
-        return
-    ACTIONS.get(argv[1])(argv)
-
 if __name__ == '__main__':
-    import sys
-    main(sys.argv)
+    import argparse
+    parser = argparse.ArgumentParser(description='Hatbot utilities')
+    parser.add_argument('action',
+                        choices=sorted(ACTIONS.keys()),
+                        help='The action to be taken')
+    parser.add_argument('--config',
+                        help='path to the server config file')
+    args = parser.parse_args()
+    if args.action is not None:
+        ACTIONS.get(args.action)(args)
