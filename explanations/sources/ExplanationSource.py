@@ -3,45 +3,51 @@ __author__ = 'moskupols'
 
 class ExplanationSource:
 
-    @classmethod
-    def explain(cls, word: str)->list:
+    def __init__(self, name: str):
+        self._name = name
+
+    def explain(self, word: str)->list:
         """
         Returns list of explanation.Explanation for the given word.
 
-        >>> from explanations.sources import PhraseologicalSource
-        >>> list(map(str, PhraseologicalSource.explain('голод')))
+        >>> from explanations import sources_registry
+        >>> s = sources_registry.source_for_name('PhraseologicalSource')
+        >>> list(map(str, s.explain('голод')))
         ['*пропуск* не тетка']
-        >>> list(map(str, PhraseologicalSource.explain('полка')))
+        >>> list(map(str, s.explain('полка')))
         ['класть зубы на *пропуск*', 'положить зубы на *пропуск*']
 
-        >>> from explanations.sources import CollocationsSource
-        >>> list(map(str, CollocationsSource.explain('учёт')))
+        >>> s = sources_registry.source_for_name('CollocationsSource')
+        >>> list(map(str, s.explain('учёт')))
         ['миграционный *пропуск*']
-        >>> list(map(str, CollocationsSource.explain('язык')))
+        >>> list(map(str, s.explain('язык')))
         ['русский *пропуск*']
 
-        >>> from explanations.sources import AntonymSource
-        >>> list(map(str, AntonymSource.explain('свет')))
+        >>> s = sources_registry.source_for_name('AntonymSource')
+        >>> list(map(str, s.explain('свет')))
         ['антоним к словам тьма, мрак, темнота, тень']
-        >>> list(map(str, AntonymSource.explain('альтруист')))
+        >>> list(map(str, s.explain('альтруист')))
         ['антоним к слову эгоист']
-        >>> list(map(str, AntonymSource.explain('диван')))
+        >>> list(map(str, s.explain('диван')))
         []
 
-        >>> from explanations.sources import SynonymSource
-        >>> list(map(str, SynonymSource.explain('богомолье')))
+        >>> s = sources_registry.source_for_name('SynonymSource')
+        >>> list(map(str, s.explain('богомолье')))
         ['синоним к словам богослужение, священнодействие']
-        >>> list(map(str, SynonymSource.explain('адский')))
+        >>> list(map(str, s.explain('адский')))
         []
 
         :param word: russian noun in the initial form, in lowercase.
         :return: list of Explanation objects
         """
         from explanations.explanation import Explanation
-        return [Explanation(cls, key) for key in cls.keys_for_word(word)]
+        return [Explanation(self, key) for key in self.keys_for_word(word)]
 
-    @classmethod
-    def text_for_key(cls, key):
+    @property
+    def name(self)->str:
+        return self._name
+
+    def text_for_key(self, key):
         """
         This method is used by explanation.Explanation to represent its information stored in key.
         If not overridden, returns repr(key).
@@ -51,8 +57,7 @@ class ExplanationSource:
         """
         return repr(key)
 
-    @classmethod
-    def keys_for_word(cls, word: str):
+    def keys_for_word(self, word: str):
         """
         This method is used by explain to initialize Explanations list. It should return a list of
         keys objects. Each of them has to be enough for text_for_key to make the explanation text.
@@ -62,8 +67,7 @@ class ExplanationSource:
         """
         raise NotImplementedError
 
-    @classmethod
-    def explainable_words(cls):
+    def explainable_words(self):
         """
         Generates all words explainable using this source. Should be overridden by successors.
         :return: Iterable of explainable words

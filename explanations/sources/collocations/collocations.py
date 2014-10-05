@@ -1,13 +1,14 @@
 __author__ = 'Алексей'
 
-try:
-    from . import _collocations_base
-except SystemError:
-    import _collocations_base
-
 from explanations.sources.GapExplanationSource import GapExplanationSource
+from explanations.sources.collocations import _collocations_base
+from explanations import sources_registry
+
 
 class CollocationsSource(GapExplanationSource):
+
+    def __init__(self):
+        super().__init__('CollocationsSource')
 
     @classmethod
     def keys_for_word(cls, word):
@@ -45,3 +46,5 @@ class CollocationsSource(GapExplanationSource):
         :return: Set with all explainable with collocation words
         """
         return _collocations_base.keys_dict.keys()
+
+sources_registry.register_source(CollocationsSource())

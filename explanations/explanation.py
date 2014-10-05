@@ -66,7 +66,7 @@ Explanation(source="PhraseologicalSource", key=(40, 1))]
            not source in sources_registry.names_registered():
             raise KeyError("Unknown source {}, register it with sources_registry".format(source))
         if not isinstance(source, str):
-            source = sources_registry.name_for_source(source)
+            source = source.name
 
         self.source_name = source
         self.key = key

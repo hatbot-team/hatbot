@@ -3,9 +3,13 @@ __author__ = 'Алексей'
 from explanations.sources.phraseological._phraseological_base \
     import keys_dict, phrases_list
 from explanations.sources.GapExplanationSource import GapExplanationSource
+from explanations import sources_registry
 
 
 class PhraseologicalSource(GapExplanationSource):
+
+    def __init__(self):
+        super().__init__('PhraseologicalSource')
 
     @classmethod
     def keys_for_word(cls, word):
@@ -35,3 +39,5 @@ class PhraseologicalSource(GapExplanationSource):
     @classmethod
     def explainable_words(cls):
         return keys_dict.keys()
+
+sources_registry.register_source(PhraseologicalSource())

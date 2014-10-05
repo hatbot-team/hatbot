@@ -4,8 +4,7 @@ from .ExplanationSource import ExplanationSource
 
 class GapExplanationSource(ExplanationSource):
 
-    @classmethod
-    def before_gap(cls, key):
+    def before_gap(self, key):
         """
         Should return the part of explanation before the gap.
 
@@ -14,8 +13,7 @@ class GapExplanationSource(ExplanationSource):
         """
         raise NotImplementedError
 
-    @classmethod
-    def after_gap(cls, key):
+    def after_gap(self, key):
         """
         Should return the part of explanation after the gap.
 
@@ -24,13 +22,11 @@ class GapExplanationSource(ExplanationSource):
         """
         raise NotImplementedError
 
-    @classmethod
-    def gap_placeholder(cls):
+    def gap_placeholder(self):
         """
         :return: placeholder of the gap word.
         """
         return ' *пропуск* '
 
-    @classmethod
-    def text_for_key(cls, key):
-        return (cls.before_gap(key) + cls.gap_placeholder() + cls.after_gap(key)).strip()
+    def text_for_key(self, key):
+        return (self.before_gap(key) + self.gap_placeholder() + self.after_gap(key)).strip()

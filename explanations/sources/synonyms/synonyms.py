@@ -1,14 +1,16 @@
-from explanations.sources import ExplanationSource
+from explanations.sources_registry import register_source
 
 __author__ = 'skird'
 
-try:
-    from . import _synonyms_base
-except SystemError:
-    import _synonyms_base
+from explanations.sources.synonyms import _synonyms_base
+from explanations.sources import ExplanationSource
 
 
 class SynonymSource(ExplanationSource):
+
+    def __init__(self):
+        super().__init__('SynonymSource')
+
     # noinspection PyProtectedMember
     @classmethod
     def keys_for_word(cls, word: str):
@@ -52,3 +54,5 @@ class SynonymSource(ExplanationSource):
             return list(s)
         else:
             return []
+
+register_source(SynonymSource())

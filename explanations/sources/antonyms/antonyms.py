@@ -1,16 +1,15 @@
 # coding:utf8
-import itertools
 from explanations.sources import ExplanationSource
+from explanations.sources_registry import register_source
 
 __author__ = 'pershik'
 
-try:
-    from . import _antonyms_base
-except SystemError:
-    import _antonyms_base
-
+from explanations.sources.antonyms import _antonyms_base
 
 class AntonymSource(ExplanationSource):
+
+    def __init__(self):
+        super().__init__('AntonymSource')
 
     @classmethod
     def explainable_words(cls):
@@ -51,3 +50,5 @@ class AntonymSource(ExplanationSource):
             return _antonyms_base.antonym_lists[i][:]
         else:
             return []
+
+register_source(AntonymSource())
