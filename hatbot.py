@@ -16,24 +16,26 @@ def stats(_):
     show_all()
 
 
-ACTIONS = {
-    'server': run_server,
-    'play': play,
-    'stats': stats
-}
-
-
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description='Hatbot utilities')
-    parser.add_argument('action',
-                        choices=sorted(ACTIONS.keys()),
-                        help='''The action to be taken.
-                        Note that server restarts automatically every time some source file is changed.
-                        Even more, at 93.175.... it is checked every 10m and restarted if found not running.
-                        ''')
-    parser.add_argument('--config',
+    parser = argparse.ArgumentParser(
+        description='''Hatbot utilities. See hatbot.py utility -h for info on utility params.''')
+    subparsers = parser.add_subparsers()
+
+    server_parser = subparsers.add_parser('server',
+        help='''Run server.
+             Note that the server restarts automatically every time some source file is changed.
+             Even more, at 93.175.... it is checked every 10m and restarted if found not running.
+        ''')
+    server_parser.add_argument('--config',
                         help='path to the server config file')
+    server_parser.set_defaults(func=run_server)
+
+    play_parser = subparsers.add_parser('play', help='run statistics gathering utility')
+    play_parser.set_defaults(func=play)
+
+    stats_parser = subparsers.add_parser('stats', help='output statistics')
+    stats_parser.set_defaults(func=stats)
+
     args = parser.parse_args()
-    if args.action is not None:
-        ACTIONS.get(args.action)(args)
+    args.func(args)
