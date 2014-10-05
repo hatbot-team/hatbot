@@ -19,7 +19,7 @@ class Statistics:
                 pass
 
     def load(self, path):
-        with open(self._path, "r") as stat_file:
+        with open(path, "r") as stat_file:
             self._stat = json.load(stat_file)
         self._autosave_counter = 0
 
@@ -46,7 +46,7 @@ class Statistics:
             raise AttributeError("Don't know where to save statistics")
 
         with open(path, "w") as stat_file:
-            json.dump(self._stat, stat_file, indent='\t')
+            json.dump(self._stat, stat_file, separators=(',', ':'))
         self._autosave_counter = 0
 
     def entries(self):
@@ -90,7 +90,7 @@ class BlackList:
             raise AttributeError("Don't know where to save black list")
 
         with open(path, "w") as black_file:
-            json.dump(self._blacklist, black_file, indent='\t')
+            json.dump(self._blacklist, black_file, separators=(',', ':'))
         self._autosave_counter = 0
 
     def entries(self):
