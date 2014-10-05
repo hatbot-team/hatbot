@@ -28,7 +28,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hatbot utilities')
     parser.add_argument('action',
                         choices=sorted(ACTIONS.keys()),
-                        help='The action to be taken')
+                        help='''The action to be taken.
+                        Note that server restarts automatically every time some source file is changed.
+                        Even more, at 93.175.... it is checked every 10m and restarted if found not running.
+                        ''')
     parser.add_argument('--config',
                         help='path to the server config file')
     args = parser.parse_args()
