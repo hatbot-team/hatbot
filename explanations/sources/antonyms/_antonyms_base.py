@@ -1,7 +1,6 @@
 import codecs
 
 from lang_utils.cognates.cognates import are_cognates
-from lang_utils.morphology.parts_of_speech import get_parts_of_speech
 from lang_utils.morphology.word_forms import get_noun_initial_form
 
 
@@ -17,17 +16,19 @@ ANTONYMS_PATH = \
 def init_antonyms():
     try:
         antonyms_file = codecs.open(ANTONYMS_PATH, 'r', encoding='utf-8')
-    except:
+    except FileNotFoundError:
         stderr.write('Antonyms dictionary doesn\'t exist\n')
         return
     global keys_dict
     for line in antonyms_file:
         words = line.strip().split('-')
-        if 'NOUN' in get_parts_of_speech(words[0]):
-            words[0] = get_noun_initial_form(words[0])
-            keys_dict[words[0]] = len(antonym_lists)
-        antonym_lists.append([w for w in words[1].split(',') if not are_cognates(words[0], w)])
-        initial_word.append(words[0])
+        antonym_lists.append(words[1].split())
+        noun = get_noun_initial_form(words[0])
+        if noun is not None:
+            words[0] = noun
+            keys_dict[noun] = len(antonym_lists) - 1
+            antonym_lists[-1] = list(filter(lambda w: not are_cognates(noun, w), antonym_lists[-1]))
+        initial_word.append(noun)
 
 
 initial_word = []
