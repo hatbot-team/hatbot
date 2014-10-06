@@ -22,8 +22,11 @@ def init_base():
     for line in _database:
         words = line.split()
         _synonyms[words[0]] = [w for w in words[1:] if not are_cognates(words[0], w)]
-        if 'NOUN' in get_parts_of_speech(words[0]):
-            _nouns.add(words[0])
+        if len(_synonyms[words[0]]) == 0:
+            _synonyms.pop(words[0])
+        else:
+            if 'NOUN' in get_parts_of_speech(words[0]):
+                _nouns.add(words[0])
 
 _synonyms = dict()
 _nouns = set()
