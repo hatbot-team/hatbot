@@ -1,7 +1,7 @@
 import codecs
 from sys import stderr
 
-from lang_utils.morphology.word_forms import get_noun_initial_form
+from lang_utils.morphology.word_forms import get_valid_noun_initial_form
 
 
 __author__ = 'Алексей'
@@ -42,7 +42,7 @@ def try_add(phrase):
         return
 
     for (index, word) in enumerate(words):
-        initial_word = get_noun_initial_form(word)
+        initial_word = get_valid_noun_initial_form(word)
         if initial_word is None:
             continue
 

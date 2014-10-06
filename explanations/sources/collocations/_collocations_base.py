@@ -1,7 +1,7 @@
 import codecs
 from sys import stderr
 
-from lang_utils.morphology.word_forms import get_noun_initial_form
+from lang_utils.morphology.word_forms import get_valid_noun_initial_form
 
 
 __author__ = 'Алексей'
@@ -54,7 +54,7 @@ def try_add(words, skip_position):
     initial_word = words[skip_position]
     explanation_word = words[1-skip_position]
 
-    initial_word = get_noun_initial_form(initial_word)
+    initial_word = get_valid_noun_initial_form(initial_word)
     if initial_word is None:
         return
     if are_cognates(initial_word, explanation_word):

@@ -1,4 +1,4 @@
-from lang_utils.morphology import get_noun_initial_form
+from lang_utils.morphology import get_valid_noun_initial_form
 from explanations.sources.GapExplanationSource import GapExplanationSource
 from explanations.sources.collocations._collocations_base import \
     collocations_list, keys_dict
@@ -33,7 +33,7 @@ class CollocationsSource(GapExplanationSource):
 
     @classmethod
     def word_for_key(cls, key):
-        return get_noun_initial_form(collocations_list[key[0]][key[1]])
+        return get_valid_noun_initial_form(collocations_list[key[0]][key[1]])
 
     @classmethod
     def before_gap(cls, key):

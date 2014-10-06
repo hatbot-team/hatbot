@@ -1,7 +1,7 @@
 import codecs
 
 from lang_utils.cognates.cognates import are_cognates
-from lang_utils.morphology.word_forms import get_noun_initial_form
+from lang_utils.morphology.word_forms import get_valid_noun_initial_form
 
 
 __author__ = 'pershik'
@@ -22,13 +22,17 @@ def init_antonyms():
     global keys_dict
     for line in antonyms_file:
         words = line.strip().split('-')
-        antonym_lists.append(words[1].split())
-        noun = get_noun_initial_form(words[0])
-        if noun is not None:
-            words[0] = noun
-            keys_dict[noun] = len(antonym_lists) - 1
-            antonym_lists[-1] = list(filter(lambda w: not are_cognates(noun, w), antonym_lists[-1]))
-        initial_word.append(noun)
+
+        new_initial = get_valid_noun_initial_form(words[0])
+        if new_initial is not None:
+            new_list = [w for w in words[1].split(',') if not are_cognates(new_initial, w)]
+            if len(new_list) != 0:
+                keys_dict[new_initial] = len(antonym_lists)
+                antonym_lists.append(new_list)
+                initial_word.append(new_initial)
+        else:
+            antonym_lists.append(None)
+            initial_word.append(None)
 
 
 initial_word = []

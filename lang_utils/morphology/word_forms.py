@@ -1,3 +1,5 @@
+from pymorphy2.analyzer import Parse
+
 __author__ = 'moskupols'
 
 from lang_utils.morphology import morph
@@ -57,9 +59,16 @@ def get_initial_forms(form, part_filter=None):
     return ret
 
 
-def get_noun_initial_form(word):
-    possible_forms = get_initial_forms(word, {'NOUN'})
+def _is_valid_noun(parsed: Parse):
+    # add surname and all, see http://opencorpora.org/dict.php?act=gram
+    # even Init!
+    tag = parsed.tag
+    return tag.POS == 'NOUN' and 'Name' not in str(tag)  # Dirty but so cool!
+
+
+def get_valid_noun_initial_form(word):
+    possible_forms = [p for p in morph.parse(word) if _is_valid_noun(p)]
     if len(possible_forms) == 0:
         return None
     else:
-        return possible_forms[0]
+        return possible_forms[0].normal_form

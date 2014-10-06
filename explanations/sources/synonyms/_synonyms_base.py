@@ -3,7 +3,7 @@ import os
 from sys import stderr
 
 from lang_utils.cognates.cognates import are_cognates
-from lang_utils.morphology.parts_of_speech import get_parts_of_speech
+from lang_utils.morphology.word_forms import get_valid_noun_initial_form
 
 
 __author__ = 'skird'
@@ -18,17 +18,25 @@ def init_base():
     except FileNotFoundError:
         stderr.write('Synonyms dictionary doesn\'t exist\n')
         return
-    global _synonyms, _nouns
+    global synonyms, initial_words
     for line in _database:
         words = line.split()
-        _synonyms[words[0]] = [w for w in words[1:] if not are_cognates(words[0], w)]
-        if len(_synonyms[words[0]]) == 0:
-            _synonyms.pop(words[0])
-        else:
-            if 'NOUN' in get_parts_of_speech(words[0]):
-                _nouns.add(words[0])
 
-_synonyms = dict()
-_nouns = set()
+        new_initial = get_valid_noun_initial_form(words[0])
+        if new_initial is not None:
+            new_list = [w for w in words[1:] if not are_cognates(words[0], w)]
+            if len(new_list) == 0:
+                new_list = None
+        else:
+            new_list = None
+
+        synonyms.append(new_list)
+        initial_words.append(new_initial)
+        if new_initial is not None:
+            noun_id[new_initial] = len(initial_words) - 1
+
+noun_id = dict()
+synonyms = []
+initial_words = []
 
 init_base()

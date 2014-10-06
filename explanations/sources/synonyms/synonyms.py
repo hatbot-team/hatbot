@@ -1,5 +1,6 @@
 # noinspection PyProtectedMember
-from explanations.sources.synonyms import _synonyms_base
+from explanations.sources.synonyms._synonyms_base import \
+    initial_words, synonyms, noun_id
 from explanations.sources_registry import register_source
 from explanations.sources import ExplanationSource
 
@@ -13,50 +14,25 @@ class SynonymSource(ExplanationSource):
 
     @classmethod
     def word_for_key(cls, key) -> str:
-        return key
+        return initial_words[key]
 
-    # noinspection PyProtectedMember
     @classmethod
     def keys_for_word(cls, word: str):
-        return [word] if word in _synonyms_base._nouns else []
+        k = noun_id.get(word, None)
+        return [k] if k is not None else []
 
-    # noinspection PyProtectedMember
     @classmethod
     def explainable_words(cls):
         """
         :return: iterable containing all russian words which have at least one synonym
         """
-        return _synonyms_base._nouns
+        return initial_words
 
-    # noinspection PyProtectedMember
     @classmethod
     def text_for_key(cls, key):
-        s = _synonyms_base._synonyms[key]
+        s = synonyms[key]
         if len(s) == 1:
             return 'синоним к слову ' + s[0]
         return 'синоним к словам ' + ', '.join(s)
-
-    # noinspection PyProtectedMember
-    @staticmethod
-    def get_synonyms(word):
-        """
-        Get synonyms list for the given word
-        :param word - russian word in the initial form
-        :return - list of all its synonyms
-
-        Use case:
-
-        >>> from explanations.sources import SynonymSource
-        >>> SynonymSource.get_synonyms('богомолье')
-        ['богослужение', 'священнодействие']
-        >>> SynonymSource.get_synonyms('адский')
-        ['невыносимый', 'каторжный', 'дьявольский', 'сатанинский', 'анафемский', 'инфернальный']
-
-        """
-        s = _synonyms_base._synonyms.get(word)
-        if s is not None:
-            return list(s)
-        else:
-            return []
 
 register_source(SynonymSource())

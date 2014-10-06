@@ -1,4 +1,4 @@
-from lang_utils.morphology.word_forms import get_noun_initial_form
+from lang_utils.morphology.word_forms import get_valid_noun_initial_form
 
 __author__ = 'Алексей'
 
@@ -33,7 +33,7 @@ class PhraseologicalSource(GapExplanationSource):
 
     @classmethod
     def word_for_key(cls, key):
-        return get_noun_initial_form(phrases_list[key[0]][key[1]])
+        return get_valid_noun_initial_form(phrases_list[key[0]][key[1]])
 
     @classmethod
     def before_gap(cls, key):
