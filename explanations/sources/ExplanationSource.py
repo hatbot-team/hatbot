@@ -47,6 +47,9 @@ class ExplanationSource:
     def name(self)->str:
         return self._name
 
+    def word_for_key(self, key)->str:
+        raise NotImplementedError
+
     def text_for_key(self, key):
         """
         This method is used by explanation.Explanation to represent its information stored in key.
@@ -57,7 +60,7 @@ class ExplanationSource:
         """
         return repr(key)
 
-    def keys_for_word(self, word: str):
+    def keys_for_word(self, word: str)->list:
         """
         This method is used by explain to initialize Explanations list. It should return a list of
         keys objects. Each of them has to be enough for text_for_key to make the explanation text.

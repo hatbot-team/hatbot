@@ -1,3 +1,5 @@
+from lang_utils.morphology.word_forms import get_noun_initial_form
+
 __author__ = 'Алексей'
 
 from explanations.sources.phraseological._phraseological_base \
@@ -18,15 +20,20 @@ class PhraseologicalSource(GapExplanationSource):
         :param word: word to explain
         :return: list of explanation keys
         Example:
-        >>> PhraseologicalSource.keys_for_word('голод')
+        >>> p = sources_registry.source_for_name('PhraseologicalSource')
+        >>> p.keys_for_word('голод')
         [(228, 0)]
-        >>> PhraseologicalSource.keys_for_word('полка')
+        >>> p.keys_for_word('полка')
         [(472, 3), (835, 3)]
         """
         if word in keys_dict.keys():
             return [k for k in keys_dict[word]]
         else:
             return []
+
+    @classmethod
+    def word_for_key(cls, key):
+        return get_noun_initial_form(phrases_list[key[0]][key[1]])
 
     @classmethod
     def before_gap(cls, key):

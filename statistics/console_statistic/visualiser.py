@@ -6,13 +6,13 @@ __author__ = 'pershik'
 def show_statistics():
     stat = Statistics()
     for explanation, (cnt_all, cnt_win) in stat.entries():
-        print(explanation, cnt_all, cnt_win)
+        print(cnt_all, cnt_win, explanation.word(), ':=', explanation, '---', repr(explanation))
 
 
 def show_blacklist():
     blacklist = BlackList()
     for explanation, cnt in blacklist.entries():
-        print(explanation, cnt)
+        print(cnt, explanation.word(), ':=', explanation, '---', repr(explanation))
 
 
 def show_all():

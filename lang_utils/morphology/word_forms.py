@@ -1,10 +1,6 @@
 __author__ = 'moskupols'
 
-try:
-    from .morph import morph
-except SystemError:
-    from morph import morph
-
+from lang_utils.morphology import morph
 
 # def get_forms(initial):
 #     """
@@ -59,3 +55,11 @@ def get_initial_forms(form, part_filter=None):
                 ret.append(norm)
                 met.add(norm)
     return ret
+
+
+def get_noun_initial_form(word):
+    possible_forms = get_initial_forms(word, {'NOUN'})
+    if len(possible_forms) == 0:
+        return None
+    else:
+        return possible_forms[0]

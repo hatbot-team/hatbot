@@ -1,9 +1,6 @@
 __author__ = 'moskupols'
 
-try:
-    from .morph import morph
-except SystemError:
-    from morph import morph
+from lang_utils.morphology import morph
 
 
 def get_parts_of_speech(word):

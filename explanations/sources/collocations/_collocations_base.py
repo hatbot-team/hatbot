@@ -1,24 +1,19 @@
 import codecs
 from sys import stderr
 
+from lang_utils.morphology.word_forms import get_noun_initial_form
+
+
 __author__ = 'Алексей'
 
 import os
-from lang_utils.morphology import get_initial_forms, get_parts_of_speech, morph
+from lang_utils.morphology import get_parts_of_speech, morph
 from lang_utils.cognates import are_cognates
 
 COLLOCATIONS_PATH = \
     os.path.dirname(os.path.abspath(__file__)) + '/collocations.txt'
 
 BANNED_PARTS = {'NPRO', 'PRED', 'PREP', 'CONJ', 'PRCL', 'INTJ'}
-
-
-def get_noun_initial_form(word):
-    possible_forms = get_initial_forms(word, {'NOUN'})
-    if len(possible_forms) == 0:
-        return None
-    else:
-        return possible_forms[0]
 
 
 def normalized_explanation(words, main_index):

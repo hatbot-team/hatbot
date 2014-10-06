@@ -1,8 +1,11 @@
-__author__ = 'Алексей'
-
+from lang_utils.morphology import get_noun_initial_form
 from explanations.sources.GapExplanationSource import GapExplanationSource
-from explanations.sources.collocations import _collocations_base
+from explanations.sources.collocations._collocations_base import \
+    collocations_list, keys_dict
 from explanations import sources_registry
+
+
+__author__ = 'Алексей'
 
 
 class CollocationsSource(GapExplanationSource):
@@ -17,27 +20,32 @@ class CollocationsSource(GapExplanationSource):
         :param word: initial word to explain
         :return: List of explanations
         Example:
-        >>> CollocationsSource.keys_for_word('учёт')
+        >>> c = sources_registry.source_for_name('CollocationsSource')
+        >>> c.keys_for_word('учёт')
         [(50, 1)]
-        >>> CollocationsSource.keys_for_word('язык')
+        >>> c.keys_for_word('язык')
         [(74, 1)]
         """
-        if word in _collocations_base.keys_dict:
-            return list(_collocations_base.keys_dict[word])
+        if word in keys_dict:
+            return list(keys_dict[word])
         else:
             return []
+
+    @classmethod
+    def word_for_key(cls, key):
+        return get_noun_initial_form(collocations_list[key[0]][key[1]])
 
     @classmethod
     def before_gap(cls, key):
         if key[1] == 0:
             return ''
-        return _collocations_base.collocations_list[key[0]][0]
+        return collocations_list[key[0]][0]
 
     @classmethod
     def after_gap(cls, key):
         if key[1] == 1:
             return ''
-        return _collocations_base.collocations_list[key[0]][1]
+        return collocations_list[key[0]][1]
 
     @classmethod
     def explainable_words(cls):
@@ -45,6 +53,6 @@ class CollocationsSource(GapExplanationSource):
         Gives all explainable words
         :return: Set with all explainable with collocation words
         """
-        return _collocations_base.keys_dict.keys()
+        return keys_dict.keys()
 
 sources_registry.register_source(CollocationsSource())

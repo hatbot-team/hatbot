@@ -1,10 +1,12 @@
 import codecs
 from sys import stderr
 
+from lang_utils.morphology.word_forms import get_noun_initial_form
+
+
 __author__ = 'Алексей'
 
 import os
-from lang_utils.morphology import get_initial_forms
 from lang_utils.morphology import get_parts_of_speech
 from lang_utils.cognates import are_cognates
 
@@ -14,13 +16,6 @@ PHRASEOLOGICAL_PATH = \
 VALID_PARTS = {'NOUN', 'ADJF', 'ADJS', 'COMP', 'VERB',
                'INFN', 'PRTF', 'PRTS', 'GRND', 'NUMR', 'ADVB', 'NPRO'}
 
-
-def get_noun_initial_form(word):
-    possible_forms = get_initial_forms(word, {'NOUN'})
-    if len(possible_forms) == 0:
-        return None
-    else:
-        return possible_forms[0]
 
 def try_add(phrase):
     """
@@ -81,7 +76,7 @@ def init_base():
     """
     try:
         raw_data = codecs.open(PHRASEOLOGICAL_PATH, 'r', encoding='cp1251')
-    except:
+    except FileNotFoundError:
         stderr.write('Phraseological base doesn\'t exist\n')
         return
 

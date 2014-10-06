@@ -4,7 +4,9 @@ from explanations.sources_registry import register_source
 
 __author__ = 'pershik'
 
-from explanations.sources.antonyms import _antonyms_base
+from explanations.sources.antonyms._antonyms_base import \
+    keys_dict, antonym_lists, initial_word
+
 
 class AntonymSource(ExplanationSource):
 
@@ -16,22 +18,26 @@ class AntonymSource(ExplanationSource):
         """
         :return: iterable containing all russian nouns which have at least one antonym
         """
-        return _antonyms_base.keys_dict.keys()
+        return keys_dict.keys()
 
     @classmethod
     def keys_for_word(cls, word):
-        i = _antonyms_base.keys_dict.get(word)
+        i = keys_dict.get(word)
         return [] if i is None else [i]
 
     @classmethod
+    def word_for_key(cls, key):
+        return initial_word[key]
+
+    @classmethod
     def text_for_key(cls, key):
-        antonyms = _antonyms_base.antonym_lists[key]
+        antonyms = antonym_lists[key]
         if len(antonyms) == 1:
             return 'антоним к слову ' + antonyms[0]
         return 'антоним к словам ' + ', '.join(antonyms)
 
-    @classmethod
-    def get_antonyms(cls, word: str)->list:
+    @staticmethod
+    def get_antonyms(word: str)->list:
 
         """
         Get antonyms list for the given word.
@@ -45,9 +51,9 @@ class AntonymSource(ExplanationSource):
         :param word: russian word in the initial form, in lowercase
         :return: list of all its antonyms
         """
-        i = _antonyms_base.keys_dict.get(word)
+        i = keys_dict.get(word)
         if i is not None:
-            return _antonyms_base.antonym_lists[i][:]
+            return antonym_lists[i][:]
         else:
             return []
 

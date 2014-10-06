@@ -1,6 +1,9 @@
 import codecs
+
 from lang_utils.cognates.cognates import are_cognates
 from lang_utils.morphology.parts_of_speech import get_parts_of_speech
+from lang_utils.morphology.word_forms import get_noun_initial_form
+
 
 __author__ = 'pershik'
 
@@ -21,10 +24,13 @@ def init_antonyms():
     for line in antonyms_file:
         words = line.strip().split('-')
         if 'NOUN' in get_parts_of_speech(words[0]):
+            words[0] = get_noun_initial_form(words[0])
             keys_dict[words[0]] = len(antonym_lists)
         antonym_lists.append([w for w in words[1].split(',') if not are_cognates(words[0], w)])
+        initial_word.append(words[0])
 
 
+initial_word = []
 antonym_lists = []
 keys_dict = dict()
 init_antonyms()

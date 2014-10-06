@@ -1,6 +1,7 @@
 __author__ = 'moskupols'
 
-from explanations import sources_registry
+from explanations.sources_registry import \
+    source_for_name, sources_registered, names_registered
 
 
 class Explanation:
@@ -11,7 +12,7 @@ class Explanation:
      from this very source. The source has to be registered in sources_registry.
 
     Probably the most important usages are obtaining the explanation text...
-    >>> e = sources_registry.source_for_name('CollocationsSource').explain('суд')[0]
+    >>> e = source_for_name('CollocationsSource').explain('суд')[0]
     >>> e.text
     'конституционный *пропуск*'
     >>> str(e)
@@ -21,7 +22,7 @@ class Explanation:
 
     ... and JSON serializing and de-serializing (notice that JSON version does not include text):
     >>> from utils import json_hooks as json
-    >>> e = sources_registry.source_for_name('SynonymSource').explain('пробст')[0]
+    >>> e = source_for_name('SynonymSource').explain('пробст')[0]
     >>> e_dumped = json.dumps(e, sort_keys=True, indent='  ')
     >>> print(e_dumped)
     {
@@ -32,7 +33,7 @@ class Explanation:
     }
     >>> json.loads(e_dumped)
     Explanation(source="SynonymSource", key=пробст)
-    >>> e2 = sources_registry.source_for_name('PhraseologicalSource').explain('час')[0]
+    >>> e2 = source_for_name('PhraseologicalSource').explain('час')[0]
     >>> pair_dumped = json.dumps([e, e2], sort_keys=True, indent='  ')
     >>> print(pair_dumped)
     [
@@ -62,8 +63,8 @@ Explanation(source="PhraseologicalSource", key=(40, 1))]
     """
 
     def __init__(self, source, key):
-        if not source in sources_registry.sources_registered() and\
-           not source in sources_registry.names_registered():
+        if not source in sources_registered() and \
+                not source in names_registered():
             raise KeyError("Unknown source {}, register it with sources_registry".format(source))
         if not isinstance(source, str):
             source = source.name
@@ -78,11 +79,16 @@ Explanation(source="PhraseologicalSource", key=(40, 1))]
         return self.text
 
     def __eq__(self, other):
-        return isinstance(other, Explanation) and self.source_name == other.source_name
+        return isinstance(other, Explanation) \
+            and self.source_name == other.source_name \
+            and self.key == other.key
 
     def __hash__(self):
         return hash((self.source_name, self.key))
 
     @property
-    def text(self)->str:
-        return sources_registry.source_for_name(self.source_name).text_for_key(self.key)
+    def text(self) -> str:
+        return source_for_name(self.source_name).text_for_key(self.key)
+
+    def word(self) -> str:
+        return source_for_name(self.source_name).word_for_key(self.key)

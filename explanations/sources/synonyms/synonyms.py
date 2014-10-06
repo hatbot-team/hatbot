@@ -1,15 +1,19 @@
+# noinspection PyProtectedMember
+from explanations.sources.synonyms import _synonyms_base
 from explanations.sources_registry import register_source
+from explanations.sources import ExplanationSource
 
 __author__ = 'skird'
-
-from explanations.sources.synonyms import _synonyms_base
-from explanations.sources import ExplanationSource
 
 
 class SynonymSource(ExplanationSource):
 
     def __init__(self):
         super().__init__('SynonymSource')
+
+    @classmethod
+    def word_for_key(cls, key) -> str:
+        return key
 
     # noinspection PyProtectedMember
     @classmethod
