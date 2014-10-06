@@ -47,6 +47,14 @@ class ExplanationSource:
     def name(self)->str:
         return self._name
 
+    def produces_key(self, key):
+        has = True
+        try:
+            self.word_for_key(key)
+        except:
+            has = False
+        return has
+
     def word_for_key(self, key)->str:
         raise NotImplementedError
 

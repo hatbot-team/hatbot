@@ -6,7 +6,10 @@ _source_for_name = dict()
 
 
 def source_for_name(name)->ExplanationSource:
-    return _source_for_name[name]
+    ret = _source_for_name.get(name, None)
+    if ret is None:
+        raise KeyError("Unknown source {}".format(name))
+    return ret
 
 
 def sources_registered():

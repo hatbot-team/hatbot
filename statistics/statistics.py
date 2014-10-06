@@ -5,6 +5,8 @@ from utils import json_hooks as json
 
 class Statistics:
     DEFAULT_PATH = os.path.dirname(os.path.abspath(__file__)) + "/statistics.json"
+    SUCCESS_RESULT = 'SUCCESS'
+    FAIL_RESULT = 'FAIL'
 
     def __init__(self, stat_path=DEFAULT_PATH, autosave_rate=10):
         self._path = stat_path
@@ -24,12 +26,12 @@ class Statistics:
         self._autosave_counter = 0
 
     def update(self, explanation, result):
-        if result not in {'SUCCESS', 'FAIL'}:
+        if result not in {self.SUCCESS_RESULT, self.FAIL_RESULT}:
             raise AttributeError('explanation result should be either "SUCCESS" or "FAIL"')
 
         cnt_all, cnt_win = self._stat.get(explanation, (0, 0))
         cnt_all += 1
-        if result == 'SUCCESS':
+        if result == self.SUCCESS_RESULT:
             cnt_win += 1
         self._stat[explanation] = (cnt_all, cnt_win)
 

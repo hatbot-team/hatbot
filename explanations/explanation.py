@@ -1,7 +1,7 @@
 __author__ = 'moskupols'
 
 from explanations.sources_registry import \
-    source_for_name, sources_registered, names_registered
+    source_for_name
 
 
 class Explanation:
@@ -62,31 +62,34 @@ class Explanation:
     """
 
     def __init__(self, source, key):
-        if not source in sources_registered() and \
-                not source in names_registered():
-            raise KeyError("Unknown source {}, register it with sources_registry".format(source))
-        if not isinstance(source, str):
-            source = source.name
+        if isinstance(source, str):
+            source = source_for_name(source)
+        if not source.produces_key(key):
+            raise KeyError("Source {} doesn't produce key {}".format(source.name, repr(key)))
 
-        self.source_name = source
+        self.source = source
         self.key = key
 
     def __repr__(self):
-        return 'Explanation(source="{}", key={})'.format(self.source_name, repr(self.key))
+        return 'Explanation(source="{}", key={})'.format(self.source.name, repr(self.key))
 
     def __str__(self):
         return self.text()
 
     def __eq__(self, other):
         return isinstance(other, Explanation) \
-            and self.source_name == other.source_name \
+            and self.source.name == other.source_name \
             and self.key == other.key
 
     def __hash__(self):
-        return hash((self.source_name, self.key))
+        return hash((self.source.name, self.key))
+
+    @property
+    def source_name(self):
+        return self.source.name
 
     def text(self) -> str:
-        return source_for_name(self.source_name).text_for_key(self.key)
+        return self.source.text_for_key(self.key)
 
     def word(self) -> str:
-        return source_for_name(self.source_name).word_for_key(self.key)
+        return self.source.word_for_key(self.key)
