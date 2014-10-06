@@ -47,10 +47,10 @@ class ExplanationSource:
     def name(self)->str:
         return self._name
 
-    def produces_key(self, key):
+    def produces_key(self, key)->bool:
         has = True
         try:
-            self.word_for_key(key)
+            self.text_for_key(key)
         except:
             has = False
         return has
@@ -58,7 +58,7 @@ class ExplanationSource:
     def word_for_key(self, key)->str:
         raise NotImplementedError
 
-    def text_for_key(self, key):
+    def text_for_key(self, key)->str:
         """
         This method is used by explanation.Explanation to represent its information stored in key.
         If not overridden, returns repr(key).
