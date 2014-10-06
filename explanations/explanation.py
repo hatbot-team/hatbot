@@ -56,8 +56,7 @@ class Explanation:
       }
     ]
     >>> print(json.loads(pair_dumped))
-    [Explanation(source="SynonymSource", key=пробст), \
-Explanation(source="PhraseologicalSource", key=(40, 1))]
+    [Explanation(source="SynonymSource", key=пробст), Explanation(source="PhraseologicalSource", key=(40, 1))]
 
     It also supports hashing and equality check (iff key supports it).
     """
@@ -73,10 +72,10 @@ Explanation(source="PhraseologicalSource", key=(40, 1))]
         self.key = key
 
     def __repr__(self):
-        return 'Explanation(source="{}", key={})'.format(self.source_name, self.key)
+        return 'Explanation(source="{}", key={})'.format(self.source_name, repr(self.key))
 
     def __str__(self):
-        return self.text
+        return self.text()
 
     def __eq__(self, other):
         return isinstance(other, Explanation) \
@@ -86,7 +85,6 @@ Explanation(source="PhraseologicalSource", key=(40, 1))]
     def __hash__(self):
         return hash((self.source_name, self.key))
 
-    @property
     def text(self) -> str:
         return source_for_name(self.source_name).text_for_key(self.key)
 

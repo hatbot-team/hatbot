@@ -22,7 +22,7 @@ class ExplanationServer:
             raise cherrypy.HTTPError(400)
         return {
             'id': json_hooks.serializable(e),
-            'text': e.text
+            'text': e.text()
         }
 
     @cherrypy.expose
@@ -32,7 +32,7 @@ class ExplanationServer:
         e = explanator.explain(word)
         if e is None:
             raise cherrypy.HTTPError(400)
-        return e.text
+        return e.text()
 
     @cherrypy.expose
     def random_word(self):
