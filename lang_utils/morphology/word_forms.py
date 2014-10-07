@@ -21,7 +21,7 @@ from lang_utils.morphology import morph
 #         ans.extend(p.inflect(...))
 
 
-def get_initial_forms(form, part_filter=None):
+def get_initial_forms(form: str, part_filter=None)->list:
     """
     Gets all possible initial forms (there are several of them sometimes) of a given word.
     Optional argument part_filter allows to prune unnecessary ambiguity with part of speech.
@@ -59,14 +59,14 @@ def get_initial_forms(form, part_filter=None):
     return ret
 
 
-def _is_valid_noun(parsed: Parse):
-    # add surname and all, see http://opencorpora.org/dict.php?act=gram
+def _is_valid_noun(parsed: Parse)->bool:
+    # TODO: add surname and all, see http://opencorpora.org/dict.php?act=gram
     # even Init!
     tag = parsed.tag
     return tag.POS == 'NOUN' and 'Name' not in str(tag)  # Dirty but so cool!
 
 
-def get_valid_noun_initial_form(word):
+def get_valid_noun_initial_form(word: str)->str:
     possible_forms = [p for p in morph.parse(word) if _is_valid_noun(p)]
     if len(possible_forms) == 0:
         return None
