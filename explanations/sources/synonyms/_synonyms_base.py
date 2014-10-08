@@ -24,7 +24,7 @@ def init_base():
 
         new_initial = get_valid_noun_initial_form(words[0])
         if new_initial is not None:
-            new_list = [w for w in words[1].split(',') if not are_cognates(new_initial, w)]
+            new_list = [w for w in words[1::] if not are_cognates(new_initial, w)]
             if len(new_list) != 0:
                 noun_id[new_initial] = len(synonyms)
                 synonyms.append(new_list)
