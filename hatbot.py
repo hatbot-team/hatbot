@@ -24,7 +24,6 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
         description='''Hatbot utilities. See hatbot.py utility -h for info on utility params.''')
-    parser.set_defaults(func=None)
     subparsers = parser.add_subparsers()
 
     server_parser = subparsers.add_parser('server',
@@ -45,8 +44,8 @@ if __name__ == '__main__':
     stats_parser.set_defaults(func=stats)
 
     args = parser.parse_args()
-    if args.func is None:
-        parser.print_usage()
-    else:
+    if hasattr(args, 'func'):
         args.func(args)
+    else:
+        parser.print_usage()
 
