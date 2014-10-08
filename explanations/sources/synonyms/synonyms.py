@@ -26,7 +26,7 @@ class SynonymSource(ExplanationSource):
         """
         :return: iterable containing all russian words which have at least one synonym
         """
-        return initial_words
+        return noun_id.keys()
 
     @classmethod
     def text_for_key(cls, key):
