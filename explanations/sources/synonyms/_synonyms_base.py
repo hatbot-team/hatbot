@@ -24,16 +24,14 @@ def init_base():
 
         new_initial = get_valid_noun_initial_form(words[0])
         if new_initial is not None:
-            new_list = [w for w in words[1:] if not are_cognates(words[0], w)]
-            if len(new_list) == 0:
-                new_list = None
+            new_list = [w for w in words[1].split(',') if not are_cognates(new_initial, w)]
+            if len(new_list) != 0:
+                noun_id[new_initial] = len(synonyms)
+                synonyms.append(new_list)
+                initial_words.append(new_initial)
         else:
-            new_list = None
-
-        synonyms.append(new_list)
-        initial_words.append(new_initial)
-        if new_initial is not None:
-            noun_id[new_initial] = len(initial_words) - 1
+            synonyms.append(None)
+            initial_words.append(None)
 
 noun_id = dict()
 synonyms = []
