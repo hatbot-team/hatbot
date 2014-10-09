@@ -3,13 +3,11 @@ from explanations.sources.synonyms._synonyms_base import \
     initial_words, synonyms, noun_id, full_synonyms_list
 from explanations.sources_registry import register_source
 from explanations.sources import ExplanationSource
-from explanations import ExplanationRate
+from explanations.ExplanationRate import ExplanationRate
 from explanations.sources.synonyms._synonyms_quality import \
     synonyms_priory_rate
 
 __author__ = 'skird'
-
-DEFAULT_SOURCE_RATE = 20
 
 
 class SynonymSource(ExplanationSource):
@@ -42,8 +40,7 @@ class SynonymSource(ExplanationSource):
 
     @classmethod
     def rate_for_key(cls, key)->ExplanationRate:
-        return ExplanationRate(priory_rate=synonyms_priory_rate(initial_words[key], synonyms[key]),
-                               source_rate=DEFAULT_SOURCE_RATE)
+        return ExplanationRate(priory_rate=synonyms_priory_rate(initial_words[key], synonyms[key]))
 
     @staticmethod
     def get_synonyms(word: str)->list:

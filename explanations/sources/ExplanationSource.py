@@ -1,6 +1,6 @@
 __author__ = 'moskupols'
 
-from explanations import ExplanationRate
+from explanations.ExplanationRate import ExplanationRate
 
 class ExplanationSource:
 

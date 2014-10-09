@@ -4,6 +4,7 @@ from explanations.sources_registry import \
     source_for_name
 from explanations import ExplanationRate
 
+
 class Explanation:
     """
     The class identifying a single explanation and giving access to its text.

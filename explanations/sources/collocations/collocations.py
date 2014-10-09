@@ -3,7 +3,6 @@ from explanations.sources.GapExplanationSource import GapExplanationSource
 from explanations.sources.collocations._collocations_base import \
     collocations_list, keys_dict
 from explanations import sources_registry
-from explanations import ExplanationRate
 
 
 __author__ = 'Алексей'
@@ -56,9 +55,5 @@ class CollocationsSource(GapExplanationSource):
         :return: Set with all explainable with collocation words
         """
         return keys_dict.keys()
-
-    @classmethod
-    def rate_for_key(cls, key)->ExplanationRate:
-        return ExplanationRate(source_rate=DEFAULT_SOURCE_RATE)
 
 sources_registry.register_source(CollocationsSource())

@@ -19,4 +19,4 @@ class ExplanationRate:
         return self.priority_rate + self.source_rate + self.statistics_rate
 
     def __lt__(self, other):
-        return self.key < other.key
+        return self.key() < other.key()
