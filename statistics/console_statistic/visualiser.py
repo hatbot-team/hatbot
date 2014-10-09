@@ -3,16 +3,22 @@ from statistics.statistics import Statistics, BlackList
 __author__ = 'pershik'
 
 
+def print_entries(stat):
+    for explanation, info in stat.entries():
+        if explanation.is_reproducible():
+            print(info, explanation.word(), ':=', explanation, '---', repr(explanation))
+        else:
+            print(info, '<not reproducible>', '---', repr(explanation))
+    print()
+    print('Total {} entries'.format(len(stat.entries())))
+
+
 def show_statistics():
-    stat = Statistics()
-    for explanation, (cnt_all, cnt_win) in stat.entries():
-        print(cnt_all, cnt_win, explanation.word(), ':=', explanation, '---', repr(explanation))
+    print_entries(Statistics())
 
 
 def show_blacklist():
-    blacklist = BlackList()
-    for explanation, cnt in blacklist.entries():
-        print(cnt, explanation.word(), ':=', explanation, '---', repr(explanation))
+    print_entries(BlackList())
 
 
 def show_all():
