@@ -1,7 +1,5 @@
 __author__ = 'Алексей'
 
-from explanations.sources.synonyms._synonyms_base import \
-    initial_words, synonyms
 
 MAX_EXPLANATION_SYNONYMS_NUMBER = 5
 
@@ -17,14 +15,13 @@ def synonyms_pair_quality(first: str, second: str):
     return 0
 
 
-def choose_best_synonyms(explanation_key):
+def choose_best_synonyms(word, synonyms_list):
     """
-    Gets best list of synonyms for synonyms explanation, represented by key
-    :param explanation_key: key of synonyms explanation
+    Gets best list of synonyms to explain word from synonym_list
+    :param word: word to explain
+    :param: synonym_list: list of it's synonyms to choose from
     :return: list of required synonyms
     """
-    synonyms_list = synonyms[explanation_key]
-    word = initial_words[explanation_key]
     new_synonyms_list = synonyms_list.copy()
     new_synonyms_list.sort(key=lambda synonym: synonyms_pair_quality(word, synonym), reverse=True)
     if len(synonyms_list) > MAX_EXPLANATION_SYNONYMS_NUMBER:
