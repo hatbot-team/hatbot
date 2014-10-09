@@ -2,21 +2,66 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type='text/javascript'>
+    var explanation;
+      function makeRequest() {
+        $.get("http://127.0.0.1:8080/random_word",
+          function(data) {
+            getted_word = data;
+          }).done(function() {
+            $( "#answer" ).html(getted_word);
+            var data = {word: getted_word};
+            $.get("http://127.0.0.1:8080/explain", data, function(text) {
+              explanation = text;
+              }).done(function() {
+                $("#explanation").html(explanation.text);
+                $("#explanation").show();
+                $("#check").show();
+              }, "json"); 
+          });
+      }
+
+      $(document).ready(function() {
+        $("#explanation").hide();
+        $("#check").hide();
+        $("#answer").hide();
+        $(".result").hide();
+        $("#repeat").hide();
+      
+        
+        makeRequest();
+
+        $('#check').click(function() {
+          $(this).hide();
+          $(".result").show();
+          $("#answer").show();
+          alert(explanation.text);
+        });
+        
+        $(".result").click(function() {
+          $("#explanation").hide();
+          $("#answer").hide();
+          $(".result").hide();
+          $("#repeat").show();
+        });
+
+        $("#repeat").click(function() {
+          $("#repeat").hide();
+          makeRequest();
+        });
+      });
+    </script>
     <title>hatbot</title>
   </head>
   <body>
-    <div id="explanation">
-      <p>Собака на *пропуск*</p>
-      <button id="check">Проверить</button>
-    </div>
-    <div id="answer">
-      <p>Сено</p>
-      <p><button id="success">Угадал</button>
-      <button id="fail">Не угадал</button>
-      <button id="blame">Ошибка в объяснении!</button></p>
-    </div>
-    <div id="repeat">
-      <p><button id="repeat">Ещё разок?</button></p>
-    </div>
+    <p id="explanation">Собака на *пропуск*</p>
+    <button id="check">Проверить</button>
+    <p id="answer">Сено</p>
+    <p><button class="result" id="success">Угадал</button>
+    <button class="result" id="fail">Не угадал</button>
+    <button class="result" id="blame">Ошибка в объяснении!</button></p>
+    <p><button id="repeat">Ещё разок?</button></p>
   </body>
 </html>
