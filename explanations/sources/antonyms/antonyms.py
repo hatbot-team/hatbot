@@ -6,7 +6,9 @@ __author__ = 'pershik'
 
 from explanations.sources.antonyms._antonyms_base import \
     keys_dict, antonym_lists, initial_word
+from explanations import ExplanationRate
 
+DEFAULT_SOURCE_RATE = 80
 
 class AntonymSource(ExplanationSource):
 
@@ -35,6 +37,11 @@ class AntonymSource(ExplanationSource):
         if len(antonyms) == 1:
             return 'антоним к слову ' + antonyms[0]
         return 'антоним к словам ' + ', '.join(antonyms)
+
+
+    @classmethod
+    def rate_for_key(cls, key)->ExplanationRate:
+        return ExplanationRate(source_rate=DEFAULT_SOURCE_RATE)
 
     @staticmethod
     def get_antonyms(word: str)->list:

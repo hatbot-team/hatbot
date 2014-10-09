@@ -6,7 +6,9 @@ from explanations.sources.phraseological._phraseological_base \
     import keys_dict, phrases_list
 from explanations.sources.GapExplanationSource import GapExplanationSource
 from explanations import sources_registry
+from explanations import ExplanationRate
 
+DEFAULT_SOURCE_RATE = 100
 
 class PhraseologicalSource(GapExplanationSource):
 
@@ -46,5 +48,9 @@ class PhraseologicalSource(GapExplanationSource):
     @classmethod
     def explainable_words(cls):
         return keys_dict.keys()
+
+    @classmethod
+    def rate_for_key(cls, key)->ExplanationRate:
+        return ExplanationRate(source_rate=DEFAULT_SOURCE_RATE)
 
 sources_registry.register_source(PhraseologicalSource())

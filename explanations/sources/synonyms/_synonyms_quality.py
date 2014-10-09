@@ -1,12 +1,11 @@
 __author__ = 'Алексей'
 
-
 MAX_EXPLANATION_SYNONYMS_NUMBER = 5
 
 
 def synonyms_pair_quality(first: str, second: str):
     """
-    Calculates absolute quality of a pair of synonyms
+    Calculates absolute quality of a pair of synonyms: number from [0, 100]
     (Not yet represented, just returns 0)
     :param first: first synonym
     :param second: second synonym
@@ -28,3 +27,8 @@ def choose_best_synonyms(word, synonyms_list):
         return new_synonyms_list[0:MAX_EXPLANATION_SYNONYMS_NUMBER:1]
     else:
         return new_synonyms_list
+
+
+def synonyms_priory_rate(word, synonym_list):
+    values = [synonyms_pair_quality(word, synonym) for synonym in synonym_list]
+    return sum(values) / len(values)

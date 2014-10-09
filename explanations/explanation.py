@@ -2,7 +2,7 @@ __author__ = 'moskupols'
 
 from explanations.sources_registry import \
     source_for_name
-
+from explanations import ExplanationRate
 
 class Explanation:
     """
@@ -94,3 +94,6 @@ class Explanation:
 
     def word(self) -> str:
         return self.source.word_for_key(self.key)
+
+    def rate(self) -> ExplanationRate:
+        return self.source.rate_for_key(self.key)
