@@ -7,6 +7,7 @@ __all__ = [
     'SynonymSource'
     'CollocationsSource',
     'PhraseologicalSource',
+    'DefinitionSource',
     ]
 
 from .ExplanationSource import ExplanationSource
@@ -15,3 +16,4 @@ from .collocations import CollocationsSource
 from .phraseological import PhraseologicalSource
 from .antonyms import AntonymSource
 from .synonyms import SynonymSource
+from .definitions import DefinitionSource
