@@ -1,5 +1,6 @@
 __author__ = 'moskupols'
 
+from explanations.ExplanationRate import ExplanationRate
 
 class ExplanationSource:
 
@@ -85,3 +86,10 @@ class ExplanationSource:
         :raise NotImplementedError: if not overridden by successors.
         """
         raise NotImplementedError
+
+    def rate_for_key(self, key)->ExplanationRate:
+        """
+        Returns explanation rate for current explanation
+        :return: ExplanationRate object, default ExplanationRate() if not overridden
+        """
+        return ExplanationRate()

@@ -2,6 +2,7 @@ __author__ = 'moskupols'
 
 from explanations.sources_registry import \
     source_for_name
+from explanations import ExplanationRate
 
 
 class Explanation:
@@ -64,8 +65,6 @@ class Explanation:
     def __init__(self, source, key):
         if isinstance(source, str):
             source = source_for_name(source)
-        if not source.produces_key(key):
-            raise KeyError("Source {} doesn't produce key {}".format(source.name, repr(key)))
 
         self.source = source
         self.key = key
@@ -88,8 +87,14 @@ class Explanation:
     def source_name(self):
         return self.source.name
 
+    def is_reproducible(self):
+        return self.source.produces_key(self.key)
+
     def text(self) -> str:
         return self.source.text_for_key(self.key)
 
     def word(self) -> str:
         return self.source.word_for_key(self.key)
+
+    def rate(self) -> ExplanationRate:
+        return self.source.rate_for_key(self.key)

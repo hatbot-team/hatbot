@@ -9,10 +9,6 @@ import explanator
 class ExplanationServer:
 
     @cherrypy.expose
-    def index(self):
-        return "wake up neo"
-
-    @cherrypy.expose
     @cherrypy.tools.json_out()
     def explain(self, word=None):
         if word is None:

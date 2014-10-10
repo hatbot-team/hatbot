@@ -33,6 +33,8 @@ class StatisticsServer:
 
             if not isinstance(explanation, Explanation):
                 raise cherrypy.HTTPError(400, 'The id should be an Explanation')
+            if not explanation.is_reproducible():
+                raise cherrypy.HTTPError(400, 'The given explanation couldn\'t be reproduced.')
             if result not in self.ALLOWED_RESULTS:
                 raise cherrypy.HTTPError(400,
                                          'Incorrect result, it should be a string from {}'

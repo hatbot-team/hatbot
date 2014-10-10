@@ -7,6 +7,7 @@ from explanations import sources_registry
 
 __author__ = 'Алексей'
 
+DEFAULT_SOURCE_RATE = 50
 
 class CollocationsSource(GapExplanationSource):
 

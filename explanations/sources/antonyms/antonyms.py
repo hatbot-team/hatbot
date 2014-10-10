@@ -7,7 +7,6 @@ __author__ = 'pershik'
 from explanations.sources.antonyms._antonyms_base import \
     keys_dict, antonym_lists, initial_word
 
-
 class AntonymSource(ExplanationSource):
 
     def __init__(self):

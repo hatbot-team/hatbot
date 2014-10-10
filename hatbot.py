@@ -27,19 +27,24 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers()
 
     server_parser = subparsers.add_parser('server',
-                                          help='''Run server.
+                                          help='''Run server. Localhost (127.0.0.1:8080) by default.
              Note that the server restarts automatically every time some source file is changed.
              Even more, at 93.175.... it is checked every 10m and restarted if found not running.
         ''')
     server_parser.add_argument('--config',
-                               help='path to the server config file')
+                               help='''Path to cherrypy config file. 
+             See https://cherrypy.readthedocs.org/en/latest/basics.html#configuring
+             ''')
     server_parser.set_defaults(func=run_server)
 
-    play_parser = subparsers.add_parser('play', help='run statistics gathering utility')
+    play_parser = subparsers.add_parser('play', help='Run statistics gathering utility')
     play_parser.set_defaults(func=play)
 
-    stats_parser = subparsers.add_parser('stats', help='output statistics')
+    stats_parser = subparsers.add_parser('stats', help='Output statistics')
     stats_parser.set_defaults(func=stats)
 
     args = parser.parse_args()
-    args.func(args)
+    if hasattr(args, 'func'):
+        args.func(args)
+    else:
+        parser.print_usage()
