@@ -24,5 +24,5 @@ def register_source(source: ExplanationSource):
     global _source_for_name
     if source.name in _source_for_name:
         raise KeyError("Source name '{}' redefinition".format(source.name))
-
+    print(source.name)
     _source_for_name[source.name] = source
