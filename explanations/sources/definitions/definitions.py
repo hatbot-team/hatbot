@@ -4,7 +4,7 @@ from explanations.sources.ExplanationSource import ExplanationSource
 from explanations import sources_registry
 
 # noinspection PyProtectedMember
-from explanations.sources.definitions._defenitions_base \
+from explanations.sources.definitions._definitions_base \
     import keys_list, definitions_dict
 
 
