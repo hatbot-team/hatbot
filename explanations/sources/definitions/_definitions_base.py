@@ -5,11 +5,14 @@ from lang_utils.cognates import are_cognates
 
 from sys import stderr
 import os
+import re
 
 DEFINITIONS_DATABASE_PATH = \
     os.path.dirname(os.path.abspath(__file__)) + '/definitions.txt'
 
 DELIMITERS_REGEXP = '[\W\(\);:.,]+'
+GAP_WORD = '*пропуск*'
+GAP_CODE = '###'
 
 
 def add_definition(word, definition_id, definition_text):
@@ -39,7 +42,7 @@ def add_definition(word, definition_id, definition_text):
     #    if are_cognates(word, def_word):
     #        return
 
-    definitions_dict[definition_id] = (word, definition_text)
+    definitions_dict[definition_id] = (word, re.sub(GAP_CODE, GAP_WORD, definition_text))
     keys_list.setdefault(word, []).append(definition_id)
 
 
