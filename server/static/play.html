@@ -8,28 +8,28 @@
     </script>
     <script type='text/javascript'>
       
-      var getRandomWord = function(host) {
+      var getRandomWord = function() {
         return $.ajax({ async: false,
-                          url: "http://" + host + "/random_word"
+                          url: "/random_word"
                       })
                   .responseText;
       }
 
-      var getRandomExplanation = function(word, host) {
+      var getRandomExplanation = function(word) {
         return $.ajax({    async: false,
-                             url: "http://" + host + "/explain",
+                             url: "/explain",
                             data: {word: word},
                         dataType: "json"
                       })
                   .responseJSON;
       }
 
-      var sendResponse = function(explanation, result, host) {
+      var sendResponse = function(explanation, result) {
         var data = { result: result,
                          id: explanation.id
                    };
         $.ajax({        type: "POST",
-                         url: "http://" + host + "/statistics/update",
+                         url: "/statistics/update",
                      headers: { 'Content-Type': 'application/json'
                               },
                         data: JSON.stringify(data),
@@ -38,16 +38,14 @@
 
       $(document).ready(function() {
         
-        var host = "127.0.0.1:8080";
-
         $("#explanation").hide();
         $("#check").hide();
         $("#answer").hide();
         $(".result").hide();
         $("#repeat").hide();
       
-        var word = getRandomWord(host);
-        var explanation = getRandomExplanation(word, host);
+        var word = getRandomWord();
+        var explanation = getRandomExplanation(word);
 
         $("#answer").text(word);
         $("#explanation").text(explanation.text);
@@ -69,22 +67,22 @@
         });
 
         $("#success").click(function() {
-          sendResponse(explanation, "SUCCESS", host);
+          sendResponse(explanation, "SUCCESS");
         });
 
         $("#fail").click(function() {
-          sendResponse(explanation, "FAIL", host);
+          sendResponse(explanation, "FAIL");
         });
 
         $("#blame").click(function() {
-          sendResponse(explanation, "BLAME", host);
+          sendResponse(explanation, "BLAME");
         });
 
         $("#repeat").click(function() {
           $("#repeat").hide();
           
-          word = getRandomWord(host);
-          explanation = getRandomExplanation(word, host);
+          word = getRandomWord();
+          explanation = getRandomExplanation(word);
 
           $("#answer").text(word);
           $("#explanation").text(explanation.text);
