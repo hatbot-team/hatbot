@@ -3,7 +3,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script
+     src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+    </script>
     <script type='text/javascript'>
     var explanation;
       function makeRequest() {
@@ -37,7 +39,6 @@
           $(this).hide();
           $(".result").show();
           $("#answer").show();
-          alert(explanation.text);
         });
         
         $(".result").click(function() {
