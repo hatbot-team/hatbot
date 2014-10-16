@@ -7,33 +7,53 @@
      src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
     </script>
     <script type='text/javascript'>
-    var explanation;
-      function makeRequest() {
-        $.get("http://127.0.0.1:8080/random_word",
-          function(data) {
-            getted_word = data;
-          }).done(function() {
-            $( "#answer" ).html(getted_word);
-            var data = {word: getted_word};
-            $.get("http://127.0.0.1:8080/explain", data, function(text) {
-              explanation = text;
-              }).done(function() {
-                $("#explanation").html(explanation.text);
-                $("#explanation").show();
-                $("#check").show();
-              }, "json"); 
-          });
+      
+      var getRandomWord = function(host) {
+        return $.ajax({ async: false,
+                          url: "http://" + host + "/random_word"
+                      })
+                  .responseText;
+      }
+
+      var getRandomExplanation = function(word, host) {
+        return $.ajax({    async: false,
+                             url: "http://" + host + "/explain",
+                            data: {word: word},
+                        dataType: "json"
+                      })
+                  .responseJSON;
+      }
+
+      var sendResponse = function(explanation, result, host) {
+        var data = { result: result,
+                         id: explanation.id
+                   };
+        $.ajax({        type: "POST",
+                         url: "http://" + host + "/statistics/update",
+                     headers: { 'Content-Type': 'application/json'
+                              },
+                        data: JSON.stringify(data),
+               });           
       }
 
       $(document).ready(function() {
+        
+        var host = "127.0.0.1:8080";
+
         $("#explanation").hide();
         $("#check").hide();
         $("#answer").hide();
         $(".result").hide();
         $("#repeat").hide();
       
+        var word = getRandomWord(host);
+        var explanation = getRandomExplanation(word, host);
+
+        $("#answer").text(word);
+        $("#explanation").text(explanation.text);
         
-        makeRequest();
+        $("#explanation").show();
+        $("#check").show();
 
         $('#check').click(function() {
           $(this).hide();
@@ -48,9 +68,29 @@
           $("#repeat").show();
         });
 
+        $("#success").click(function() {
+          sendResponse(explanation, "SUCCESS", host);
+        });
+
+        $("#fail").click(function() {
+          sendResponse(explanation, "FAIL", host);
+        });
+
+        $("#blame").click(function() {
+          sendResponse(explanation, "BLAME", host);
+        });
+
         $("#repeat").click(function() {
           $("#repeat").hide();
-          makeRequest();
+          
+          word = getRandomWord(host);
+          explanation = getRandomExplanation(word, host);
+
+          $("#answer").text(word);
+          $("#explanation").text(explanation.text);
+          
+          $("#explanation").show();
+          $("#check").show();
         });
       });
     </script>
