@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script
+     src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+    </script>
+    <script type='text/javascript'>
+      
+      var getRandomWord = function() {
+        return $.ajax({ async: false,
+                          url: "/random_word"
+                      })
+                  .responseText;
+      }
+
+      var getRandomExplanation = function(word) {
+        return $.ajax({    async: false,
+                             url: "/explain",
+                            data: {word: word},
+                        dataType: "json"
+                      })
+                  .responseJSON;
+      }
+
+      var sendResponse = function(explanation, result) {
+        var data = { result: result,
+                         id: explanation.id
+                   };
+        $.ajax({        type: "POST",
+                         url: "/statistics/update",
+                     headers: { 'Content-Type': 'application/json'
+                              },
+                        data: JSON.stringify(data),
+               });           
+      }
+
+      $(document).ready(function() {
+        
+        $("#explanation").hide();
+        $("#check").hide();
+        $("#answer").hide();
+        $(".result").hide();
+        $("#repeat").hide();
+      
+        var word = getRandomWord();
+        var explanation = getRandomExplanation(word);
+
+        $("#answer").text(word);
+        $("#explanation").text(explanation.text);
+        
+        $("#explanation").show();
+        $("#check").show();
+
+        $('#check').click(function() {
+          $(this).hide();
+          $(".result").show();
+          $("#answer").show();
+        });
+        
+        $(".result").click(function() {
+          $("#explanation").hide();
+          $("#answer").hide();
+          $(".result").hide();
+          $("#repeat").show();
+        });
+
+        $("#success").click(function() {
+          sendResponse(explanation, "SUCCESS");
+        });
+
+        $("#fail").click(function() {
+          sendResponse(explanation, "FAIL");
+        });
+
+        $("#blame").click(function() {
+          sendResponse(explanation, "BLAME");
+        });
+
+        $("#repeat").click(function() {
+          $("#repeat").hide();
+          
+          word = getRandomWord();
+          explanation = getRandomExplanation(word);
+
+          $("#answer").text(word);
+          $("#explanation").text(explanation.text);
+          
+          $("#explanation").show();
+          $("#check").show();
+        });
+      });
+    </script>
+    <title>hatbot</title>
+  </head>
+  <body>
+    <p id="explanation">Собака на *пропуск*</p>
+    <button id="check">Проверить</button>
+    <p id="answer">Сено</p>
+    <p><button class="result" id="success">Угадал</button>
+    <button class="result" id="fail">Не угадал</button>
+    <button class="result" id="blame">Ошибка в объяснении!</button></p>
+    <p><button id="repeat">Ещё разок?</button></p>
+  </body>
+</html>
