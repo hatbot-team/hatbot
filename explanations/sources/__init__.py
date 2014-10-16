@@ -9,6 +9,7 @@ __all__ = [
     'PhraseologicalSource',
     'FilmTitlesSource'
     'DefinitionSource',
+    'CrosswordSource'
     ]
 
 from .ExplanationSource import ExplanationSource
