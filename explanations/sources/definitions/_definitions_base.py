@@ -6,6 +6,7 @@ from lang_utils.cognates import are_cognates
 from sys import stderr
 import os
 import re
+import codecs
 
 DEFINITIONS_DATABASE_PATH = \
     os.path.dirname(os.path.abspath(__file__)) + '/definitions.txt'
@@ -51,7 +52,7 @@ def init_base():
     Method uses parsed definitions file to create dict of explanations
     """
     try:
-        _database = open(DEFINITIONS_DATABASE_PATH, 'r')
+        _database = codecs.open(DEFINITIONS_DATABASE_PATH, 'r', encoding='utf-8')
     except FileNotFoundError:
         stderr.write('Definitions database doesn\'t exist\n')
         return
