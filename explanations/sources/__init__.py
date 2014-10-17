@@ -20,3 +20,4 @@ from .film_titles import FilmTitlesSource
 from .antonyms import AntonymSource
 from .synonyms import SynonymSource
 from .definitions import DefinitionSource
+from .crosswords import CrosswordSource

@@ -1,3 +1,5 @@
+import codecs
+
 __author__ = 'Keks'
 
 
@@ -19,7 +21,7 @@ def add(word, explanation_id, explanation_text):
 def init_base():
 
     try:
-        database = open(CROSSWORDS_DATABASE_PATH, 'r')
+        database = codecs.open(CROSSWORDS_DATABASE_PATH, mode = 'r', encoding = 'utf-8')
     except FileNotFoundError:
         stderr.write('Crosswords database doesn\'t exist\n')
         return
