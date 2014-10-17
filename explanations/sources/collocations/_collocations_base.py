@@ -75,7 +75,7 @@ def init_base():
     """
     try:
         raw_data = codecs.open(COLLOCATIONS_PATH, 'r', encoding='cp1251')
-    except:
+    except FileNotFoundError:
         stderr.write('Collocations base doesn\'t exist\n')
         return
 

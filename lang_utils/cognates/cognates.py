@@ -1,11 +1,8 @@
 __author__ = 'Oktosha'
 
 from lang_utils.morphology import get_initial_forms
+from lang_utils.cognates import _cognates_base
 
-try:
-    from . import _cognates_base
-except SystemError:
-    import _cognates_base
 
 def get_roots(word):
     """
@@ -23,6 +20,7 @@ def get_roots(word):
         return _cognates_base.cognates[word]
     else:
         return [word]
+
 
 def are_cognates(a, b):
     """

@@ -11,7 +11,7 @@ COGNATES_PATH = \
 def init_cognates():
     try:
         cognates_file = codecs.open(COGNATES_PATH, "r", "utf-8")
-    except:
+    except FileNotFoundError:
         stderr.write('Cognates dictionary doesn\'t exist\n')
         return
     global cognates
