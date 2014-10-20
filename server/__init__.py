@@ -17,7 +17,8 @@ def run(conf=None):
         '/': {
             'tools.staticdir.root': path.join(path.dirname(path.abspath(__file__)), 'static'),
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': '.'
+            'tools.staticdir.dir': '.',
+            'tools.staticdir.index': 'index.html'
         }
     }
 
