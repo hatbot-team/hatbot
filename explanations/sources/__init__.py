@@ -10,7 +10,7 @@ __all__ = [
     'FilmTitlesSource'
     'DefinitionSource',
     'CrosswordSource'
-    ]
+]
 
 from .ExplanationSource import ExplanationSource
 from .GapExplanationSource import GapExplanationSource

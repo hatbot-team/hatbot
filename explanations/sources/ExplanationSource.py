@@ -9,7 +9,7 @@ class ExplanationSource:
 
     def explain(self, word: str)->list:
         """
-        Returns list of explanation.Explanation for the given word.
+        Returns list of explanations.ExplanationID for the given word.
 
         >>> from explanations import sources_registry
         >>> s = sources_registry.source_for_name('PhraseologicalSource')
@@ -39,10 +39,10 @@ class ExplanationSource:
         []
 
         :param word: russian noun in the initial form, in lowercase.
-        :return: list of Explanation objects
+        :return: list of ExplanationID objects
         """
-        from explanations.explanation import Explanation
-        return [Explanation(self, key) for key in self.keys_for_word(word)]
+        from explanations import ExplanationID
+        return [ExplanationID(self, key) for key in self.keys_for_word(word)]
 
     @property
     def name(self)->str:

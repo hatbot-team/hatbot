@@ -1,8 +1,8 @@
 __author__ = 'moskupols'
 
-__all__ = ['Explanation', 'sources', 'sources_registry', 'ExplanationRate']
+__all__ = ['ExplanationID', 'sources', 'sources_registry', 'ExplanationRate']
 
 from . import sources
 from . import sources_registry
-from .explanation import Explanation
+from .explanationid import ExplanationID
 from .ExplanationRate import ExplanationRate

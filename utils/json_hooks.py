@@ -3,7 +3,7 @@ __author__ = 'moskupols'
 import json
 from collections import namedtuple
 
-from explanations import Explanation
+from explanations import ExplanationID
 
 
 """
@@ -26,7 +26,7 @@ def serializable(data):
 
     if data is None or isinstance(data, (bool, int, float, str)):
         return data
-    if isinstance(data, Explanation):
+    if isinstance(data, ExplanationID):
         return {'py/Explanation': {
             'source': data.source_name,
             'key': serializable(data.key)
@@ -59,7 +59,7 @@ def _object_decode_hook(dct):
     :return: encoded object on success, dct otherwise
     """
     if 'py/Explanation' in dct:
-        return Explanation(**dct['py/Explanation'])
+        return ExplanationID(**dct['py/Explanation'])
     if 'py/namedtuple' in dct:
         data = dct['py/namedtuple']
         return namedtuple(data['name'], data['fields'])(*data['values'])

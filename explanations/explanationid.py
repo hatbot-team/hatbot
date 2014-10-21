@@ -5,7 +5,7 @@ from explanations.sources_registry import \
 from explanations import ExplanationRate
 
 
-class Explanation:
+class ExplanationID:
     """
     The class identifying a single explanation and giving access to its text.
 
@@ -33,7 +33,7 @@ class Explanation:
       }
     }
     >>> json.loads(e_dumped)
-    Explanation(source="SynonymSource", key=9731)
+    ExplanationID(source="SynonymSource", key=9731)
     >>> e2 = source_for_name('PhraseologicalSource').explain('час')[0]
     >>> pair_dumped = json.dumps([e, e2], sort_keys=True, indent='  ')
     >>> print(pair_dumped)
@@ -57,7 +57,7 @@ class Explanation:
       }
     ]
     >>> print(json.loads(pair_dumped))
-    [Explanation(source="SynonymSource", key=9731), Explanation(source="PhraseologicalSource", key=(40, 1))]
+    [ExplanationID(source="SynonymSource", key=9731), ExplanationID(source="PhraseologicalSource", key=(40, 1))]
 
     It also supports hashing and equality check (iff key supports it).
     """
@@ -70,13 +70,13 @@ class Explanation:
         self.key = key
 
     def __repr__(self):
-        return 'Explanation(source="{}", key={})'.format(self.source.name, repr(self.key))
+        return 'ExplanationID(source="{}", key={})'.format(self.source.name, repr(self.key))
 
     def __str__(self):
         return self.text()
 
     def __eq__(self, other):
-        return isinstance(other, Explanation) \
+        return isinstance(other, ExplanationID) \
             and self.source.name == other.source_name \
             and self.key == other.key
 

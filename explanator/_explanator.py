@@ -1,7 +1,7 @@
 __author__ = 'moskupols'
 
 import random
-from explanations import Explanation, sources_registry
+from explanations import ExplanationID, sources_registry
 
 
 SOURCES = sources_registry.sources_registered()
@@ -25,7 +25,7 @@ def get_random_word():
     return random.choice(words_list)
 
 
-def explain(word) -> Explanation:
+def explain(word) -> ExplanationID:
     """
     Returns the best explanation of the given word.
 
