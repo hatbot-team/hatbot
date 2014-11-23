@@ -24,6 +24,11 @@ def get_explainable_words():
 def get_random_word():
     return random.choice(words_list)
 
+def explain_list(word):
+    if word in words:
+        return sum(map(lambda s: s.explain(word), SOURCES), [])
+    else:
+        return None
 
 def explain(word) -> ExplanationID:
     """
