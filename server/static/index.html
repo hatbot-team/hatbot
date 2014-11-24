@@ -1,10 +1,118 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Hatboy here</title>
-</head>
-<body>
-wake up neo
-</body>
+<html ng-app="hatbot">
+  <head>
+    <title>Шляпобот</title>
+    <link  rel="stylesheet"
+          type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet"
+         type="text/css"
+         href="style.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body>
+    <div ng-controller="HatbotController as hatbot">
+    <div class="page-header">
+      <h1 ng-click="hatbot.state = 'hat-index'">Шляпобот — бот для игры в шляпу</h1>
+    </div>
+      <div id="hat-index" ng-show="hatbot.state === 'hat-index'">
+        <p>
+          Привет, я Шляпобот — бот для игры в
+          <a href="http://thehat.ru/about/">шляпу</a>.
+        </p>
+        <p>
+          Оцени, как я объясняю слова!
+          <button class="btn btn-default"
+                  ng-click="hatbot.rateRandom()">
+            Оценить!
+          </button>
+        </p>
+      </div>
+      <div id="hat-rate" ng-show="hatbot.state === 'hat-rate'">
+        <div class="explanation" ng-repeat="e in hatbot.ratedExplanations">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="explanation-body">
+                {{e.text}}
+              </div>
+              <div class="explanation-rate">
+                <form class="rate-radio">
+                  <div class="radio-button">
+                    <p>-2</p>
+                    <p><input type="radio"
+                              ng-model="e.score"
+                              value="-2"></p>
+                  </div>
+                  <div class="radio-button">
+                    <p>-1</p>
+                    <p><input type="radio" ng-model="e.score" value="-1"></p>
+                  </div>
+                  <div class="radio-button">
+                    <p>0</p>
+                    <p><input type="radio" ng-model="e.score" value="0"></p>
+                  </div>
+                  <div class="radio-button">
+                    <p>1</p>
+                    <p><input type="radio" ng-model="e.score" value="1"></p>
+                  </div>
+                  <div class="radio-button">
+                    <p>2</p>
+                    <p><input type="radio" ng-model="e.score" value="2"></p>
+                  </div>
+                </form>
+                <div class="rate-text">
+                  {{hatbot.textRate[e.score]}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="after-rate-actions" class="panel panel-default">
+          <div class="panel-body">
+            <p>Объясняется 
+              <span ng-show="hatbot.wordIsHidden">
+                скрытое слово
+              </span>
+              <span ng-hide="hatbot.wordIsHidden">
+                слово «{{hatbot.word}}»
+              </span>
+            </p>
+            <p>
+              <div id="more-buttons" class="btn-group" role="group">
+                <button class="btn btn-default"
+                     ng-click="hatbot.showMore()"
+                      ng-show="hatbot.nShown < hatbot.explanations.length">
+                  Ещё
+                </button>
+                <button class="btn btn-default"
+                     ng-click="hatbot.showAll()"
+                      ng-show="hatbot.nShown < hatbot.explanations.length">
+                  Все
+                </button>
+                <button class="btn btn-default"
+                      ng-show="hatbot.wordIsHidden"
+                     ng-click="hatbot.wordIsHidden = false">
+                  Покажи слово
+                </button>
+                <button class="btn btn-default"
+                      ng-hide="hatbot.wordIsHidden"
+                     ng-click="hatbot.sendRatingAndRateRandom()">
+                  Я оценил, объясни ещё что-нибудь
+                </button>
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div id="hat-play" ng-show="hatbot.state === 'hat-play'">
+        Игра
+      </div>
+    </div>
+    <script type="text/javascript"
+             src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js">
+    </script>
+    <script type="text/javascript"
+             src="hatbot.js">
+    </script>
+  </body>
 </html>
