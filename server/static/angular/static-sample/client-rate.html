@@ -1,0 +1,114 @@
+<hmtl>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Оценка объяснений</title>
+    <style>
+    .page-header {
+      top: 0px;
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      background-color: white;
+    }
+    #client-rate {
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .explanation {
+      float: left;
+      width: 65%;
+      max-height: 140px;
+      overflow: scroll;
+    }
+    .radio-button {
+      float: left;
+      padding-left: 10px;
+      text-align: center;
+    }
+    .text-rate {
+      float: left;
+      max-width: 15%;
+      min-width: 100px;
+      padding-left: 10px;
+      right: 0px;
+    }
+    .rate-form {
+      float: left;
+      width: 120px;
+    }
+    #more-buttons {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    </style>
+  </head>
+  <body>
+    <div class="page-header" align="center">
+      <h1>Шляпобот — бот для игры в шляпу</h1>
+    </div>
+    <div id="client-rate">
+      <div id="explanations">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="explanation">
+              Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное Блохастое домашнее животное
+            </div>
+            <form class="rate-form">
+              <div class="radio-button">
+                <p>-2</p>
+                <p><input type="radio"></p>
+              </div>
+              <div class="radio-button">
+                <p>-1</p>
+                <p><input type="radio"></p>
+              </div>
+              <div class="radio-button">
+                <p>0</p>
+                <p><input type="radio"></p>
+              </div>
+              <div class="radio-button">
+                <p>1</p>
+                <p><input type="radio"></p>
+              </div>
+              <div class="radio-button">
+                <p>2</p>
+                <p><input type="radio"></p>
+              </div>
+            </form>
+            <div class="text-rate">
+              Так себе, но вполне корректно.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="after-rate-actions" class="panel panel-default">
+        <div class="panel-body">
+          <p>Объясняется слово собака</p>
+          <p>
+            <div id="more-buttons" class="btn-group" role="group">
+          <button class="btn btn-default">
+            Ещё
+          </button>
+          <button class="btn btn-default">
+            Все
+          </button>
+          <button class="btn btn-default">
+            Я оценил, объясни ещё что-нибудь
+          </button>
+        </div>
+          </p>
+          <form>
+            <p><input type="radio"/> объясни ещё что-нибудь</p>
+            <p><input type="radio"/> объясни слово <input type="text" size="20"/></p>
+            <p><input type="radio"/> давай играть</p>
+            <p><input type="radio"/> вернись на главную</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
