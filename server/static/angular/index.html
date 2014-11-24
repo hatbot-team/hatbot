@@ -11,10 +11,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   </head>
   <body>
-    <div class="page-header">
-      <h1>Шляпобот — бот для игры в шляпу</h1>
-    </div>
     <div ng-controller="HatbotController as hatbot">
+    <div class="page-header">
+      <h1 ng-click="hatbot.state = 'hat-index'">Шляпобот — бот для игры в шляпу</h1>
+    </div>
       <div id="hat-index" ng-show="hatbot.state === 'hat-index'">
         <p>
           Привет, я Шляпобот — бот для игры в
@@ -29,7 +29,7 @@
         </p>
       </div>
       <div id="hat-rate" ng-show="hatbot.state === 'hat-rate'">
-        <div class="explanation" ng-repeat="e in hatbot.explanations">
+        <div class="explanation" ng-repeat="e in hatbot.ratedExplanations">
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="explanation-body">
@@ -65,6 +65,42 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div id="after-rate-actions" class="panel panel-default">
+          <div class="panel-body">
+            <p>Объясняется 
+              <span ng-show="hatbot.wordIsHidden">
+                скрытое слово
+              </span>
+              <span ng-hide="hatbot.wordIsHidden">
+                слово «{{hatbot.word}}»
+              </span>
+            </p>
+            <p>
+              <div id="more-buttons" class="btn-group" role="group">
+                <button class="btn btn-default"
+                     ng-click="hatbot.showMore()"
+                      ng-show="hatbot.nShown < hatbot.explanations.length">
+                  Ещё
+                </button>
+                <button class="btn btn-default"
+                     ng-click="hatbot.showAll()"
+                      ng-show="hatbot.nShown < hatbot.explanations.length">
+                  Все
+                </button>
+                <button class="btn btn-default"
+                      ng-show="hatbot.wordIsHidden"
+                     ng-click="hatbot.wordIsHidden = false">
+                  Покажи слово
+                </button>
+                <button class="btn btn-default"
+                      ng-hide="hatbot.wordIsHidden"
+                     ng-click="hatbot.sendRatingAndRateRandom()">
+                  Я оценил, объясни ещё что-нибудь
+                </button>
+              </div>
+            </p>
           </div>
         </div>
       </div>
