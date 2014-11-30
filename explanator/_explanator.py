@@ -1,14 +1,20 @@
-__author__ = 'moskupols'
+__author__ = 'pershik'
 
+from hb_res.explanations import Explanation
 import random
-from explanations import ExplanationID, sources_registry
+from hb_res.explanation_source import sources_registry
 
 
 SOURCES = sources_registry.sources_registered()
 
+asset_by_key = dict()
 words = set()
 for s in SOURCES:
-    words.update(s.explainable_words())
+    for word in s.explainable_words():
+        words.add(word)
+        explanations = s.explain(word)
+        for explanation in explanations:
+            asset_by_key[explanation.key] = s.name
 words_list = list(words)
 
 
@@ -24,20 +30,30 @@ def get_explainable_words():
 def get_random_word():
     return random.choice(words_list)
 
+
 def explain_list(word):
+    """
+    Returns list of tuple (Explanations, asset_name)
+    """
     if word in words:
-        return sum(map(lambda s: s.explain(word), SOURCES), [])
+        res = list()
+        for s in SOURCES:
+            explanations = s.explain(word)
+            for explanation in explanations:
+                res.append((explanation, asset_by_key[explanation.key]))
+        return res
     else:
         return None
 
-def explain(word) -> ExplanationID:
+
+def explain(word):
     """
-    Returns the best explanation of the given word.
+    Returns tuple (Explanation, asset_name)
 
     :param word: a russian noun in lowercase
     :return: the explanation
     """
     if word in words:
-        return random.choice(sum(map(lambda s: s.explain(word), SOURCES), []))
+        return random.choice(explain_list(word))
     else:
         return None
