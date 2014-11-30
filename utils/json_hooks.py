@@ -3,8 +3,6 @@ __author__ = 'moskupols'
 import json
 from collections import namedtuple
 
-from explanations import ExplanationID
-
 
 """
   A wrapper for standard json module that preserves *tuples* and some other classes.
@@ -26,11 +24,6 @@ def serializable(data):
 
     if data is None or isinstance(data, (bool, int, float, str)):
         return data
-    if isinstance(data, ExplanationID):
-        return {'py/Explanation': {
-            'source': data.source_name,
-            'key': serializable(data.key)
-        }}
     if isinstance(data, list):
         return [serializable(val) for val in data]
     if is_namedtuple(data):
@@ -58,8 +51,6 @@ def _object_decode_hook(dct):
     :param dct: the dict
     :return: encoded object on success, dct otherwise
     """
-    if 'py/Explanation' in dct:
-        return ExplanationID(**dct['py/Explanation'])
     if 'py/namedtuple' in dct:
         data = dct['py/namedtuple']
         return namedtuple(data['name'], data['fields'])(*data['values'])

@@ -2,7 +2,6 @@ import cherrypy
 
 from statistics import Statistics, BlackList
 from utils import json_hooks as json
-from explanations import ExplanationID
 
 
 __author__ = 'moskupols'
@@ -31,10 +30,6 @@ class StatisticsServer:
             except KeyError as e:
                 raise cherrypy.HTTPError(400, 'KeyError: ' + str(e))
 
-            if not isinstance(explanation, ExplanationID):
-                raise cherrypy.HTTPError(400, 'The id should be an Explanation')
-            if not explanation.is_reproducible():
-                raise cherrypy.HTTPError(400, 'The given explanation couldn\'t be reproduced.')
             if result not in self.ALLOWED_RESULTS:
                 raise cherrypy.HTTPError(400,
                                          'Incorrect result, it should be a string from {}'

@@ -1,8 +1,7 @@
-from utils import json_hooks
-
 __author__ = 'moskupols'
 
 import cherrypy
+
 import explanator
 
 
@@ -17,8 +16,9 @@ class ExplanationServer:
         if e is None:
             raise cherrypy.HTTPError(400)
         return {
-            'id': json_hooks.serializable(e),
-            'text': e.text()
+            'id': e[0].key.encode(),
+            'text': e[0].text,
+            'asset': e[1]
         }
 
     @cherrypy.expose
@@ -29,10 +29,11 @@ class ExplanationServer:
         e_list = explanator.explain_list(word)
         if e_list is None:
             raise cherrypy.HTTPError(400)
-        for i in range (len(e_list)):
+        for i in range(len(e_list)):
             e_list[i] = {
-                'id': json_hooks.serializable(e_list[i]),
-                'text': e_list[i].text()
+                'id': e_list[i][0].key.encode(),
+                'text': e_list[i][0].text,
+                'asset': e_list[i][1]
             }
         return e_list
 
@@ -43,7 +44,7 @@ class ExplanationServer:
         e = explanator.explain(word)
         if e is None:
             raise cherrypy.HTTPError(400)
-        return e.text()
+        return e[0].text
 
     @cherrypy.expose
     def random_word(self):
