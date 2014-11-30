@@ -55,7 +55,20 @@
         });
       });
     };
-
+    this.rateWord = function() {
+      var hatbot = this;
+      this.state = 'hat-rate';
+      this.wordIsHidden = false;
+      this.nShown = 0;
+      this.ratedExplanations = [];      
+      $http({ method: 'GET',
+                 url: '/explain_list',
+              params: {word: hatbot.word},
+                  }).success(function(list){
+          hatbot.explanations = list;
+          hatbot.showMore();
+        });
+    }
     this.sendRating = function(e) {
         var data = { result: e.score,
                          id: e.id

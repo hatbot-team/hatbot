@@ -27,6 +27,14 @@
             Оценить!
           </button>
         </p>
+        <p>
+          Посмотри, как я объясню слово
+          <input type="text" size="20" ng-model="hatbot.word"/>
+          <button class="btn btn-default" 
+                  ng-click="hatbot.rateWord()">
+            Смотреть!
+          </button>
+        </p>
       </div>
       <div id="hat-rate" ng-show="hatbot.state === 'hat-rate'">
         <div class="explanation" ng-repeat="e in hatbot.ratedExplanations">
