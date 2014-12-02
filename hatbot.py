@@ -40,7 +40,10 @@ if __name__ == '__main__':
                                     "[db]\n"
                                     "url = 'sqlite:///some.db'\n"
                                     "# or\n"
-                                    "url = 'postgresql://user:password@host:5432/database'")
+                                    "url = 'postgresql://user:password@host:5432/database'\n"
+                                    "\n"
+                                    "It's worth noting though that you'll need to install psycopg2 package\n"
+                                    "in order to use postgresql with hatbot.")
     server_parser.set_defaults(func=run_server)
 
     play_parser = subparsers.add_parser('play', help='Run statistics gathering utility')
