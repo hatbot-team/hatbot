@@ -10,7 +10,7 @@ ALLOWED_VERDICTS = (
 )
 
 
-class Feedback(BaseModel):
+class ScoreFeedback(BaseModel):
     verdict = CharField(10, choices=ALLOWED_VERDICTS)
     timestamp = DateTimeField()
     expl_key = CharField(50)

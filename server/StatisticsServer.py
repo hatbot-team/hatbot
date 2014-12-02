@@ -1,6 +1,6 @@
 import cherrypy
 import datetime
-from models import Feedback, get_database
+from models import ScoreFeedback, get_database
 
 
 __author__ = 'moskupols'
@@ -19,13 +19,13 @@ class StatisticsServer:
             except KeyError as e:
                 raise cherrypy.HTTPError(400, 'KeyError: ' + str(e))
 
-            if result not in Feedback.verdict.choices:
+            if result not in ScoreFeedback.verdict.choices:
                 raise cherrypy.HTTPError(400,
                                          'Incorrect result, it should be a string from ' +
-                                         str(Feedback.verdict.choices))
+                                         str(ScoreFeedback.verdict.choices))
 
             with get_database().transaction():
-                Feedback.create(
+                ScoreFeedback.create(
                     verdict=result,
                     timestamp=datetime.datetime.now(),
                     expl_key=key
