@@ -3,6 +3,9 @@
 
 def run_server(args):
     from server import run
+    import models
+    models.init_database()
+    models.create_nonexistent_tables()
 
     run(args.config)
 

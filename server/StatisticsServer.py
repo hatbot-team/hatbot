@@ -1,23 +1,12 @@
 import cherrypy
-
-from statistics import Statistics, BlackList
-from utils import json_hooks as json
+import datetime
+from models import Feedback, get_database
 
 
 __author__ = 'moskupols'
 
 
 class StatisticsServer:
-    BLAME_RESULT = 'BLAME'
-    ALLOWED_RESULTS = [BLAME_RESULT, Statistics.SUCCESS_RESULT, Statistics.FAIL_RESULT]
-
-    def __init__(self):
-        self.stat = Statistics()
-        self.blacklist = BlackList()
-
-        cherrypy.engine.subscribe('stop', self.stat.save)
-        cherrypy.engine.subscribe('stop', self.blacklist.save)
-
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
     def update(self):
@@ -26,19 +15,21 @@ class StatisticsServer:
 
             try:
                 result = info['result']
-                explanation = json.unwrap(info['id'])
+                key = info['id']
             except KeyError as e:
                 raise cherrypy.HTTPError(400, 'KeyError: ' + str(e))
 
-            if result not in self.ALLOWED_RESULTS:
+            if result not in Feedback.verdict.choices:
                 raise cherrypy.HTTPError(400,
-                                         'Incorrect result, it should be a string from {}'
-                                         .format(self.ALLOWED_RESULTS))
+                                         'Incorrect result, it should be a string from ' +
+                                         str(Feedback.verdict.choices))
 
-            if result == self.BLAME_RESULT:
-                self.blacklist.blame(explanation)
-            else:
-                self.stat.update(explanation, result)
+            with get_database().transaction():
+                Feedback.create(
+                    verdict=result,
+                    timestamp=datetime.datetime.now(),
+                    expl_key=key
+                )
 
         except cherrypy.HTTPError as e:
             if e.code >= 500:

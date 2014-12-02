@@ -68,27 +68,19 @@
           hatbot.explanations = list;
           hatbot.showMore();
         });
-    }
+    };
     this.sendRating = function(e) {
         var data = { result: e.score,
                          id: e.id
                    };
         
-        //заглушка, а вообще статистику хочется обсудить
-        switch(e.score) {
-          case '-2':
-          case '-1':
-            data.result = 'BLAME';
-            break;
-          case '2':
-          case '1':
-            data.result = 'SUCCESS';
-            break;
-          case '0':
-            data.result = 'FAIL';
-            break;
-        }
-        //конец заглушки
+        data.result = {
+            '-2': 'NOT_AN_EXPL',
+            '-1': 'VIOLATION',
+             '0': 'NOT_IMPRESSED',
+             '1': 'GOOD',
+             '2': 'EXACT'
+        }[e.score];
 
         $http({  method: 'POST',
                     url: '/statistics/update',
