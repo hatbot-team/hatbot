@@ -1,4 +1,4 @@
 # you can use it like this: (sudo) pip3 install -r dependencies.txt
 
 cherrypy
-
+peewee
