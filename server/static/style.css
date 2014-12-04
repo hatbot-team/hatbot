@@ -1,10 +1,5 @@
-.page-header {
-  top: 0px;
-  width: 85%;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  background-color: white;
+html, body {
+  height: 100%;
 }
 
 #hat-index {
@@ -41,4 +36,75 @@
 
 .rate-radio {
   float: right;
+}
+
+.sidebar {
+  height: 100%;
+  float: left;
+}
+
+.content {
+  height: 100%;
+  width: 270px;
+  float: left;
+  padding: 10px;
+}
+
+.hide-button {
+  height: 100%;
+  width: 30px;
+  float: left;
+  text-align: center;
+  display: table;
+  border-right: 1px solid;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+  /*border-color: black;*/
+  border-color: darkgray;
+}
+.hide-button:hover {
+  background-color: lightgray;
+}
+
+#hat-launch > button {
+  margin-top: 10px;
+  width: 220px;
+}
+
+#hat-launch > .input-group {
+  width: 220px;
+  margin-bottom: 10px;
+}
+
+.group-text {
+  background-color: #dddddd;
+  padding: 10px;
+}
+.arrow {
+  height: 100%;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.arrow:hover {
+  color: black;
+}
+
+
+.label-text {
+  /*background-color: white;*/
+  border-radius: 0 3px 3px 0;
+  border: 1px solid lightgray;
+  width: 183px;
+  padding: 5px 5px 5px 10px;
+}
+
+.panel-heading {
+  text-align: center;
+}
+
+#state-panel {
+  position: absolute;
+  bottom: 0;
+  width: 250px;
 }
