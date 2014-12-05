@@ -1,9 +1,30 @@
+import logging
 import cherrypy
 import explanator
 import datetime
 from models import ScoreFeedback, get_database
 
 __author__ = 'moskupols'
+
+
+def make_chat_logger():
+    chat_logger = logging.getLogger('api.chats')
+    chat_logger.setLevel(logging.INFO)
+
+    ch = logging.FileHandler('chats.log', encoding='UTF-8')
+    ch.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(asctime)s\n%(title)s\n%(text)s\n')
+
+    ch.setFormatter(formatter)
+    chat_logger.addHandler(ch)
+
+
+make_chat_logger()
+
+
+def store_chat_log(title, lines):
+    logging.getLogger('api.chats').info('New chat', extra={'title': title, 'text': '\n'.join(lines)})
 
 
 class ApiServer:
@@ -74,3 +95,21 @@ class ApiServer:
                 raise e
             e.set_response()
             return e.args[-1]
+
+    @cherrypy.tools.json_in(force=True)
+    @cherrypy.expose
+    def chat_log(self):
+        info = cherrypy.request.json
+
+        try:
+            title = info['title']
+            lines = info['lines']
+        except KeyError as e:
+            raise cherrypy.HTTPError(400, 'KeyError: ' + str(e))
+
+        if not isinstance(title, str) \
+                or not isinstance(lines, list) \
+                or any(not isinstance(s, str) or '\n' in s for s in lines):
+            raise cherrypy.HTTPError(400, 'Incorrect typing')
+
+        store_chat_log(title, lines)
