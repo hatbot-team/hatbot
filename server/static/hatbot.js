@@ -83,7 +83,7 @@
         }[e.score];
 
         $http({  method: 'POST',
-                    url: '/api/feedback',
+                    url: '/api/score',
                 headers: { 'Content-Type': 'application/json'
                               },
                 data: JSON.stringify(data),
