@@ -44,10 +44,10 @@
       this.wordIsHidden = true;
       this.nShown = 0;
       this.ratedExplanations = [];
-      $http.get('/random_word').success(function(data){
+      $http.get('/api/random_word').success(function(data){
         hatbot.word = data;
         $http({ method: 'GET',
-                   url: '/explain_list',
+                   url: '/api/explain_list',
                   params: {word: hatbot.word},
                   }).success(function(list){
           hatbot.explanations = list;
@@ -62,7 +62,7 @@
       this.nShown = 0;
       this.ratedExplanations = [];      
       $http({ method: 'GET',
-                 url: '/explain_list',
+                 url: '/api/explain_list',
               params: {word: hatbot.word},
                   }).success(function(list){
           hatbot.explanations = list;
@@ -83,7 +83,7 @@
         }[e.score];
 
         $http({  method: 'POST',
-                    url: '/statistics/update',
+                    url: '/api/score',
                 headers: { 'Content-Type': 'application/json'
                               },
                 data: JSON.stringify(data),
