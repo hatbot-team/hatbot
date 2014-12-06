@@ -1,0 +1,29 @@
+<div class="explanation-rate">
+    <form class="rate-radio">
+        <div class="radio-button">
+            <p>-2</p>
+            <p><input type="radio"
+                      ng-model="score"
+                      value="-2"></p>
+        </div>
+        <div class="radio-button">
+            <p>-1</p>
+            <p><input type="radio" ng-model="score" value="-1"></p>
+        </div>
+        <div class="radio-button">
+            <p>0</p>
+            <p><input type="radio" ng-model="score" value="0"></p>
+        </div>
+        <div class="radio-button">
+            <p>1</p>
+            <p><input type="radio" ng-model="score" value="1"></p>
+        </div>
+        <div class="radio-button">
+            <p>2</p>
+            <p><input type="radio" ng-model="score" value="2"></p>
+        </div>
+    </form>
+    <div class="rate-text">
+        {{scoreCtrl.textScore[score]}}
+    </div>
+</div>

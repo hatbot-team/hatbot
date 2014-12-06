@@ -2,8 +2,18 @@
     <div class="panel-heading">Сведения о текущем слове</div>
     <table class="table">
         <tbody>
-        <tr><td>слово</td><td ng-transclude></td></tr>
-        <tr><td>источник</td><td>{{source}}</td></tr>
+            <tr>
+                <td>слово</td>
+                <td>
+                    <a role="button" ng-hide="hatbot.wordIsHidden" ng-click="hatbot.hideWord()" title="щёлкни, чтобы скрыть">
+                        {{hatbot.word}}
+                    </a>
+                    <a role="button" ng-show="hatbot.wordIsHidden" ng-click="hatbot.showWord()" title="щёлкни, чтобы посмотреть">
+                        слово скрыто
+                    </a>
+                </td>
+            </tr>
+        <tr><td>источник</td><td>{{hatbot.wordSource}}</td></tr>
         </tbody>
     </table>
 </div>
