@@ -2,13 +2,13 @@ from models.basemodel import BaseModel
 from peewee import CharField, DateTimeField
 import datetime
 
-ALLOWED_VERDICTS = (
+ALLOWED_VERDICTS = frozenset((
     'NOT_AN_EXPL',
     'VIOLATION',
     'NOT_IMPRESSED',
     'GOOD',
     'EXACT',
-)
+))
 
 
 class ScoreFeedback(BaseModel):

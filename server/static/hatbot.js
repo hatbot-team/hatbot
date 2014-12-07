@@ -71,7 +71,8 @@
     };
     this.sendRating = function(e) {
         var data = { verdict: e.score,
-                     expl_id: e.id
+                     expl_id: e.id,
+                  client_app: 'hatbot.js'
                    };
 
         data.verdict = {

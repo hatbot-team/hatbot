@@ -33,12 +33,13 @@ __all__ = [
     'get_database',
     'create_nonexistent_tables',
     'init_database',
-    'ScoreFeedback'
+    'ScoreFeedback',
+    'ALLOWED_VERDICTS'
 ]
 
 try:
     from ._database import init_database, get_database
-    from .scorefeedback import ScoreFeedback
+    from .scorefeedback import ScoreFeedback, ALLOWED_VERDICTS
 except SystemError:
     from _database import init_database, get_database
     from scorefeedback import ScoreFeedback
