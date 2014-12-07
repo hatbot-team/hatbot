@@ -1,52 +1,12 @@
 <!DOCTYPE html>
-<html ng-app="hatbot" ng-controller="hatbotController as hatbot">
-  <head>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="hatbot-app.html">
     <title>Шляпобот</title>
-    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
-    <script type="text/javascript" src="hatbot.js"></script>
-    <script type="text/javascript" src="hatbot-menu.js"></script>
-    <script type="text/javascript" src="hatbot-rate.js"></script>
-  </head>
-  <body>
-    <div ng-controller="menuCtrl as menu">
-
-      <hatbot-menu ctrl="menu">
-        <div class="panel panel-default">
-          <div class="panel-heading">Ручной запускатр Шляпобота</div>
-          <div class="panel-body">
-            <form id="hat-launch">
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <input type="radio" ng-model="srcChoice" value="random" name="word-src">
-                </span>
-                <div class="label-text">случайное слово</div>
-              </div>
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <input type="radio" ng-model="srcChoice" value="own" name="word-src">
-                </span>
-                <input type="text" class="form-control" placeholder="своё слово" ng-model="givenWord">
-              </div>
-              <button type="button" class="btn btn-default" ng-click="hatbot.play(srcChoice, givenWord)">Играть</button>
-              <button type="button" class="btn btn-default">Оценивать объяснения</button>
-              <button type="button" class="btn btn-default">Улучшать объяснения</button>
-            </form>
-          </div>
-        </div>
-        <word-info hatbot="hatbot"></word-info>
-      </hatbot-menu>
-      <div id='hatbot-body' ng-style="menu.marginStyle">
-        <div class="alert alert-danger" ng-show="hatbot.wordLoadError">
-          Не удалось загрузить слово.
-        </div>
-        <div class="alert alert-danger" ng-show="hatbot.explanationsLoadError">
-          Не удалось загрузить объяснения.
-        </div>
-        <hatbot-rate hatbot="hatbot" ng-hide="hatbot.wordLoadError || hatbot.explanationsLoadError"></hatbot-rate>
-      </div>
-    </div>
-  </body>
+</head>
+    <body>
+        <hatbot-app></hatbot-app>
+    </body>
 </html>
