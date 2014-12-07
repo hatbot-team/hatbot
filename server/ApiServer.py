@@ -34,7 +34,7 @@ class ApiServer:
     def explanation_desc(e, asset: str):
         return {
             'id': e.key.encode(),
-            'title': e.title,
+            'word': e.title,
             'text': e.text,
             'asset': asset
         }
