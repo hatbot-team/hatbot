@@ -2,20 +2,20 @@ from os import path
 
 import cherrypy
 from models import init_database, create_nonexistent_tables
-from .ExplanationServer import ExplanationServer
-from .StatisticsServer import StatisticsServer
+from .ApiServer import ApiServer
 
 
 __author__ = 'moskupols'
 
 
-def run(conf=None):
+class StaticServer:
+    pass
+
+
+def run(db_url, conf=None):
     if conf is not None:
         cherrypy.config.update(conf)
 
-    db_url = None
-    if 'db' in cherrypy.config and 'url' in cherrypy.config['db']:
-        db_url = cherrypy.config['db']['url']
     init_database(db_url)
     create_nonexistent_tables()
 
@@ -28,7 +28,7 @@ def run(conf=None):
         }
     }
 
-    cherrypy.tree.mount(ExplanationServer(), '/', static_conf)
-    cherrypy.tree.mount(StatisticsServer(), '/statistics')
+    cherrypy.tree.mount(StaticServer(), '/', static_conf)
+    cherrypy.tree.mount(ApiServer(), '/api')
     cherrypy.engine.start()
     cherrypy.engine.block()

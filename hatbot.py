@@ -4,7 +4,7 @@
 def run_server(args):
     from server import run
 
-    run(args.config)
+    run(args.db_url, args.config)
 
 
 def play(_):
@@ -32,18 +32,23 @@ if __name__ == '__main__':
                                                'Note that the server restarts automatically every time some source '
                                                'file is changed.\n',
                                           formatter_class=argparse.RawTextHelpFormatter)
-    server_parser.add_argument('--config',
+    server_parser.add_argument('--db-url',
+                               dest='db_url',
+                               default='sqlite:///hatbot.sqlite',
+                               help="You can specify database url somehow like\n"
+                                    "this: 'sqlite:///some.db',\n"
+                                    "this: 'sqlite:///:memory:',\n"
+                                    "or this: 'postgresql://user:password@host:5432/database'.\n"
+                                    "\n"
+                                    "Defaults to 'sqlite:///hatbot.sqlite'.\n"
+                                    "\n"
+                                    "It's worth noting though that you'll need to install psycopg2 python3 package\n"
+                                    "in order to use postgresql with hatbot.")
+    server_parser.add_argument('--cp-config',
+                               dest='config',
                                help="Path to cherrypy config file. \n"
                                     "See https://cherrypy.readthedocs.org/en/latest/basics.html#configuring\n"
-                                    "\n"
-                                    "Also you can specify database url somehow like this:\n"
-                                    "[db]\n"
-                                    "url = 'sqlite:///some.db'\n"
-                                    "# or\n"
-                                    "url = 'postgresql://user:password@host:5432/database'\n"
-                                    "\n"
-                                    "It's worth noting though that you'll need to install psycopg2 package\n"
-                                    "in order to use postgresql with hatbot.")
+                                    "\n")
     server_parser.set_defaults(func=run_server)
 
     play_parser = subparsers.add_parser('play', help='Run statistics gathering utility')
