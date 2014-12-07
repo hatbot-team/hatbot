@@ -3,6 +3,8 @@
 *.pdf
 *.djvu
 *.vim
+*.swp
 .idea/
 *.json
-
+*.log
+*.sqlite
