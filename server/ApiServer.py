@@ -1,8 +1,9 @@
 import logging
 import cherrypy
 import explanator
-import datetime
+import jsonschema
 from models import ScoreFeedback, get_database
+from server.schemas import score_feedback_schema
 
 __author__ = 'moskupols'
 
@@ -32,6 +33,7 @@ class ApiServer:
     def explanation_desc(e, asset: str):
         return {
             'id': e.key.encode(),
+            'title': e.title,
             'text': e.text,
             'asset': asset
         }
@@ -69,32 +71,15 @@ class ApiServer:
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
     def score(self):
+        info = cherrypy.request.json
+
         try:
-            info = cherrypy.request.json
+            jsonschema.validate(info, score_feedback_schema)
+        except jsonschema.ValidationError as err:
+            raise cherrypy.HTTPError(400, err.message)
 
-            try:
-                result = info['result']
-                key = info['id']
-            except KeyError as e:
-                raise cherrypy.HTTPError(400, 'KeyError: ' + str(e))
-
-            if result not in ScoreFeedback.verdict.choices:
-                raise cherrypy.HTTPError(400,
-                                         'Incorrect result, it should be a string from ' +
-                                         str(ScoreFeedback.verdict.choices))
-
-            with get_database().transaction():
-                ScoreFeedback.create(
-                    verdict=result,
-                    timestamp=datetime.datetime.now(),
-                    expl_key=key
-                )
-
-        except cherrypy.HTTPError as e:
-            if e.code >= 500:
-                raise e
-            e.set_response()
-            return e.args[-1]
+        with get_database().transaction():
+            ScoreFeedback.create(**info)
 
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
