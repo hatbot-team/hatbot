@@ -1,9 +1,40 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/core-collapse/core-collapse.html">
+<link rel="import" href="hatbot-data-service.html">
+
 <polymer-element name="hatbot-app">
     <template>
+        <hatbot-data-service
+                id="loader"
+                word="{{word}}"
+                explanations="{{explanations}}"
+                on-got-word="{{updateExplanations}}"
+                on-no-explanations="{{noExplanationsHandler}}">
+        </hatbot-data-service>
         <p>Привет, я Шляпобот!</p>
+        <p>я загадал слово <input type="text" value="{{word}}"> </p>
+        <button on-click="{{updateWord}}">кнопка</button>
+        <button on-click="{{updateExplanations}}">ещё кнопка</button>
+        <template repeat="{{e in explanations}}">
+            <p>{{e.text}}</p>
+        </template>
     </template>
     <script>
-        Polymer({});
+        Polymer({
+            created: function() {
+                this.word = 'собака';
+            },
+            updateWord: function() {
+                var loader = this.$.loader;
+                loader.loadRandomWord();
+            },
+            updateExplanations: function() {
+                var loader = this.$.loader;
+                loader.loadExplanations();
+            },
+            noExplanationsHandler: function() {
+              console.log("no Explanations");
+            }
+        });
     </script>
 </polymer-element>
