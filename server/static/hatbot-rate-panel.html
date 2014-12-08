@@ -1,0 +1,78 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="bower_components/paper-input/paper-autogrow-textarea.html">
+<link rel="import" href="bower_components/paper-input/paper-input-decorator.html">
+
+<polymer-element name="hatbot-rate-panel" attributes="explanation">
+    <template>
+        <style>
+            :host {
+                display: block;
+                position: relative;
+                background-color: white;
+                padding: 20px;
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10px;
+            }
+            #verdict {
+                width: 200px;
+                padding: 10px;
+                text-align: center;
+                border-left: solid 1px lightgray;
+            }
+            #verdict > p {
+                height: 30px;
+                width: 100%;
+            }
+            #text {
+                padding: 10px;
+            }
+        </style>
+        <div horizontal layout>
+            <div id="text" flex>
+                <p>{{explanation.text}}</p>
+                <div horizontal layout>
+                    <paper-icon-button
+                            icon="create"
+                            hidden?="{{changeText}}"
+                            on-tap="{{activateChangeText}}">
+                    </paper-icon-button>
+                    <paper-input-decorator flex
+                            hidden?="{{!changeText}}"
+                            label="исправленный текст объяснения"
+                            floatingLabel>
+                        <paper-autogrow-textarea>
+                            <textarea value="{{explanation.changedText}}"></textarea>
+                        </paper-autogrow-textarea>
+                    </paper-input-decorator>
+                </div>
+            </div>
+            <div id="verdict">
+                <p>{{verdictConvertArray[2 + explanation.verdictNumber].text}}</p>
+                <paper-slider pin snaps min="-2" max="2" step="1" value={{explanation.verdictNumber}}></paper-slider>
+            </div>
+        </div>
+
+    </template>
+    <script>
+        Polymer({
+            text: '',
+            changeText: false,
+            verdictConvertArray: [{verdict: "NOT_AN_EXPL",   text: "Ужасно! Это вообще не объяснение!"},
+                                  {verdict: "VIOLATION",     text: "Плохо. Объяснение нарушает правила шляпы."},
+                                  {verdict: "NOT_IMPRESSED", text: "Так себе, но вполне корректно."},
+                                  {verdict: "GOOD",          text: "Хорошо. Но можно лучше."},
+                                  {verdict: "EXACT",         text: "Отлично! Я сразу понял!"}],
+            create: function() {
+                this.explanation.verdict = 0;
+            },
+            activateChangeText: function() {
+                this.changeText = true;
+                console.log("activated change text");
+            }
+        });
+    </script>
+</polymer-element>

@@ -1,5 +1,6 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="hatbot-feedback-service.html">
+<link rel="import" href="hatbot-rate-panel.html">
 
 <polymer-element name="hatbot-rate" attributes="word mind said canExplain">
     <template>
@@ -8,6 +9,9 @@
             Хотите предложить своё объяснение?
         </div>
         <hatbot-feedback-service feedback="{{feedback}}"></hatbot-feedback-service>
+        <template repeat="{{e in mind}}">
+            <hatbot-rate-panel explanation="{{e}}"></hatbot-rate-panel>
+        </template>
     </template>
     <script>
         Polymer({
