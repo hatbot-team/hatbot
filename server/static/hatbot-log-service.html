@@ -1,0 +1,25 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="hatbot-log-service" attributes="messages">
+    <template>
+        <style>
+            :host {
+                display: none;
+            }
+        </style>
+        <core-ajax id="sender"
+                   method="POST"
+                   url="???"
+                   data="{{messages}}"
+                   auto="false">
+        </core-ajax>
+    </template>
+    <script>
+        Polymer({
+            send: function() {
+                console.log("I pretend to send log");
+            }
+        });
+    </script>
+</polymer-element>

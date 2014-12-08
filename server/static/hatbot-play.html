@@ -1,0 +1,52 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="hatbot-log-service.html">
+<link rel="import" href="hatbot-dialog.html">
+
+<polymer-element name="hatbot-play" attributes="word mind said">
+    <template>
+        <p>Play!</p>
+        <hatbot-log-service messages="{{messages}}" word="{{word}}"></hatbot-log-service>
+        <hatbot-dialog messages="{{messages}}"></hatbot-dialog>
+        <button on-click="{{explain}}">Объясни по-другому!</button>
+    </template>
+    <script>
+        Polymer({
+            created: function() {
+                this.messages = [];
+                this.mind = [];
+                this.said = [];
+            },
+            greet: function() {
+                this.messages.push({ actor: 'app',
+                                     text: 'Привет, я шляпобот, бот для игры в шляпу. Давай играть?',
+                       msecs_after_start: 0
+                    });
+            },
+            startExplain: function() {
+                this.messages.push({ actor: 'app',
+                                      text: '*Достаю слово из шляпы*',
+                         msecs_after_start: 0});
+                this.startTime = new Date();
+                this.explain();
+            },
+            explain: function() {
+                var time = new Date();
+                if (this.mind.length != 0) {
+                    var msg = this.mind.pop();
+                    this.said.push(msg);
+                    this.messages.push({
+                        actor: 'bot',
+                        text: msg.text,
+                        msecs_after_start: time.getTime() - this.startTime.getTime()
+                    });
+                } else {
+                    this.messages.push({
+                        actor: 'app',
+                        text: 'не знаю, как объяснить по-другому',
+                        msecs_after_start: time.getTime() - this.startTime.getTime()
+                    });
+                }
+            }
+        });
+    </script>
+</polymer-element>

@@ -1,0 +1,14 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<polymer-element name="hatbot-dialog" attributes="messages">
+    <template>
+        <template repeat="{{msg in messages}}">
+            <p>{{msg.msecs_after_start}}</p>
+            <p>{{msg.actor}}</p>
+            <p>{{msg.text}}</p>
+        </template>
+    </template>
+    <script>
+        Polymer({});
+    </script>
+</polymer-element>

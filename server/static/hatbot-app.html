@@ -1,6 +1,16 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/core-collapse/core-collapse.html">
 <link rel="import" href="hatbot-data-service.html">
+<link rel="import" href="hatbot-play.html">
+<link rel="import" href="hatbot-rate.html">
+<link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="bower_components/core-menu/core-menu.html">
+<link rel="import" href="bower_components/core-menu/core-submenu.html">
+<link rel="import" href="bower_components/core-item/core-item.html">
+<link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
+<link rel="import" href="bower_components/paper-dialog/paper-action-dialog.html">
+<link rel="import" href="bower_components/paper-input/paper-input.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
 
 <polymer-element name="hatbot-app">
     <template>
@@ -9,20 +19,61 @@
                 word="{{word}}"
                 explanations="{{explanations}}"
                 on-got-word="{{updateExplanations}}"
-                on-no-explanations="{{noExplanationsHandler}}">
+                on-no-explanations="{{noExplanationsHandler}}"
+                on-got-explanations="{{gotExplanationsHandler}}">
         </hatbot-data-service>
-        <p>Привет, я Шляпобот!</p>
-        <p>я загадал слово <input type="text" value="{{word}}"> </p>
-        <button on-click="{{updateWord}}">кнопка</button>
-        <button on-click="{{updateExplanations}}">ещё кнопка</button>
-        <template repeat="{{e in explanations}}">
-            <p>{{e.text}}</p>
-        </template>
+
+        <core-scaffold mode="waterfall">
+            <nav>
+                <h1 style="text-align: center">Шляпобот</h1>
+                <core-menu theme="core-light-theme">
+                    <core-submenu label="Играть с ботом">
+                        <core-item label="играть случайное слово"></core-item>
+                        <core-item on-click="{{toggleDialog}}" label="играть своё слово">
+                            <paper-action-dialog id="wordForPlay" backdrop>
+                                <paper-input label="слово для игры" floatingLabel></paper-input>
+                                <paper-button affirmative>Играть</paper-button>
+                            </paper-action-dialog>
+                        </core-item>
+                    </core-submenu>
+                    <core-submenu label="Оценивать и править">
+                        <core-item label="случайные объяснения"></core-item>
+                        <core-item on-click="{{toggleDialog}}" label="объяснения своего слова">
+                            <paper-action-dialog id="wordForRate" backdrop>
+                                <paper-input label="слово для оценки" floatingLabel></paper-input>
+                                <paper-button affirmative>Оценивать</paper-button>
+                            </paper-action-dialog>
+                        </core-item>
+                    </core-submenu>
+                </core-menu>
+            </nav>
+
+            <div tool>{{state}}</div>
+
+            <div>
+                <hatbot-play
+                        id="play"
+                        hidden?="{{state != 'Игра с ботом'}}"
+                        word="{{word}}"
+                        mind="{{explanations}}"
+                        said="{{said}}">
+                </hatbot-play>
+                <hatbot-rate
+                        id="rate"
+                        hidden?="{{state != 'Обучение бота'}}"
+                        word="{{word}}"
+                        mind="{{explanations}}"
+                        said="{{said}}">
+                </hatbot-rate>
+            </div>
+        </core-scaffold>
     </template>
     <script>
         Polymer({
-            created: function() {
-                this.word = 'собака';
+            ready: function() {
+                this.state = 'Игра с ботом';
+                this.$.play.greet();
+                this.updateWord();
             },
             updateWord: function() {
                 var loader = this.$.loader;
@@ -34,6 +85,15 @@
             },
             noExplanationsHandler: function() {
               console.log("no Explanations");
+            },
+            gotExplanationsHandler: function() {
+                if (this.state == 'Игра с ботом'){
+                    this.$.play.startExplain();
+                }
+            },
+            toggleDialog: function(e) {
+                var d = e.target.querySelector('paper-dialog,paper-action-dialog');
+                d.toggle();
             }
         });
     </script>
