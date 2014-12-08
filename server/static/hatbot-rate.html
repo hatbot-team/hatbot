@@ -1,22 +1,41 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
+
 <link rel="import" href="hatbot-feedback-service.html">
-<link rel="import" href="hatbot-rate-panel.html">
+<link rel="import" href="hatbot-rate-panels.html">
+<link rel="import" href="hatbot-panel.html">
 
 <polymer-element name="hatbot-rate" attributes="word mind said canExplain">
     <template>
-        <div hidden?="{{canExplain}}">
+        <hatbot-feedback-service feedback="{{feedback}}"></hatbot-feedback-service>
+        <hatbot-panel hidden?="{{canExplain}}">
             Бот не знает как объяснять слово «{{word}}».
             Хотите предложить своё объяснение?
-        </div>
-        <hatbot-feedback-service feedback="{{feedback}}"></hatbot-feedback-service>
-        <template repeat="{{e in mind}}">
-            <hatbot-rate-panel explanation="{{e}}"></hatbot-rate-panel>
-        </template>
+        </hatbot-panel>
+        <hatbot-panel hidden?="{{!canExplain}}">
+            Оценивая и исправляя объяснения бота, Вы помогаете ему стать лучше!
+        </hatbot-panel>
+        <hatbot-rate-panels explanations="{{said}}"></hatbot-rate-panels>
+        <hatbot-panel>
+            <paper-button on-click="{{explain}}">Ещё объяснение</paper-button>
+            <paper-button on-click="{{explainAll}}">Все объяснения</paper-button>
+        </hatbot-panel>
     </template>
     <script>
         Polymer({
-            startExplain: function() {
-                console.log('started explaining');
+            created: function() {
+                this.said = [];
+                this.mind = [];
+            },
+            explain: function() {
+                this.said.push(this.mind.pop());
+            },
+            explainAll: function() {
+                while (this.mind.length != 0) {
+                    this.explain();
+                }
             },
             clear: function() {
                 console.log('rate.clear');

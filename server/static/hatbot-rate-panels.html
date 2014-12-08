@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<link rel="import" href="bower_components/polymer/polymer.html">
 
-</body>
-</html>
+<link rel="import" href="hatbot-rate-panel.html">
+
+<polymer-element name="hatbot-rate-panels" attributes="explanations">
+    <template>
+        <template repeat="{{e in explanations}}">
+            <hatbot-rate-panel explanation="{{e}}"></hatbot-rate-panel>
+        </template>
+    </template>
+    <script>
+        Polymer({});
+    </script>
+</polymer-element>
