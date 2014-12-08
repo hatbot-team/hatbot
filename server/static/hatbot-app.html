@@ -4,13 +4,7 @@
 <link rel="import" href="hatbot-rate.html">
 <link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
 <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
-<link rel="import" href="bower_components/core-menu/core-menu.html">
-<link rel="import" href="bower_components/core-menu/core-submenu.html">
-<link rel="import" href="bower_components/core-item/core-item.html">
-<link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
-<link rel="import" href="bower_components/paper-dialog/paper-action-dialog.html">
-<link rel="import" href="bower_components/paper-input/paper-input.html">
-<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="hatbot-launch-menu.html">
 
 <polymer-element name="hatbot-app">
     <template>
@@ -26,52 +20,13 @@
         <core-scaffold mode="waterfall">
             <nav>
                 <h1 style="text-align: center">Шляпобот</h1>
-                <core-menu theme="core-light-theme">
-                    <core-submenu label="Играть с ботом">
-                        <core-item
-                                on-click="{{playRandom}}"
-                                label="играть случайное слово">
-                        </core-item>
-                        <core-item
-                                label="играть своё слово"
-                                on-click="{{toggleDialog}}">
-                            <paper-action-dialog backdrop>
-                                <paper-input
-                                        label="слово для игры"
-                                        value="{{given}}"
-                                        floatingLabel>
-                                </paper-input>
-                                <paper-button
-                                        affirmative
-                                        on-click="{{playOwn}}">
-                                    Играть
-                                </paper-button>
-                            </paper-action-dialog>
-                        </core-item>
-                    </core-submenu>
-                    <core-submenu label="Оценивать и править">
-                        <core-item
-                                label="случайные объяснения"
-                                on-click="{{rateRandom}}">
-                        </core-item>
-                        <core-item
-                                label="объяснения своего слова"
-                                on-click="{{toggleDialog}}">
-                            <paper-action-dialog backdrop>
-                                <paper-input
-                                        label="слово для оценки"
-                                        value="{{given}}"
-                                        floatingLabel>
-                                </paper-input>
-                                <paper-button
-                                        affirmative
-                                        on-click="{{rateOwn}}">
-                                    Оценивать
-                                </paper-button>
-                            </paper-action-dialog>
-                        </core-item>
-                    </core-submenu>
-                </core-menu>
+                <hatbot-launch-menu
+                        word="{{given}}"
+                        on-play-random="{{playRandom}}"
+                        on-play-own="{{playOwn}}"
+                        on-rate-random="{{rateRandom}}"
+                        on-rate-own="{{rateOwn}}">
+                </hatbot-launch-menu>
             </nav>
 
             <div tool>{{titles[state]}}</div>
@@ -157,10 +112,6 @@
                 } else if (this.state == 'rate') {
                     this.$.rate.startExplain();
                 }
-            },
-            toggleDialog: function(e) {
-                var d = e.target.querySelector('paper-dialog,paper-action-dialog');
-                d.toggle();
             }
         });
     </script>
