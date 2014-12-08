@@ -28,42 +28,69 @@
                 <h1 style="text-align: center">Шляпобот</h1>
                 <core-menu theme="core-light-theme">
                     <core-submenu label="Играть с ботом">
-                        <core-item label="играть случайное слово"></core-item>
-                        <core-item on-click="{{toggleDialog}}" label="играть своё слово">
-                            <paper-action-dialog id="wordForPlay" backdrop>
-                                <paper-input label="слово для игры" floatingLabel></paper-input>
-                                <paper-button affirmative>Играть</paper-button>
+                        <core-item
+                                on-click="{{playRandom}}"
+                                label="играть случайное слово">
+                        </core-item>
+                        <core-item
+                                label="играть своё слово"
+                                on-click="{{toggleDialog}}">
+                            <paper-action-dialog backdrop>
+                                <paper-input
+                                        label="слово для игры"
+                                        value="{{given}}"
+                                        floatingLabel>
+                                </paper-input>
+                                <paper-button
+                                        affirmative
+                                        on-click="{{playOwn}}">
+                                    Играть
+                                </paper-button>
                             </paper-action-dialog>
                         </core-item>
                     </core-submenu>
                     <core-submenu label="Оценивать и править">
-                        <core-item label="случайные объяснения"></core-item>
-                        <core-item on-click="{{toggleDialog}}" label="объяснения своего слова">
-                            <paper-action-dialog id="wordForRate" backdrop>
-                                <paper-input label="слово для оценки" floatingLabel></paper-input>
-                                <paper-button affirmative>Оценивать</paper-button>
+                        <core-item
+                                label="случайные объяснения"
+                                on-click="{{rateRandom}}">
+                        </core-item>
+                        <core-item
+                                label="объяснения своего слова"
+                                on-click="{{toggleDialog}}">
+                            <paper-action-dialog backdrop>
+                                <paper-input
+                                        label="слово для оценки"
+                                        value="{{given}}"
+                                        floatingLabel>
+                                </paper-input>
+                                <paper-button
+                                        affirmative
+                                        on-click="{{rateOwn}}">
+                                    Оценивать
+                                </paper-button>
                             </paper-action-dialog>
                         </core-item>
                     </core-submenu>
                 </core-menu>
             </nav>
 
-            <div tool>{{state}}</div>
+            <div tool>{{titles[state]}}</div>
 
             <div>
                 <hatbot-play
                         id="play"
-                        hidden?="{{state != 'Игра с ботом'}}"
+                        hidden?="{{state != 'play'}}"
                         word="{{word}}"
                         mind="{{explanations}}"
                         said="{{said}}">
                 </hatbot-play>
                 <hatbot-rate
                         id="rate"
-                        hidden?="{{state != 'Обучение бота'}}"
+                        hidden?="{{state != 'rate'}}"
                         word="{{word}}"
                         mind="{{explanations}}"
-                        said="{{said}}">
+                        said="{{said}}"
+                        canExplain="{{canExplain}}">
                 </hatbot-rate>
             </div>
         </core-scaffold>
@@ -71,9 +98,44 @@
     <script>
         Polymer({
             ready: function() {
-                this.state = 'Игра с ботом';
+                this.explanations = [];
+                this.said = [];
+                this.canExplain = true;
+                this.given = '';
+                this.titles = {'play': 'Игра с ботом', 'rate': 'Оценка объяснений'};
+                this.state = 'play';
                 this.$.play.greet();
                 this.updateWord();
+            },
+            clear: function() {
+                this.explanations = [];
+                this.said = [];
+            },
+            playRandom: function() {
+                this.clear();
+                this.$.play.clear();
+                this.state = 'play';
+                this.updateWord();
+            },
+            playOwn: function() {
+                this.clear();
+                this.$.play.clear();
+                this.state = 'play';
+                this.word = this.given;
+                this.updateExplanations();
+            },
+            rateRandom: function() {
+                this.clear();
+                this.$.rate.clear();
+                this.state = 'rate';
+                this.updateWord();
+            },
+            rateOwn: function() {
+                this.clear();
+                this.$.rate.clear();
+                this.state = 'rate';
+                this.word = this.given;
+                this.updateExplanations();
             },
             updateWord: function() {
                 var loader = this.$.loader;
@@ -84,11 +146,16 @@
                 loader.loadExplanations();
             },
             noExplanationsHandler: function() {
-              console.log("no Explanations");
+                this.canExplain = false;
+                this.state = 'rate';
+                console.log("no Explanations");
             },
             gotExplanationsHandler: function() {
-                if (this.state == 'Игра с ботом'){
+                this.canExplain = true;
+                if (this.state == 'play'){
                     this.$.play.startExplain();
+                } else if (this.state == 'rate') {
+                    this.$.rate.startExplain();
                 }
             },
             toggleDialog: function(e) {

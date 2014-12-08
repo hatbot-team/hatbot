@@ -1,12 +1,22 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="hatbot-feedback-service.html">
 
-<polymer-element name="hatbot-rate" attributes="word mind said">
+<polymer-element name="hatbot-rate" attributes="word mind said canExplain">
     <template>
-        <p>Rate!</p>
-        <hatbot-log-service messages="{{feedback}}"></hatbot-log-service>
+        <div hidden?="{{canExplain}}">
+            Бот не знает как объяснять слово «{{word}}».
+            Хотите предложить своё объяснение?
+        </div>
+        <hatbot-feedback-service feedback="{{feedback}}"></hatbot-feedback-service>
     </template>
     <script>
-        Polymer({});
+        Polymer({
+            startExplain: function() {
+                console.log('started explaining');
+            },
+            clear: function() {
+                console.log('rate.clear');
+            }
+        });
     </script>
 </polymer-element>

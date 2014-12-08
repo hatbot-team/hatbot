@@ -11,7 +11,10 @@
     </template>
     <script>
         Polymer({
-            created: function() {
+            ready: function() {
+                this.clear();
+            },
+            clear: function() {
                 this.messages = [];
                 this.mind = [];
                 this.said = [];
@@ -35,7 +38,7 @@
                     var msg = this.mind.pop();
                     this.said.push(msg);
                     this.messages.push({
-                        actor: 'bot',
+                        actor: 'app',
                         text: msg.text,
                         msecs_after_start: time.getTime() - this.startTime.getTime()
                     });
