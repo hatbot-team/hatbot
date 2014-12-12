@@ -6,11 +6,11 @@ from hb_res.explanation_source import sources_registry
 
 
 SOURCES = sources_registry.sources_registered()
-SELECTED_FILE = open("../hb_res/goodwords.dat", 'r', encoding='utf-8')
+SELECTED_FILE = open("explanator/goodwords.dat", 'r', encoding='utf-8')
 
 goodwordslist = []
 for s in SELECTED_FILE:
-    goodwordslist.append(s.trip())
+    goodwordslist.append(s.strip())
 
 
 asset_by_key = dict()
@@ -33,10 +33,9 @@ def get_explainable_words():
     return words
 
 
-def get_random_word(selected=None):
-    if (selected != None):
-        if (selected == true):
-            return random.choice(goodwordslist)
+def get_random_word(selected=False):
+    if (selected):
+        return random.choice(goodwordslist)
     return random.choice(words_list)
 
 

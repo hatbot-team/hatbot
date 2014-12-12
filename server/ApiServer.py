@@ -64,7 +64,7 @@ class ApiServer:
 
     @cherrypy.expose
     def random_word(self):
-        return explanator.get_random_word()
+        return explanator.get_random_word(selected=True)
 
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
