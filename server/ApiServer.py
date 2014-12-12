@@ -1,20 +1,26 @@
 import logging
+import json
+
 import cherrypy
+import jsonschema
+
 import explanator
-import datetime
 from models import ScoreFeedback, get_database
+from server.schemas import score_feedback_schema, chat_log_schema
+
 
 __author__ = 'moskupols'
+CHAT_LOGGER_NAME = 'api.chats'
 
 
 def make_chat_logger():
-    chat_logger = logging.getLogger('api.chats')
+    chat_logger = logging.getLogger(CHAT_LOGGER_NAME)
     chat_logger.setLevel(logging.INFO)
 
     ch = logging.FileHandler('chats.log', encoding='UTF-8')
     ch.setLevel(logging.INFO)
 
-    formatter = logging.Formatter('%(asctime)s\n%(title)s\n%(text)s\n')
+    formatter = logging.Formatter('%(asctime)s\n%(msg)s')
 
     ch.setFormatter(formatter)
     chat_logger.addHandler(ch)
@@ -23,15 +29,12 @@ def make_chat_logger():
 make_chat_logger()
 
 
-def store_chat_log(title, lines):
-    logging.getLogger('api.chats').info('New chat', extra={'title': title, 'text': '\n'.join(lines)})
-
-
 class ApiServer:
     @staticmethod
     def explanation_desc(e, asset: str):
         return {
             'id': e.key.encode(),
+            'word': e.title,
             'text': e.text,
             'asset': asset
         }
@@ -45,14 +48,29 @@ class ApiServer:
             raise cherrypy.HTTPError(400)
         return e
 
+    @staticmethod
+    def receive_json(schema):
+        data = cherrypy.request.json
+        try:
+            jsonschema.validate(data, schema)
+        except jsonschema.ValidationError as err:
+            raise cherrypy.HTTPError(400, err.message)
+        return data
+
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def explain(self, word=None):
+        """
+        Returns JSON described by explanation_schema
+        """
         return self.explanation_desc(*self.get_explanation(word))
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def explain_list(self, word=None):
+        """
+        Returns JSON described by explanation_list_schema
+        """
         e_list = self.get_explanation(word, method=explanator.explain_list)
         for i in range(len(e_list)):
             e_list[i] = self.explanation_desc(*e_list[i])
@@ -60,6 +78,9 @@ class ApiServer:
 
     @cherrypy.expose
     def explain_plain(self, word=None):
+        """
+        Returns plain explanation text
+        """
         return self.get_explanation(word)[0].text
 
     @cherrypy.expose
@@ -69,47 +90,12 @@ class ApiServer:
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
     def score(self):
-        try:
-            info = cherrypy.request.json
-
-            try:
-                result = info['result']
-                key = info['id']
-            except KeyError as e:
-                raise cherrypy.HTTPError(400, 'KeyError: ' + str(e))
-
-            if result not in ScoreFeedback.verdict.choices:
-                raise cherrypy.HTTPError(400,
-                                         'Incorrect result, it should be a string from ' +
-                                         str(ScoreFeedback.verdict.choices))
-
-            with get_database().transaction():
-                ScoreFeedback.create(
-                    verdict=result,
-                    timestamp=datetime.datetime.now(),
-                    expl_key=key
-                )
-
-        except cherrypy.HTTPError as e:
-            if e.code >= 500:
-                raise e
-            e.set_response()
-            return e.args[-1]
+        info = self.receive_json(score_feedback_schema)
+        with get_database().transaction():
+            ScoreFeedback.create(**info)
 
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
     def chat_log(self):
-        info = cherrypy.request.json
-
-        try:
-            title = info['title']
-            lines = info['lines']
-        except KeyError as e:
-            raise cherrypy.HTTPError(400, 'KeyError: ' + str(e))
-
-        if not isinstance(title, str) \
-                or not isinstance(lines, list) \
-                or any(not isinstance(s, str) or '\n' in s for s in lines):
-            raise cherrypy.HTTPError(400, 'Incorrect typing')
-
-        store_chat_log(title, lines)
+        log = self.receive_json(chat_log_schema)
+        logging.getLogger('api.chats').info(json.dumps(log))

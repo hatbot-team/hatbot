@@ -70,11 +70,12 @@
         });
     };
     this.sendRating = function(e) {
-        var data = { result: e.score,
-                         id: e.id
+        var data = { verdict: e.score,
+                     expl_id: e.id,
+                  client_app: 'hatbot.js'
                    };
-        
-        data.result = {
+
+        data.verdict = {
             '-2': 'NOT_AN_EXPL',
             '-1': 'VIOLATION',
              '0': 'NOT_IMPRESSED',
@@ -87,7 +88,7 @@
                 headers: { 'Content-Type': 'application/json'
                               },
                 data: JSON.stringify(data),
-               });  
+               });
     };
 
     this.sendRatingAndRateRandom = function(){
