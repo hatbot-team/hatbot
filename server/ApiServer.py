@@ -108,4 +108,4 @@ class ApiServer:
     @cherrypy.expose
     def chat_log(self):
         log = self.receive_json(chat_log_schema)
-        logging.getLogger('api.chats').info(json.dumps(log))
+        logging.getLogger(CHAT_LOGGER_NAME).info(json.dumps(log))
