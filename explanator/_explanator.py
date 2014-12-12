@@ -1,59 +1,82 @@
+import itertools
+
 __author__ = 'pershik'
 
-from hb_res.explanations import Explanation
 import random
-from hb_res.explanation_source import sources_registry
+from hb_res.explanation_source import sources_registry, ExplanationSource
 
 
 SOURCES = sources_registry.sources_registered()
+source_names = [s.name for s in SOURCES]
 
-asset_by_key = dict()
-words = set()
+words_list = []
+words_list_by_asset_name = dict()
 for s in SOURCES:
-    for word in s.explainable_words():
-        words.add(word)
-        explanations = s.explain(word)
-        for explanation in explanations:
-            asset_by_key[explanation.key] = s.name
-words_list = list(words)
+    li = list(s.explainable_words())
+    words_list_by_asset_name[s.name] = li
+    words_list.extend(li)
+words_set = frozenset(words_list)
 
 
-def get_explainable_words():
+def _apply_asset_filter(assets):
+    if assets is None:
+        sources_filtered = SOURCES
+    elif isinstance(assets, str):
+        sources_filtered = [sources_registry.source_for_name(assets)]
+    else:
+        sources_filtered = [sources_registry.source_for_name(name) for name in assets]
+    return sources_filtered
+
+
+def get_explainable_words(assets=None):
     """
     Returns an iterable of all words for which we have any explanation.
 
     :return: iterable
     """
-    return words
+    assets = _apply_asset_filter(assets)
+    return itertools.chain(map(ExplanationSource.explainable_words, assets))
 
 
-def get_random_word():
-    return random.choice(words_list)
+def get_random_word(assets=None):
+    if assets is None:
+        return random.choice(words_list)
+    if isinstance(assets, str):
+        return random.choice(words_list_by_asset_name[assets])
+
+    lists = [words_list_by_asset_name[name] for name in assets]
+    total = sum(len(list) for list in lists)
+    rand = random.randrange(total)
+    upto = 0
+    for list in lists:
+        upto += len(list)
+        if rand < upto:
+            return list[upto-rand]
+    assert False, 'Shouldn\'t get here'
 
 
-def explain_list(word):
+def explain_list(word, assets=None):
     """
     Returns list of tuple (Explanations, asset_name)
     """
-    if word in words:
+    sources_filtered = _apply_asset_filter(assets)
+    if word in words_set:
         res = list()
-        for s in SOURCES:
-            explanations = s.explain(word)
-            for explanation in explanations:
-                res.append((explanation, asset_by_key[explanation.key]))
+        for s in sources_filtered:
+            res.extend(zip(s.explain(word), itertools.repeat(s.name)))
         return res
     else:
-        return None
+        return []
 
 
-def explain(word):
+def explain(word, assets=None):
     """
     Returns tuple (Explanation, asset_name)
 
     :param word: a russian noun in lowercase
     :return: the explanation
     """
-    if word in words:
-        return random.choice(explain_list(word))
+    if word in words_set:
+        return random.choice(explain_list(word, assets))
     else:
         return None
