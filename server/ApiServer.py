@@ -84,8 +84,12 @@ class ApiServer:
         return self.get_explanation(word)[0].text
 
     @cherrypy.expose
-    def random_word(self):
-        return explanator.get_random_word(selected=True)
+    def random_word(self, selection_level=None):
+        if selection_level is None or selection_level != '0':
+            selection_level = 1
+        else:
+            selection_level = int(selection_level)
+        return explanator.get_random_word(selection_level)
 
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
