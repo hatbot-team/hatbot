@@ -1,66 +1,88 @@
 import itertools
-
-__author__ = 'pershik'
-
+import logging
+from os import path
 import random
+
 from hb_res.explanation_source import sources_registry, ExplanationSource
 
 
-SOURCES = sources_registry.sources_registered()
-source_names = [s.name for s in SOURCES]
+__author__ = 'pershik, ryad0m, keksozavr'
+
+ALL_SOURCES = sources_registry.sources_registered()
+ALL_SOURCES_NAMES_SET = frozenset(s.name for s in ALL_SOURCES)
 
 words_list = []
-words_list_by_asset_name = dict()
-for s in SOURCES:
+words_list_by_source_name = dict()
+for s in ALL_SOURCES:
     li = list(s.explainable_words())
-    words_list_by_asset_name[s.name] = li
+    words_list_by_source_name[s.name] = li
     words_list.extend(li)
 words_set = frozenset(words_list)
 
 
-def _apply_asset_filter(assets):
-    if assets is None:
-        sources_filtered = SOURCES
-    elif isinstance(assets, str):
-        sources_filtered = [sources_registry.source_for_name(assets)]
+GOOD_WORDS_SELECTION = 1
+ALL_WORDS_SELECTION = 0
+SELECTED_WORDS_PATH = path.join(path.dirname(path.abspath(__file__)), "goodwords.dat")
+
+try:
+    with open(SELECTED_WORDS_PATH, 'r', encoding='utf-8') as selected_file:
+        selected_words_list = list(map(str.strip, selected_file))
+except FileNotFoundError as e:
+    logging.error("Couldn't find selected words at " + e.filename)
+    selected_words_list = words_list
+
+
+def _pick_sources_by_names(names):
+    if names is None:
+        sources_filtered = ALL_SOURCES
     else:
-        sources_filtered = [sources_registry.source_for_name(name) for name in assets]
+        if isinstance(names, str):
+            names = [names]
+        sources_filtered = [sources_registry.source_for_name(name) for name in names]
     return sources_filtered
 
 
-def get_explainable_words(assets=None):
+def get_explainable_words(sources=None):
     """
     Returns an iterable of all words for which we have any explanation.
 
     :return: iterable
     """
-    assets = _apply_asset_filter(assets)
-    return itertools.chain(map(ExplanationSource.explainable_words, assets))
+    sources = _pick_sources_by_names(sources)
+    return itertools.chain(map(ExplanationSource.explainable_words, sources))
 
 
-def get_random_word(assets=None):
-    if assets is None:
-        return random.choice(words_list)
-    if isinstance(assets, str):
-        return random.choice(words_list_by_asset_name[assets])
+def get_random_word(*, sources_names=None, selection_level=None):
+    assert sources_names is None or selection_level is None
 
-    lists = [words_list_by_asset_name[name] for name in assets]
-    total = sum(len(list) for list in lists)
+    if sources_names is None:
+        return random.choice(words_list if selection_level == ALL_WORDS_SELECTION else selected_words_list)
+
+    # If the user wants a sole specific asset, the task is straightforward
+    if not isinstance(sources_names, str) and len(sources_names) == 1:
+        sources_names = sources_names[0]
+    if isinstance(sources_names, str):
+        return random.choice(words_list_by_source_name[sources_names])
+
+    # otherwise we have to pick a uniformly random element from several lists,
+    # but we wouldn't like to join them, as they are long
+    lists = [words_list_by_source_name[name] for name in sources_names]
+    total = sum(map(len, lists))
     rand = random.randrange(total)
     upto = 0
-    for list in lists:
-        upto += len(list)
+    for word_list in lists:
+        upto += len(word_list)
         if rand < upto:
-            return list[upto-rand]
+            return word_list[rand - upto]  # yep, negative indexation
     assert False, 'Shouldn\'t get here'
 
 
-def explain_list(word, assets=None):
+def explain_list(word, sources_names=None):
     """
     Returns list of tuple (Explanations, asset_name)
     """
-    sources_filtered = _apply_asset_filter(assets)
     if word in words_set:
+        sources_filtered = _pick_sources_by_names(sources_names)
         res = list()
         for s in sources_filtered:
             res.extend(zip(s.explain(word), itertools.repeat(s.name)))
@@ -69,7 +91,7 @@ def explain_list(word, assets=None):
         return []
 
 
-def explain(word, assets=None):
+def explain(word, sources_names=None):
     """
     Returns tuple (Explanation, asset_name)
 
@@ -77,6 +99,6 @@ def explain(word, assets=None):
     :return: the explanation
     """
     if word in words_set:
-        return random.choice(explain_list(word, assets))
+        return random.choice(explain_list(word, sources_names))
     else:
         return None
