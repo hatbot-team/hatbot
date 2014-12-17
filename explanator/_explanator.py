@@ -86,6 +86,7 @@ def explain_list(word, sources_names=None):
         res = list()
         for s in sources_filtered:
             res.extend(zip(s.explain(word), itertools.repeat(s.name)))
+        random.shuffle(res)
         return res
     else:
         return []
@@ -99,6 +100,6 @@ def explain(word, sources_names=None):
     :return: the explanation
     """
     if word in words_set:
-        return random.choice(explain_list(word, sources_names))
+        return explain_list(word, sources_names)[0]
     else:
         return None
