@@ -1,15 +1,15 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 
 <link rel="import" href="bower_components/paper-button/paper-button.html">
-<link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
 
 <link rel="import" href="hatbot-feedback-service.html">
 <link rel="import" href="hatbot-rate-panels.html">
 <link rel="import" href="hatbot-panel.html">
+<link rel="import" href="hatbot-user-explanations.html">
 
 <polymer-element name="hatbot-rate" attributes="word mind said canExplain">
     <template>
-        <hatbot-feedback-service feedback="{{feedback}}"></hatbot-feedback-service>
+        <hatbot-feedback-service id='ajax' feedback="{{feedback}}"></hatbot-feedback-service>
         <hatbot-panel hidden?="{{canExplain}}">
             Бот не знает как объяснять слово «{{word}}».
             Хотите предложить своё объяснение?
@@ -18,16 +18,26 @@
             Оценивая и исправляя объяснения бота, Вы помогаете ему стать лучше!
         </hatbot-panel>
         <hatbot-rate-panels explanations="{{said}}"></hatbot-rate-panels>
-        <hatbot-panel>
-            <paper-button on-click="{{explain}}">Ещё объяснение</paper-button>
-            <paper-button on-click="{{explainAll}}">Все объяснения</paper-button>
+        <hatbot-panel style="text-align: center">
+            <p>
+                <paper-button raised on-click="{{explain}}" hidden?="{{mind.length == 0 || !canExplain}}">Ещё объяснение</paper-button>
+                <paper-button raised on-click="{{explainAll}}" hidden?="{{mind.length == 0 || !canExplain}}">Все объяснения</paper-button>
+            </p>
+            <p>
+                <paper-button raised on-click="{{addOwn}}">Добавить своё объяснение</paper-button>
+            </p>
+            <p>
+                <paper-button raised on-click="{{sendFeedback}}">Отправить оценки и исправления объяснений слова «{{word}}»</paper-button>
+            </p>
         </hatbot-panel>
+        <hatbot-user-explanations explanations="{{userExplanations}}"></hatbot-user-explanations>
     </template>
     <script>
         Polymer({
             created: function() {
                 this.said = [];
                 this.mind = [];
+                this.userExplanations = [];
             },
             explain: function() {
                 this.said.push(this.mind.pop());
@@ -39,6 +49,13 @@
             },
             clear: function() {
                 console.log('rate.clear');
+            },
+            addOwn: function() {
+                this.userExplanations.push('');
+            },
+            sendFeedback: function() {
+                this.$.ajax.send();
+                this.fire('feedback-sent');
             }
         });
     </script>

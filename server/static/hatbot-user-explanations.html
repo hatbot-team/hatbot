@@ -1,0 +1,25 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/paper-input/paper-autogrow-textarea.html">
+<link rel="import" href="bower_components/paper-input/paper-input-decorator.html">
+
+<link rel="import" href="hatbot-panel.html">
+
+<polymer-element name="hatbot-user-explanations" attributes="explanations">
+    <template>
+        <template repeat="{{e in explanations}}">
+            <hatbot-panel>
+                <paper-input-decorator flex
+                                       label="Ваше объяснение"
+                                       floatingLabel>
+                    <paper-autogrow-textarea>
+                        <textarea value="{{e}}"></textarea>
+                    </paper-autogrow-textarea>
+                </paper-input-decorator>
+            </hatbot-panel>
+        </template>
+    </template>
+    <script>
+        Polymer({});
+    </script>
+</polymer-element>

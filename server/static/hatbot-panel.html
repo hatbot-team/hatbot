@@ -1,9 +1,11 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 
+<link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
+
 <polymer-element name="hatbot-panel">
     <template>
         <style>
-            :host {
+            #panel {
                 display: block;
                 position: relative;
                 background-color: white;
@@ -14,7 +16,9 @@
                 margin-top: 10px;
             }
         </style>
-        <content></content>
+        <paper-shadow id='panel' z="1">
+            <content></content>
+        </paper-shadow>
     </template>
     <script>
         Polymer({});

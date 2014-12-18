@@ -1,9 +1,12 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="bower_components/paper-toast/paper-toast.html">
+
 <link rel="import" href="hatbot-data-service.html">
 <link rel="import" href="hatbot-play.html">
 <link rel="import" href="hatbot-rate.html">
-<link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
-<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
 <link rel="import" href="hatbot-launch-menu.html">
 
 <polymer-element name="hatbot-app">
@@ -17,9 +20,9 @@
                 on-got-explanations="{{gotExplanationsHandler}}">
         </hatbot-data-service>
 
-        <core-scaffold mode="waterfall">
+        <core-scaffold mode="waterfall" responsiveWidth="800px">
             <nav>
-                <h1 style="text-align: center">Шляпобот</h1>
+                <h1 style="text-align: center">Шляпобот-меню</h1>
                 <hatbot-launch-menu
                         word="{{given}}"
                         on-play-random="{{playRandom}}"
@@ -29,7 +32,7 @@
                 </hatbot-launch-menu>
             </nav>
 
-            <div tool>{{titles[state]}}</div>
+            <div tool>{{titles[state]}}{{state == 'rate' ? '«'+ word + '»' : ''}}</div>
 
             <div>
                 <hatbot-play
@@ -45,10 +48,12 @@
                         word="{{word}}"
                         mind="{{explanations}}"
                         said="{{said}}"
-                        canExplain="{{canExplain}}">
+                        canExplain="{{canExplain}}"
+                        on-feedback-sent="{{launchAfterRate}}">
                 </hatbot-rate>
             </div>
         </core-scaffold>
+        <paper-toast id="feedbackSuccess" text="Оценки и исправления объяснений успешно отправлены"></paper-toast>
     </template>
     <script>
         Polymer({
@@ -57,22 +62,33 @@
                 this.said = [];
                 this.canExplain = true;
                 this.given = '';
-                this.titles = {'play': 'Игра с ботом', 'rate': 'Оценка объяснений'};
+                this.titles = {'play': 'Игра с ботом', 'rate': 'Оценка объяснений слова '};
                 this.state = 'play';
                 this.$.play.greet();
                 this.updateWord();
+                this.lastChoise = 'play';
             },
             clear: function() {
                 this.explanations = [];
                 this.said = [];
             },
+            launchAfterRate: function() {
+                this.$.feedbackSuccess.show();
+                if (this.lastChoice == 'play') {
+                    this.playRandom();
+                } else {
+                    this.rateRandom();
+                }
+            },
             playRandom: function() {
+                this.lastChoise = 'play';
                 this.clear();
                 this.$.play.clear();
                 this.state = 'play';
                 this.updateWord();
             },
             playOwn: function() {
+                this.lastChoise = 'play';
                 this.clear();
                 this.$.play.clear();
                 this.state = 'play';
@@ -80,12 +96,14 @@
                 this.updateExplanations();
             },
             rateRandom: function() {
+                this.lastChoise = 'rate';
                 this.clear();
                 this.$.rate.clear();
                 this.state = 'rate';
                 this.updateWord();
             },
             rateOwn: function() {
+                this.lastChoise = 'rate';
                 this.clear();
                 this.$.rate.clear();
                 this.state = 'rate';
