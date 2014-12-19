@@ -50,7 +50,9 @@
                         hidden?="{{state != 'play'}}"
                         word="{{word}}"
                         mind="{{explanations}}"
-                        said="{{said}}">
+                        said="{{said}}"
+                        on-play-random="{{playRandom}}"
+                        on-rate-game="{{rateGame}}">
                 </hatbot-play>
                 <hatbot-rate
                         id="rate"
@@ -76,7 +78,7 @@
                 this.state = 'play';
                 this.$.play.greet();
                 this.updateWord();
-                this.lastChoise = 'play';
+                this.lastChoice = 'play';
             },
             clear: function() {
                 this.explanations = [];
@@ -91,14 +93,14 @@
                 }
             },
             playRandom: function() {
-                this.lastChoise = 'play';
+                this.lastChoice = 'play';
                 this.clear();
                 this.$.play.clear();
                 this.state = 'play';
                 this.updateWord();
             },
             playOwn: function() {
-                this.lastChoise = 'play';
+                this.lastChoice = 'play';
                 this.clear();
                 this.$.play.clear();
                 this.state = 'play';
@@ -106,19 +108,25 @@
                 this.updateExplanations();
             },
             rateRandom: function() {
-                this.lastChoise = 'rate';
+                this.lastChoice = 'rate';
                 this.clear();
                 this.$.rate.clear();
                 this.state = 'rate';
                 this.updateWord();
             },
             rateOwn: function() {
-                this.lastChoise = 'rate';
+                this.lastChoice = 'rate';
                 this.clear();
                 this.$.rate.clear();
                 this.state = 'rate';
                 this.word = this.given;
                 this.updateExplanations();
+            },
+            rateGame: function() {
+                this.$.rate.clear();
+                this.canExplain = true;
+                this.state = 'rate';
+                console.log('rateGame()' + this.lastChoice);
             },
             updateWord: function() {
                 var loader = this.$.loader;

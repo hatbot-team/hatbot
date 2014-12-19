@@ -9,7 +9,7 @@
 
 <polymer-element name="hatbot-play" attributes="word mind said">
     <template>
-        <hatbot-log-service messages="{{messages}}" word="{{word}}"></hatbot-log-service>
+        <hatbot-log-service messages="{{messages}}" word="{{word}}" id="ajax"></hatbot-log-service>
         <hatbot-dialog messages="{{messages}}"></hatbot-dialog>
         <hatbot-play-menu
                 hidden?="{{gameIsOver}}"
@@ -18,7 +18,7 @@
                 on-explain-other="{{explain}}"
                 on-finish="{{finish}}"></hatbot-play-menu>
         <hatbot-panel hidden?="{{!gameIsOver}}">
-            <paper-button raised>Оценить прозвучавшие объяснения</paper-button>
+            <paper-button raised on-click="{{rateGame}}">Оценить прозвучавшие объяснения</paper-button>
             <paper-button raised on-click="{{playRandom}}">Играть другое слово</paper-button>
         </hatbot-panel>
     </template>
@@ -80,6 +80,7 @@
                         msecs_after_start: time.getTime() - this.startTime.getTime()
                     });
                     this.gameIsOver = true;
+                    this.$.ajax.send();
                     console.log('word guessed');
                 } else {
                     this.messages.push({
@@ -100,6 +101,7 @@
                     msecs_after_start: time.getTime() - this.startTime.getTime()
                 });
                 this.gameIsOver = true;
+                this.$.ajax.send();
             },
             playRandom: function() {
                 this.fire('play-random');
