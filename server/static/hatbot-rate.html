@@ -9,7 +9,7 @@
 
 <polymer-element name="hatbot-rate" attributes="word mind said canExplain">
     <template>
-        <hatbot-feedback-service id='ajax' feedback="{{feedback}}" userExplanations="{{userExplanations}}"></hatbot-feedback-service>
+        <hatbot-feedback-service id='ajax' feedback="{{feedback}}"></hatbot-feedback-service>
         <hatbot-panel hidden?="{{canExplain}}">
             Бот не знает как объяснять слово «{{word}}».
             Хотите предложить своё объяснение?
@@ -55,6 +55,8 @@
                 this.userExplanations.push('');
             },
             sendFeedback: function() {
+                console.log('trying to send ' + JSON.stringify(this.said));
+                this.feedback = this.said;
                 this.$.ajax.send();
                 this.fire('feedback-sent');
             }
