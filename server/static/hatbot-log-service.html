@@ -1,7 +1,7 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/core-ajax/core-ajax.html">
 
-<polymer-element name="hatbot-log-service" attributes="messages">
+<polymer-element name="hatbot-log-service" attributes="messages word">
     <template>
         <style>
             :host {
@@ -10,15 +10,19 @@
         </style>
         <core-ajax id="sender"
                    method="POST"
-                   url="???"
-                   data="{{messages}}"
-                   auto="false">
+                   url="/api/chat_log"
+                   params="{{data}}"
+                   auto="false"
+                   headers='{"Content-Type": "application/json"}'>
         </core-ajax>
     </template>
     <script>
         Polymer({
             send: function() {
-                console.log("I pretend to send log");
+                this.data = {"word": this.word, "entries": this.messages, "client_app": "web-app"};
+                /*this.data = JSON.stringify(this.data);*/
+                console.log('trying to send' + this.data);
+                this.$.sender.go();
             }
         });
     </script>
