@@ -11,18 +11,22 @@
         <core-ajax id="sender"
                    method="POST"
                    url="/api/chat_log"
-                   params="{{data}}"
+                   body="{{data}}"
                    auto="false"
-                   headers='{"Content-Type": "application/json"}'>
+                   headers='{"Content-Type": "application/json"}'
+                   on-core-complete="{{completeHandler}}">
         </core-ajax>
     </template>
     <script>
         Polymer({
             send: function() {
                 this.data = {"word": this.word, "entries": this.messages, "client_app": "web-app"};
-                /*this.data = JSON.stringify(this.data);*/
-                console.log('trying to send' + this.data);
+                this.data = JSON.stringify(this.data);
+                console.log('trying to send' + JSON.stringify(this.data));
                 this.$.sender.go();
+            },
+            completeHandler: function(e) {
+             console.log(e.detail.response);
             }
         });
     </script>
