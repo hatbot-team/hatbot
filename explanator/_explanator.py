@@ -1,4 +1,4 @@
-__author__ = 'pershik'
+__author__ = 'pershik, ryad0m, keksozavr'
 
 from hb_res.explanations import Explanation
 import random
@@ -6,6 +6,12 @@ from hb_res.explanation_source import sources_registry
 
 
 SOURCES = sources_registry.sources_registered()
+SELECTED_FILE = open("explanator/goodwords.dat", 'r', encoding='utf-8')
+
+good_words_list = []
+for s in SELECTED_FILE:
+    good_words_list.append(s.strip())
+
 
 asset_by_key = dict()
 words = set()
@@ -27,8 +33,10 @@ def get_explainable_words():
     return words
 
 
-def get_random_word():
-    return random.choice(words_list)
+def get_random_word(selection_level=0):
+    if selection_level == 0:
+        return random.choice(words_list)
+    return random.choice(good_words_list)
 
 
 def explain_list(word):
