@@ -21,7 +21,7 @@
         </hatbot-data-service>
 
         <core-scaffold mode="waterfall" responsiveWidth="800px">
-            <nav style="padding: 10px; height: 100%" vertical layout>
+            <nav style="height: 100%" vertical layout>
                 <h1 style="text-align: center">Шляпобот-меню</h1>
                 <hatbot-launch-menu flex
                         word="{{given}}"
@@ -30,14 +30,16 @@
                         on-rate-random="{{rateRandom}}"
                         on-rate-own="{{rateOwn}}">
                 </hatbot-launch-menu>
-                <hatbot-panel>
-                    Хочешь поддержать шляпобота?
-                    Присоединяйся к
-                    <a href="https://plus.google.com/u/0/communities/107837050034813876303?hl=ru">
-                        группе альфа-тестеров
-                    </a>
-                    нашего android-приложения!
-                </hatbot-panel>
+                <div style="padding: 10px">
+                    <hatbot-panel>
+                        Хочешь поддержать шляпобота?
+                        Присоединяйся к
+                        <a href="https://plus.google.com/u/0/communities/107837050034813876303?hl=ru">
+                            группе альфа-тестеров
+                        </a>
+                        нашего android-приложения!
+                    </hatbot-panel>
+                </div>
             </nav>
 
             <div tool>{{titles[state]}}{{state == 'rate' ? '«'+ word + '»' : ''}}</div>

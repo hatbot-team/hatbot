@@ -4,7 +4,6 @@
 
 <polymer-element name="hatbot-play" attributes="word mind said">
     <template>
-        <p>Play!</p>
         <hatbot-log-service messages="{{messages}}" word="{{word}}"></hatbot-log-service>
         <hatbot-dialog messages="{{messages}}"></hatbot-dialog>
         <button on-click="{{explain}}">Объясни по-другому!</button>

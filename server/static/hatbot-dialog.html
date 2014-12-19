@@ -1,14 +1,35 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 
+<link rel="import" href="hatbot-panel.html">
+
 <polymer-element name="hatbot-dialog" attributes="messages">
+    <style>
+        #actor {
+            border-right: solid 1px lightgray;
+            padding: 10px;
+        }
+        #text {
+            padding: 10px;
+        }
+
+    </style>
     <template>
         <template repeat="{{msg in messages}}">
-            <p>{{msg.msecs_after_start}}</p>
-            <p>{{msg.actor}}</p>
-            <p>{{msg.text}}</p>
+            <hatbot-panel>
+                <div horizontal layout>
+                    <div id="actor">
+                        <p>{{actor[msg.actor]}}</p>
+                    </div>
+                    <div flex id="text">
+                        <p>{{msg.text}}</p>
+                    </div>
+                </div>
+            </hatbot-panel>
         </template>
     </template>
     <script>
-        Polymer({});
+        Polymer({
+            actor: {'app': 'бот', 'player': 'вы'}
+        });
     </script>
 </polymer-element>
