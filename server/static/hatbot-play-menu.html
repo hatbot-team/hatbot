@@ -1,0 +1,51 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="hatbot-panel.html">
+
+<polymer-element name="hatbot-play-menu" attributes="message">
+    <template>
+        <hatbot-panel>
+            <div horizontal layout>
+                <div flex></div>
+                <div style="width: 400px" horizontal layout>
+                    <div flex>
+                            <paper-input
+                                style="width: 100%"
+                                label="ваша версия слова"
+                                value="{{message}}"
+                                floatingLabel></paper-input>
+                    </div>
+                    <div>
+                        <paper-button raised on-click="{{answer}}">Ответить</paper-button>
+                    </div>
+                </div>
+                <div flex></div>
+            </div>
+            <div horizontal layout>
+                <div flex></div>
+                <div style="width: 400px; padding-top: 20px">
+                    <paper-button raised on-click="{{explainOther}}">Объясни по-другому</paper-button>
+                    <paper-button raised on-click="{{finish}}">Закончить игру</paper-button>
+                </div>
+                <div flex></div>
+            </div>
+        </hatbot-panel>
+    </template>
+    <script>
+        Polymer({
+            answer: function() {
+                console.log('time to send user answer');
+                this.fire('answer');
+            },
+            explainOther: function() {
+                this.fire('explain-other');
+            },
+            finish: function() {
+                this.fire('finish');
+            }
+        });
+    </script>
+</polymer-element>

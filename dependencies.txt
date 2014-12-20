@@ -2,3 +2,4 @@
 
 cherrypy
 peewee
+jsonschema

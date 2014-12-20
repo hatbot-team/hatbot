@@ -1,0 +1,33 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="hatbot-log-service" attributes="messages word">
+    <template>
+        <style>
+            :host {
+                display: none;
+            }
+        </style>
+        <core-ajax id="sender"
+                   method="POST"
+                   url="/api/chat_log"
+                   body="{{data}}"
+                   auto="false"
+                   headers='{"Content-Type": "application/json"}'
+                   on-core-complete="{{completeHandler}}">
+        </core-ajax>
+    </template>
+    <script>
+        Polymer({
+            send: function() {
+                this.data = {"word": this.word, "entries": this.messages, "client_app": "web-app"};
+                this.data = JSON.stringify(this.data);
+                console.log('trying to send' + JSON.stringify(this.data));
+                this.$.sender.go();
+            },
+            completeHandler: function(e) {
+             console.log(e.detail.response);
+            }
+        });
+    </script>
+</polymer-element>

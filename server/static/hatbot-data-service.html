@@ -1,0 +1,52 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="hatbot-data-service" attributes="word explanations">
+    <template>
+        <style>
+            :host {
+                display: none;
+            }
+        </style>
+        <core-ajax id="word"
+                   url="/api/random_word"
+                   auto="false"
+                   handleAs="text"
+                   response="{{word}}"
+                   on-core-complete="{{randomWordHandler}}">
+        </core-ajax>
+        <core-ajax id="explain"
+                   url="/api/explain_list"
+                   auto="false"
+                   params='{"word": "{{word}}"}'
+                   handleAs="json"
+                   response="{{explanations}}"
+                   on-core-response="{{explanationsResponseHandler}}"
+                   on-core-error="{{explanationsErrorHandler}}">
+        </core-ajax>
+    </template>
+    <script>
+        Polymer({
+            loadRandomWord: function() {
+                console.log("asking for random word");
+                this.$.word.go();
+            },
+            randomWordHandler: function() {
+                console.log("Request to /api/random_word is finished");
+                this.fire('got-word', {word: this.word});
+            },
+            loadExplanations: function(){
+                console.log("asking for explanations");
+                this.$.explain.go();
+            },
+            explanationsResponseHandler: function() {
+                console.log("Request to /api/explain_list is successful");
+                this.fire('got-explanations', {explanations: this.explanations, word: this.word});
+            },
+            explanationsErrorHandler: function() {
+                console.log("Request to /api/explain_list failed");
+                this.fire('no-explanations', {word: this.word});
+            }
+        });
+    </script>
+</polymer-element>

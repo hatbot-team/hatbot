@@ -1,0 +1,73 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="bower_components/paper-input/paper-autogrow-textarea.html">
+
+<link rel="import" href="hatbot-panel.html">
+
+<polymer-element name="hatbot-rate-panel" attributes="explanation">
+    <template>
+        <style>
+            #verdict {
+                width: 200px;
+                padding: 10px;
+                text-align: center;
+                border-left: solid 1px lightgray;
+            }
+            #verdict > p {
+                height: 30px;
+                width: 100%;
+            }
+            #text {
+                padding: 10px;
+            }
+        </style>
+        <hatbot-panel>
+            <div horizontal layout>
+                <div id="text" flex>
+                    <p>{{explanation.text}}</p>
+                    <paper-button raised
+                            hidden?="{{changeText}}"
+                            on-tap="{{activateChangeText}}">
+                        исправить объяснение
+                    </paper-button>
+                    <div hidden?="{{!changeText}}" flex>
+                            <paper-input-decorator flex
+                                    label="Исправленный текст объяснения"
+                                    floatingLabel="true"
+                                    id="a1">
+                                <paper-autogrow-textarea>
+                                    <textarea>{{explanation.changed}}</textarea>
+                                </paper-autogrow-textarea>
+                            </paper-input-decorator>
+                    </div>
+                </div>
+                <div id="verdict">
+                    <p>{{verdictConvertArray[2 + explanation.verdictNumber].text}}</p>
+                    <paper-slider pin snaps min="-2" max="2" step="1" value={{explanation.verdictNumber}}></paper-slider>
+                </div>
+            </div>
+        </hatbot-panel>
+
+    </template>
+    <script>
+        Polymer({
+            explanation: {
+                changed: '',
+                text: '',
+                verdict: 0
+            },
+            changeText: false,
+            verdictConvertArray: [{verdict: "NOT_AN_EXPL",   text: "Ужасно! Это вообще не объяснение!"},
+                                  {verdict: "VIOLATION",     text: "Плохо. Объяснение нарушает правила шляпы."},
+                                  {verdict: "NOT_IMPRESSED", text: "Так себе, но вполне корректно."},
+                                  {verdict: "GOOD",          text: "Хорошо. Но можно лучше."},
+                                  {verdict: "EXACT",         text: "Отлично! Я сразу понял!"}],
+            activateChangeText: function() {
+                this.changeText = true;
+                console.log("activated change text");
+            }
+        });
+    </script>
+</polymer-element>

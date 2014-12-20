@@ -1,0 +1,48 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="hatbot-feedback-service" attributes="feedback">
+    <template>
+        <style>
+            :host {
+                display: none;
+            }
+        </style>
+        <core-ajax id="sender"
+                   method="POST"
+                   url="api/score"
+                   body="{{data}}"
+                   headers='{"Content-Type": "application/json"}'
+                   auto="false"
+                   on-core-complete="{{completeHandler}}">
+        </core-ajax>
+    </template>
+    <script>
+        Polymer({
+            verdict: {
+                "-2": "NOT_AN_EXPL",
+                "-1": "VIOLATION",
+                "0": "NOT_IMPRESSED",
+                "1": "GOOD",
+                "2": "EXACT"
+            },
+            data: {},
+            send: function() {
+                console.log('feedback sender got' + JSON.stringify(this.feedback));
+                for (var i = 0; i < this.feedback.length; ++i) {
+                    var e = this.feedback[i];
+                    console.log('data entry' + JSON.stringify(e));
+                    this.data.expl_id = e.id;
+                    this.data.verdict = this.verdict[e["verdictNumber"]];
+                    this.data.client_app = "web-app";
+                    this.data = JSON.stringify(this.data);
+                    console.log("trying to send " + this.data);
+                    this.$.sender.go();
+                }
+            },
+            completeHandler: function(e) {
+                console.log(e.detail.response);
+            }
+        });
+    </script>
+</polymer-element>

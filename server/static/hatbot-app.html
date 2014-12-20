@@ -1,0 +1,155 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="bower_components/paper-toast/paper-toast.html">
+
+<link rel="import" href="hatbot-data-service.html">
+<link rel="import" href="hatbot-play.html">
+<link rel="import" href="hatbot-rate.html">
+<link rel="import" href="hatbot-launch-menu.html">
+
+<polymer-element name="hatbot-app">
+    <template>
+        <hatbot-data-service
+                id="loader"
+                word="{{word}}"
+                explanations="{{explanations}}"
+                on-got-word="{{updateExplanations}}"
+                on-no-explanations="{{noExplanationsHandler}}"
+                on-got-explanations="{{gotExplanationsHandler}}">
+        </hatbot-data-service>
+
+        <core-scaffold mode="waterfall" responsiveWidth="800px">
+            <nav style="height: 100%" vertical layout>
+                <h1 style="text-align: center">Шляпобот-меню</h1>
+                <hatbot-launch-menu flex
+                        word="{{given}}"
+                        on-play-random="{{playRandom}}"
+                        on-play-own="{{playOwn}}"
+                        on-rate-random="{{rateRandom}}"
+                        on-rate-own="{{rateOwn}}">
+                </hatbot-launch-menu>
+                <div style="padding: 10px">
+                    <hatbot-panel>
+                        Хочешь поддержать шляпобота?
+                        Присоединяйся к
+                        <a href="https://plus.google.com/u/0/communities/107837050034813876303?hl=ru">
+                            группе альфа-тестеров
+                        </a>
+                        нашего android-приложения!
+                    </hatbot-panel>
+                </div>
+            </nav>
+
+            <div tool>{{titles[state]}}{{state == 'rate' ? '«'+ word + '»' : ''}}</div>
+
+            <div>
+                <hatbot-play
+                        id="play"
+                        hidden?="{{state != 'play'}}"
+                        word="{{word}}"
+                        mind="{{explanations}}"
+                        said="{{said}}"
+                        on-play-random="{{playRandom}}"
+                        on-rate-game="{{rateGame}}">
+                </hatbot-play>
+                <hatbot-rate
+                        id="rate"
+                        hidden?="{{state != 'rate'}}"
+                        word="{{word}}"
+                        mind="{{explanations}}"
+                        said="{{said}}"
+                        canExplain="{{canExplain}}"
+                        on-feedback-sent="{{launchAfterRate}}">
+                </hatbot-rate>
+            </div>
+        </core-scaffold>
+        <paper-toast id="feedbackSuccess" text="Оценки и исправления объяснений успешно отправлены"></paper-toast>
+    </template>
+    <script>
+        Polymer({
+            ready: function() {
+                this.explanations = [];
+                this.said = [];
+                this.canExplain = true;
+                this.given = '';
+                this.titles = {'play': 'Игра с ботом', 'rate': 'Оценка объяснений слова '};
+                this.state = 'play';
+                this.$.play.greet();
+                this.updateWord();
+                this.lastChoice = 'play';
+            },
+            clear: function() {
+                this.explanations = [];
+                this.said = [];
+            },
+            launchAfterRate: function() {
+                this.$.feedbackSuccess.show();
+                if (this.lastChoice == 'play') {
+                    this.playRandom();
+                } else {
+                    this.rateRandom();
+                }
+            },
+            playRandom: function() {
+                this.lastChoice = 'play';
+                this.clear();
+                this.$.play.clear();
+                this.state = 'play';
+                this.updateWord();
+            },
+            playOwn: function() {
+                this.lastChoice = 'play';
+                this.clear();
+                this.$.play.clear();
+                this.state = 'play';
+                this.word = this.given;
+                this.updateExplanations();
+            },
+            rateRandom: function() {
+                this.lastChoice = 'rate';
+                this.clear();
+                this.$.rate.clear();
+                this.state = 'rate';
+                this.updateWord();
+            },
+            rateOwn: function() {
+                this.lastChoice = 'rate';
+                this.clear();
+                this.$.rate.clear();
+                this.state = 'rate';
+                this.word = this.given;
+                this.updateExplanations();
+            },
+            rateGame: function() {
+                this.$.rate.clear();
+                this.canExplain = true;
+                this.state = 'rate';
+                console.log('rateGame()' + this.lastChoice);
+            },
+            updateWord: function() {
+                var loader = this.$.loader;
+                loader.loadRandomWord();
+            },
+            updateExplanations: function() {
+                var loader = this.$.loader;
+                loader.loadExplanations();
+            },
+            noExplanationsHandler: function() {
+                this.canExplain = false;
+                this.state = 'rate';
+                console.log("no Explanations");
+            },
+            gotExplanationsHandler: function() {
+                this.canExplain = true;
+                if (this.state == 'play'){
+                    this.$.play.startExplain();
+                } else if (this.state == 'rate') {
+                    this.$.rate.explain();
+                }
+                console.log(JSON.stringify(this.explanations));
+            }
+        });
+    </script>
+</polymer-element>

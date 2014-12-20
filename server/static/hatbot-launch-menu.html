@@ -1,0 +1,79 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/core-menu/core-menu.html">
+<link rel="import" href="bower_components/core-menu/core-submenu.html">
+<link rel="import" href="bower_components/core-item/core-item.html">
+<link rel="import" href="bower_components/paper-dialog/paper-action-dialog.html">
+<link rel="import" href="bower_components/paper-input/paper-input.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+
+<polymer-element name="hatbot-launch-menu" attributes="word">
+    <template>
+        <core-menu>
+            <core-submenu label="Играть с ботом">
+                <core-item
+                        on-click="{{playRandom}}"
+                        label="играть случайное слово">
+                </core-item>
+                <core-item
+                        label="играть своё слово"
+                        on-click="{{toggleDialog}}">
+                    <paper-action-dialog backdrop>
+                        <paper-input
+                                label="слово для игры"
+                                value="{{word}}"
+                                floatingLabel>
+                        </paper-input>
+                        <paper-button
+                                affirmative
+                                on-click="{{playOwn}}">
+                            Играть
+                        </paper-button>
+                    </paper-action-dialog>
+                </core-item>
+            </core-submenu>
+            <core-submenu label="Оценивать и править">
+                <core-item
+                        label="случайные объяснения"
+                        on-click="{{rateRandom}}">
+                </core-item>
+                <core-item
+                        label="объяснения своего слова"
+                        on-click="{{toggleDialog}}">
+                    <paper-action-dialog backdrop>
+                        <paper-input
+                                label="слово для оценки"
+                                value="{{word}}"
+                                floatingLabel>
+                        </paper-input>
+                        <paper-button
+                                affirmative
+                                on-click="{{rateOwn}}">
+                            Оценивать
+                        </paper-button>
+                    </paper-action-dialog>
+                </core-item>
+            </core-submenu>
+        </core-menu>
+    </template>
+    <script>
+        Polymer({
+            playOwn: function(){
+                this.fire('play-own');
+            },
+            rateOwn: function(){
+                this.fire('rate-own');
+            },
+            playRandom: function(){
+                this.fire('play-random');
+            },
+            rateRandom: function(){
+                this.fire('rate-random');
+            },
+            toggleDialog: function(e) {
+                var d = e.target.querySelector('paper-dialog,paper-action-dialog');
+                d.toggle();
+            }
+        });
+    </script>
+</polymer-element>

@@ -1,0 +1,114 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="hatbot-log-service.html">
+<link rel="import" href="hatbot-dialog.html">
+<link rel="import" href="hatbot-play-menu.html">
+<link rel="import" href="hatbot-panel.html">
+
+<polymer-element name="hatbot-play" attributes="word mind said">
+    <template>
+        <hatbot-log-service messages="{{messages}}" word="{{word}}" id="ajax"></hatbot-log-service>
+        <hatbot-dialog messages="{{messages}}"></hatbot-dialog>
+        <hatbot-play-menu
+                hidden?="{{gameIsOver}}"
+                message="{{userMsg}}"
+                on-answer="{{addUserAnswer}}"
+                on-explain-other="{{explain}}"
+                on-finish="{{finish}}"></hatbot-play-menu>
+        <hatbot-panel hidden?="{{!gameIsOver}}">
+            <paper-button raised on-click="{{rateGame}}">Оценить прозвучавшие объяснения</paper-button>
+            <paper-button raised on-click="{{playRandom}}">Играть другое слово</paper-button>
+        </hatbot-panel>
+    </template>
+    <script>
+        Polymer({
+            ready: function() {
+                this.clear();
+            },
+            clear: function() {
+                this.messages = [];
+                this.mind = [];
+                this.said = [];
+                this.userMsg = '';
+                this.gameIsOver = false;
+            },
+            greet: function() {
+                this.messages.push({ actor: 'app',
+                                     text: 'Привет, я шляпобот, бот для игры в шляпу. Давай играть?',
+                            msecs_after_start: 0
+                    });
+            },
+            startExplain: function() {
+                this.messages.push({ actor: 'app',
+                                      text: '*Достаю слово из шляпы*',
+                         msecs_after_start: 0});
+                this.startTime = new Date();
+                this.explain();
+            },
+            explain: function() {
+                var time = new Date();
+                if (this.mind.length != 0) {
+                    var msg = this.mind.pop();
+                    this.said.push(msg);
+                    this.messages.push({
+                        actor: 'app',
+                        text: msg.text,
+                        msecs_after_start: time.getTime() - this.startTime.getTime()
+                    });
+                } else {
+                    this.messages.push({
+                        actor: 'app',
+                        text: 'не знаю, как объяснить по-другому',
+                        msecs_after_start: time.getTime() - this.startTime.getTime()
+                    });
+                }
+            },
+            addUserAnswer: function() {
+                console.log('adding user answer');
+                var time = new Date();
+                this.messages.push({
+                    actor: 'player',
+                    text: this.userMsg,
+                    msecs_after_start: time.getTime() - this.startTime.getTime()
+                });
+                if (this.userMsg.toLowerCase() == this.word.toLowerCase()) {
+                    this.messages.push({
+                        actor: 'app',
+                        text: 'слово угадано!',
+                        msecs_after_start: time.getTime() - this.startTime.getTime()
+                    });
+                    this.gameIsOver = true;
+                    this.$.ajax.send();
+                    console.log('word guessed');
+                } else {
+                    this.messages.push({
+                        actor: 'app',
+                        text: 'нет, не то',
+                        msecs_after_start: time.getTime() - this.startTime.getTime()
+                    });
+                    console.log('word not guessed');
+                }
+                this.userMsg = '';
+            },
+            finish: function() {
+                console.log('finishing');
+                var time = new Date();
+                this.messages.push({
+                    actor: 'app',
+                    text: 'это было слово «' + this.word + '»',
+                    msecs_after_start: time.getTime() - this.startTime.getTime()
+                });
+                this.gameIsOver = true;
+                this.$.ajax.send();
+            },
+            playRandom: function() {
+                this.fire('play-random');
+            },
+            rateGame: function() {
+                this.fire('rate-game');
+            }
+        });
+    </script>
+</polymer-element>
