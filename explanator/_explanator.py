@@ -1,67 +1,105 @@
+import itertools
+import logging
+from os import path
+import random
+
+from hb_res.explanation_source import sources_registry, ExplanationSource
+
+
 __author__ = 'pershik, ryad0m, keksozavr'
 
-from hb_res.explanations import Explanation
-import random
-from hb_res.explanation_source import sources_registry
+ALL_SOURCES = sources_registry.sources_registered()
+ALL_SOURCES_NAMES_SET = frozenset(s.name for s in ALL_SOURCES)
+
+words_list = []
+words_list_by_source_name = dict()
+for s in ALL_SOURCES:
+    li = list(s.explainable_words())
+    words_list_by_source_name[s.name] = li
+    words_list.extend(li)
+words_set = frozenset(words_list)
 
 
-SOURCES = sources_registry.sources_registered()
-SELECTED_FILE = open("explanator/goodwords.dat", 'r', encoding='utf-8')
+GOOD_WORDS_SELECTION = 1
+ALL_WORDS_SELECTION = 0
+SELECTED_WORDS_PATH = path.join(path.dirname(path.abspath(__file__)), "goodwords.dat")
 
-good_words_list = []
-for s in SELECTED_FILE:
-    good_words_list.append(s.strip())
-
-
-asset_by_key = dict()
-words = set()
-for s in SOURCES:
-    for word in s.explainable_words():
-        words.add(word)
-        explanations = s.explain(word)
-        for explanation in explanations:
-            asset_by_key[explanation.key] = s.name
-words_list = list(words)
+try:
+    with open(SELECTED_WORDS_PATH, 'r', encoding='utf-8') as selected_file:
+        selected_words_list = list(map(str.strip, selected_file))
+except FileNotFoundError as e:
+    logging.error("Couldn't find selected words at " + e.filename)
+    selected_words_list = words_list
 
 
-def get_explainable_words():
+def _pick_sources_by_names(names):
+    if names is None:
+        sources_filtered = ALL_SOURCES
+    else:
+        if isinstance(names, str):
+            names = [names]
+        sources_filtered = [sources_registry.source_for_name(name) for name in names]
+    return sources_filtered
+
+
+def get_explainable_words(sources=None):
     """
     Returns an iterable of all words for which we have any explanation.
 
     :return: iterable
     """
-    return words
+    sources = _pick_sources_by_names(sources)
+    return itertools.chain(map(ExplanationSource.explainable_words, sources))
 
 
-def get_random_word(selection_level=0):
-    if selection_level == 0:
-        return random.choice(words_list)
-    return random.choice(good_words_list)
+def get_random_word(*, sources_names=None, selection_level=None):
+    assert sources_names is None or selection_level is None
+
+    if sources_names is None:
+        return random.choice(words_list if selection_level == ALL_WORDS_SELECTION else selected_words_list)
+
+    # If the user wants a sole specific asset, the task is straightforward
+    if not isinstance(sources_names, str) and len(sources_names) == 1:
+        sources_names = sources_names[0]
+    if isinstance(sources_names, str):
+        return random.choice(words_list_by_source_name[sources_names])
+
+    # otherwise we have to pick a uniformly random element from several lists,
+    # but we wouldn't like to join them, as they are long
+    lists = [words_list_by_source_name[name] for name in sources_names]
+    total = sum(map(len, lists))
+    rand = random.randrange(total)
+    upto = 0
+    for word_list in lists:
+        upto += len(word_list)
+        if rand < upto:
+            return word_list[rand - upto]  # yep, negative indexation
+    assert False, 'Shouldn\'t get here'
 
 
-def explain_list(word):
+def explain_list(word, sources_names=None):
     """
     Returns list of tuple (Explanations, asset_name)
     """
-    if word in words:
+    if word in words_set:
+        sources_filtered = _pick_sources_by_names(sources_names)
         res = list()
-        for s in SOURCES:
-            explanations = s.explain(word)
-            for explanation in explanations:
-                res.append((explanation, asset_by_key[explanation.key]))
+        for s in sources_filtered:
+            res.extend(zip(s.explain(word), itertools.repeat(s.name)))
+        random.shuffle(res)
         return res
     else:
-        return None
+        return []
 
 
-def explain(word):
+def explain(word, sources_names=None):
     """
     Returns tuple (Explanation, asset_name)
 
     :param word: a russian noun in lowercase
     :return: the explanation
     """
-    if word in words:
-        return random.choice(explain_list(word))
+    if word in words_set:
+        return explain_list(word, sources_names)[0]
     else:
         return None
