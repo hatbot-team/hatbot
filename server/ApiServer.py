@@ -41,16 +41,16 @@ class ApiServer:
 
     @staticmethod
     def unpack_asset_filter(joined):
-        if joined is None:
+        if joined is None or joined == 'all':
             return None
         asset_filter = joined.split(',')
         for name in asset_filter:
-            if not name in explanator.ALL_SOURCES_NAMES_SET:
+            if name not in explanator.ALL_SOURCES_NAMES_SET:
                 raise cherrypy.HTTPError(400, "Unknown asset '{}'".format(name))
         return asset_filter
 
     @staticmethod
-    def get_explanation(word, joined_assets=None, method=explanator.explain):
+    def get_explanation(word, joined_assets, method=explanator.explain):
         if word is None:
             raise cherrypy.HTTPError(400)
         e = method(word, ApiServer.unpack_asset_filter(joined_assets))
@@ -69,7 +69,7 @@ class ApiServer:
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def explain(self, word=None, assets=None):
+    def explain(self, word=None, assets='Selected'):
         """
         Returns JSON described by explanation_schema
         """
@@ -77,7 +77,7 @@ class ApiServer:
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def explain_list(self, word=None, assets=None):
+    def explain_list(self, word=None, assets='Selected'):
         """
         Returns JSON described by explanation_list_schema
         """
@@ -87,23 +87,18 @@ class ApiServer:
         return e_list
 
     @cherrypy.expose
-    def explain_plain(self, word=None, assets=None):
+    def explain_plain(self, word=None, assets='Selected'):
         """
         Returns plain explanation text
         """
         return self.get_explanation(word, assets)[0].text
 
     @cherrypy.expose
-    def random_word(self, selection_level=None, assets=None):
-        if selection_level is not None and assets is not None:
-            raise cherrypy.HTTPError(
-                400, "Enhance your calm; you shan't specify both selection_level and assets")
-        if selection_level is not None:
-            selection_level = int(selection_level)
-        elif assets is not None:
-            assets = self.unpack_asset_filter(assets)
-        else:
-            selection_level = explanator.GOOD_WORDS_SELECTION
+    def random_word(self, selection_level='good', assets='all'):
+        selection_level = selection_level.lower()
+        if selection_level not in explanator.SELECTION_LEVELS:
+            raise cherrypy.HTTPError(400, 'unknown selection level, should be from ' + explanator.SELECTION_LEVELS)
+        assets = self.unpack_asset_filter(assets)
         return explanator.get_random_word(selection_level=selection_level, sources_names=assets)
 
     @cherrypy.tools.json_in(force=True)
