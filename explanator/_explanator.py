@@ -1,6 +1,4 @@
 import itertools
-import logging
-from os import path
 import random
 
 from hb_res.explanation_source import sources_registry, ExplanationSource
@@ -9,7 +7,7 @@ from hb_res.explanation_source import sources_registry, ExplanationSource
 __author__ = 'pershik, ryad0m, keksozavr'
 
 ALL_SOURCES = sources_registry.sources_registered()
-ALL_SOURCES_NAMES_SET = frozenset(s.name for s in ALL_SOURCES)
+ALL_SOURCES_NAMES_SET = frozenset(sources_registry.names_registered())
 
 words_list = []
 words_list_by_source_name = dict()
@@ -19,17 +17,8 @@ for s in ALL_SOURCES:
     words_list.extend(li)
 words_set = frozenset(words_list)
 
-
-GOOD_WORDS_SELECTION = 1
-ALL_WORDS_SELECTION = 0
-SELECTED_WORDS_PATH = path.join(path.dirname(path.abspath(__file__)), "goodwords.dat")
-
-try:
-    with open(SELECTED_WORDS_PATH, 'r', encoding='utf-8') as selected_file:
-        selected_words_list = list(map(str.strip, selected_file))
-except FileNotFoundError as e:
-    logging.error("Couldn't find selected words at " + e.filename)
-    selected_words_list = words_list
+SELECTED_SOURCE = sources_registry.source_for_name('Selected')
+SELECTION_LEVELS = {'good', 'all'}
 
 
 def _pick_sources_by_names(names):
@@ -53,10 +42,12 @@ def get_explainable_words(sources=None):
 
 
 def get_random_word(*, sources_names=None, selection_level=None):
-    assert sources_names is None or selection_level is None
+    # assert sources_names is None or selection_level is None
 
     if sources_names is None:
-        return random.choice(words_list if selection_level == ALL_WORDS_SELECTION else selected_words_list)
+        return random.choice(words_list
+                             if selection_level == 'all'
+                             else words_list_by_source_name['Selected'])
 
     # If the user wants a sole specific asset, the task is straightforward
     if not isinstance(sources_names, str) and len(sources_names) == 1:

@@ -6,8 +6,7 @@ __all__ = [
     'get_random_word',
     'explain_list',
     'ALL_SOURCES_NAMES_SET',
-    'ALL_WORDS_SELECTION',
-    'GOOD_WORDS_SELECTION'
+    'SELECTION_LEVELS',
 ]
 
 from ._explanator import \
@@ -16,5 +15,4 @@ from ._explanator import \
     get_random_word, \
     explain_list, \
     ALL_SOURCES_NAMES_SET, \
-    ALL_WORDS_SELECTION, \
-    GOOD_WORDS_SELECTION
+    SELECTION_LEVELS
