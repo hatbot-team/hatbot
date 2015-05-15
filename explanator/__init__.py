@@ -1,18 +1,15 @@
 __author__ = 'moskupols'
 
 __all__ = [
-    'explain',
-    'get_explainable_words',
-    'get_random_word',
-    'explain_list',
-    'ALL_SOURCES_NAMES_SET',
-    'SELECTION_LEVELS',
+    'Explanator',
+    'explanator',
 ]
 
-from ._explanator import \
-    explain, \
-    get_explainable_words, \
-    get_random_word, \
-    explain_list, \
-    ALL_SOURCES_NAMES_SET, \
-    SELECTION_LEVELS
+
+from hb_res.explanation_source import sources_registry
+from ._explanator import Explanator
+bad = [s for s in sources_registry.sources_registered() if s.name != 'Selected']
+good = [sources_registry.source_for_name('Selected')]
+explanator = Explanator({'bad': bad, 'good': good})
+
+del sources_registry, bad, good

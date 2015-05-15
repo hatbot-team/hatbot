@@ -4,7 +4,7 @@ import json
 import cherrypy
 import jsonschema
 
-import explanator
+from explanator import explanator
 from models import ScoreFeedback, get_database
 from server.schemas import score_feedback_schema, chat_log_schema
 
@@ -40,20 +40,20 @@ class ApiServer:
         }
 
     @staticmethod
-    def unpack_asset_filter(joined):
+    def unpack_source_filter(joined):
         if joined is None or joined == 'all':
             return None
-        asset_filter = joined.split(',')
-        for name in asset_filter:
-            if name not in explanator.ALL_SOURCES_NAMES_SET:
+        source_filter = joined.split(',')
+        for name in source_filter:
+            if name not in explanator.tags and name not in explanator.source_names:
                 raise cherrypy.HTTPError(400, "Unknown asset '{}'".format(name))
-        return asset_filter
+        return source_filter
 
     @staticmethod
-    def get_explanation(word, joined_assets, method=explanator.explain):
+    def get_explanation(word, joined_sourceish, method=explanator.explain):
         if word is None:
             raise cherrypy.HTTPError(400)
-        e = method(word, ApiServer.unpack_asset_filter(joined_assets))
+        e = method(word, ApiServer.unpack_source_filter(joined_sourceish))
         if e is None or e == []:
             raise cherrypy.HTTPError(404, 'No explanation for word "{}"'.format(word))
         return e
@@ -69,37 +69,33 @@ class ApiServer:
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def explain(self, word=None, assets='Selected'):
+    def explain(self, word=None, sources='Selected'):
         """
         Returns JSON described by explanation_schema
         """
-        return self.explanation_desc(*self.get_explanation(word, assets))
+        return self.explanation_desc(*self.get_explanation(word, sources))
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def explain_list(self, word=None, assets='Selected'):
+    def explain_list(self, word=None, sources='Selected'):
         """
         Returns JSON described by explanation_list_schema
         """
-        e_list = self.get_explanation(word, assets, method=explanator.explain_list)
+        e_list = self.get_explanation(word, sources, method=explanator.explain_list)
         for i in range(len(e_list)):
             e_list[i] = self.explanation_desc(*e_list[i])
         return e_list
 
     @cherrypy.expose
-    def explain_plain(self, word=None, assets='Selected'):
+    def explain_plain(self, word=None, sources='Selected'):
         """
         Returns plain explanation text
         """
-        return self.get_explanation(word, assets)[0].text
+        return self.get_explanation(word, sources)[0].text
 
     @cherrypy.expose
-    def random_word(self, selection_level='good', assets='all'):
-        selection_level = selection_level.lower()
-        if selection_level not in explanator.SELECTION_LEVELS:
-            raise cherrypy.HTTPError(400, 'unknown selection level, should be from ' + explanator.SELECTION_LEVELS)
-        assets = self.unpack_asset_filter(assets)
-        return explanator.get_random_word(selection_level=selection_level, sources_names=assets)
+    def random_word(self, sources='Selected'):
+        return explanator.get_random_word(sourceish=self.unpack_source_filter(sources))
 
     @cherrypy.tools.json_in(force=True)
     @cherrypy.expose
