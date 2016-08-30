@@ -4,3 +4,4 @@ cherrypy
 peewee
 jsonschema
 hatbot_resources>=1.1
+six
