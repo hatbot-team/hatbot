@@ -24,7 +24,8 @@ def run(db_url, conf=None):
             'tools.staticdir.root': path.join(path.dirname(path.abspath(__file__)), 'static'),
             'tools.staticdir.on': True,
             'tools.staticdir.dir': '.',
-            'tools.staticdir.index': 'index.html'
+            'tools.staticdir.index': 'index.html',
+            'engine.autoreload_on': False,
         }
     }
 
